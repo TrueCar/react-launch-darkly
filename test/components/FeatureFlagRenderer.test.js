@@ -3,17 +3,23 @@ import { shallow, mount } from "enzyme";
 import { expect } from "chai";
 import { spy, stub } from "sinon";
 
-import FeatureFlag from "../../src/components/FeatureFlag";
+import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import * as launchDarkly from "../../src/lib/launchDarkly";
 
-describe("<FeatureFlag />", () => {
+describe("<FeatureFlagRenderer />", () => {
   const renderFeatureCallback = stub().returns("feature rendered");
   const renderDefaultCallback = stub().returns("default rendered");
   const initialRenderCallback = stub().returns("initial rendered");
 
+  const launchDarklyConfig = {
+    apiKey: "abcdefg",
+    user: "yoloman"
+  };
+
   it("renders without an issue", () => {
     const wrapper = shallow(
-      <FeatureFlag
+      <FeatureFlagRenderer
+        launchDarklyConfig={launchDarklyConfig}
         flagKey="my-test"
         renderFeatureCallback={renderFeatureCallback}
       />
@@ -23,7 +29,8 @@ describe("<FeatureFlag />", () => {
 
   it("renders the proper data-qa attribute", () => {
     const wrapper = shallow(
-      <FeatureFlag
+      <FeatureFlagRenderer
+        launchDarklyConfig={launchDarklyConfig}
         flagKey="my-test"
         renderFeatureCallback={renderFeatureCallback}
       />
@@ -32,21 +39,23 @@ describe("<FeatureFlag />", () => {
   });
 
   it("calls componentDidMount", () => {
-    spy(FeatureFlag.prototype, "componentDidMount");
+    spy(FeatureFlagRenderer.prototype, "componentDidMount");
     mount(
-      <FeatureFlag
+      <FeatureFlagRenderer
+        launchDarklyConfig={launchDarklyConfig}
         flagKey="my-test"
         renderFeatureCallback={renderFeatureCallback}
       />
     );
-    expect(FeatureFlag.prototype.componentDidMount).to.have.property("callCount", 1);
+    expect(FeatureFlagRenderer.prototype.componentDidMount).to.have.property("callCount", 1);
   });
 
   describe("the _renderLogic function", () => {
     context("when showFeature is true", () => {
       it("renders the feature callback", () => {
         const wrapper = shallow(
-          <FeatureFlag
+          <FeatureFlagRenderer
+            launchDarklyConfig={launchDarklyConfig}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -61,7 +70,8 @@ describe("<FeatureFlag />", () => {
         context("when renderDefaultCallback is provided", () => {
           it("renders the default callback", () => {
             const wrapper = shallow(
-              <FeatureFlag
+              <FeatureFlagRenderer
+                launchDarklyConfig={launchDarklyConfig}
                 flagKey="my-test"
                 renderFeatureCallback={renderFeatureCallback}
                 renderDefaultCallback={renderDefaultCallback}
@@ -75,7 +85,8 @@ describe("<FeatureFlag />", () => {
         context("when renderDefaultCallback is not provided", () => {
           it("renders nothing", () => {
             const wrapper = shallow(
-              <FeatureFlag
+              <FeatureFlagRenderer
+                launchDarklyConfig={launchDarklyConfig}
                 flagKey="my-test"
                 renderFeatureCallback={renderFeatureCallback}
               />
@@ -91,7 +102,8 @@ describe("<FeatureFlag />", () => {
         context("when initialRenderCallback is provided", () => {
           it("renders the initial callback", () => {
             const wrapper = shallow(
-              <FeatureFlag
+              <FeatureFlagRenderer
+                launchDarklyConfig={launchDarklyConfig}
                 flagKey="my-test"
                 renderFeatureCallback={renderFeatureCallback}
                 initialRenderCallback={initialRenderCallback}
@@ -105,7 +117,8 @@ describe("<FeatureFlag />", () => {
         context("when initialRenderCallback is not provided", () => {
           it("renders nothing", () => {
             const wrapper = shallow(
-              <FeatureFlag
+              <FeatureFlagRenderer
+                launchDarklyConfig={launchDarklyConfig}
                 flagKey="my-test"
                 renderFeatureCallback={renderFeatureCallback}
               />
@@ -121,7 +134,8 @@ describe("<FeatureFlag />", () => {
     context("when all else fails", () => {
       it("it renders nothing", () => {
         const wrapper = shallow(
-          <FeatureFlag
+          <FeatureFlagRenderer
+            launchDarklyConfig={launchDarklyConfig}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -151,7 +165,8 @@ describe("<FeatureFlag />", () => {
     context("when the feature flag comes back true", () => {
       it("sets the state", () => {
         const wrapper = mount(
-          <FeatureFlag
+          <FeatureFlagRenderer
+            launchDarklyConfig={launchDarklyConfig}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -163,7 +178,8 @@ describe("<FeatureFlag />", () => {
     context("when the feature flag comes back false", () => {
       it("sets the state", () => {
         const wrapper = mount(
-          <FeatureFlag
+          <FeatureFlagRenderer
+            launchDarklyConfig={launchDarklyConfig}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -173,3 +189,4 @@ describe("<FeatureFlag />", () => {
     });
   });
 });
+
