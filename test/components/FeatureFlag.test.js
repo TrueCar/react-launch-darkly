@@ -1,14 +1,15 @@
-/*global React*/
-/*global describe it*/
-/*global expect*/
-import FeatureFlag from "components/common/FeatureFlag";
+import React from "react";
 import { shallow, mount } from "enzyme";
-import * as launchDarkly from "lib/launchDarkly";
+import { expect } from "chai";
+import { spy, stub } from "sinon";
+
+import FeatureFlag from "../../src/components/FeatureFlag";
+import * as launchDarkly from "../../src/lib/launchDarkly";
 
 describe("<FeatureFlag />", () => {
-  const renderFeatureCallback = sinon.stub().returns("feature rendered");
-  const renderDefaultCallback = sinon.stub().returns("default rendered");
-  const initialRenderCallback = sinon.stub().returns("initial rendered");
+  const renderFeatureCallback = stub().returns("feature rendered");
+  const renderDefaultCallback = stub().returns("default rendered");
+  const initialRenderCallback = stub().returns("initial rendered");
 
   it("renders without an issue", () => {
     const wrapper = shallow(
@@ -31,7 +32,7 @@ describe("<FeatureFlag />", () => {
   });
 
   it("calls componentDidMount", () => {
-    sinon.spy(FeatureFlag.prototype, "componentDidMount");
+    spy(FeatureFlag.prototype, "componentDidMount");
     mount(
       <FeatureFlag
         flagKey="my-test"
@@ -134,17 +135,17 @@ describe("<FeatureFlag />", () => {
 
   describe("the _checkFeatureFlag function", () => {
     before(() => {
-      const variation = sinon.stub();
+      const variation = stub();
       variation.onCall(0).returns(true);
       variation.onCall(1).returns(false);
 
-      const ldClientStub = sinon.stub().returns({
+      const ldClientStub = stub().returns({
         on: (ready, callback) => {
           callback();
         },
         variation: variation
       });
-      sinon.stub(launchDarkly, "ldBrowserInit", ldClientStub);
+      stub(launchDarkly, "ldBrowserInit", ldClientStub);
     });
 
     context("when the feature flag comes back true", () => {

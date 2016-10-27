@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
-import Cookies from "cookies-js";
 
-import { ldBrowserInit } from "lib/launchDarkly";
+import { ldBrowserInit } from "../lib/launchDarkly";
 
 export default class FeatureFlag extends Component {
   static propTypes = {
@@ -48,10 +47,8 @@ export default class FeatureFlag extends Component {
   }
 
   _checkFeatureFlag () {
-    // TODO: Investigate how we want to handle tracking users. We may want to let BE control the
-    // user keys for LD and load it from the initial state.
-    const userKey = { key: Cookies.get("u") };
-    const ldClient = ldBrowserInit(userKey);
+    // @TODO: determine best way to pass api key and user
+    const ldClient = ldBrowserInit("api-key", "user");
     const { flagKey } = this.props;
 
     ldClient.on("ready", () => {
@@ -66,3 +63,4 @@ export default class FeatureFlag extends Component {
     });
   }
 }
+
