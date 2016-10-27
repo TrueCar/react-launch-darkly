@@ -1,6 +1,6 @@
 {
   "name": "react-launch-darkly",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -36,6 +36,7 @@
     "babel-runtime": "6.18.0",
     "ldclient-js": "^1.1.4",
     "react": "^15.3.2",
+    "react-broadcast": "^0.1.2",
     "react-dom": "^15.3.2"
   }
 }
