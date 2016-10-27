@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha --compilers js:babel-core/register --require babel-polyfill --recursive test/.setup.js test/**/*.test.js"
+    "test": "NODE_ENV=test mocha --compilers js:babel-core/register --require babel-polyfill --recursive test/.setup.js test/**/*.test.js",
+    "test-coverage": "NODE_ENV=test babel-node ./node_modules/.bin/babel-istanbul cover --include-all-sources --report html --dir coverage/html ./node_modules/.bin/_mocha -- --recursive test/.setup.js test/**/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,9 @@
   },
   "homepage": "https://github.com/TrueCar/react-launch-darkly#readme",
   "devDependencies": {
+    "babel-cli": "^6.18.0",
     "babel-eslint": "7.1.0",
+    "babel-istanbul": "^0.11.0",
     "chai": "3.5.0",
     "enzyme": "2.5.1",
     "eslint": "3.8.1",
