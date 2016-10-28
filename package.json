@@ -1,12 +1,18 @@
 {
   "name": "react-launch-darkly",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
-  "main": "index.js",
+  "main": "./build/index",
   "scripts": {
     "test": "NODE_ENV=test mocha --compilers js:babel-core/register --require babel-polyfill --recursive test/.setup.js test/**/*.test.js",
-    "test-coverage": "NODE_ENV=test babel-node ./node_modules/.bin/babel-istanbul cover --include-all-sources --report html --dir coverage/html ./node_modules/.bin/_mocha -- --recursive test/.setup.js test/**/*.test.js"
+    "test-coverage": "NODE_ENV=test babel-node ./node_modules/.bin/babel-istanbul cover --include-all-sources --report html --dir coverage/html ./node_modules/.bin/_mocha -- --recursive test/.setup.js test/**/*.test.js",
+    "clean": "rimraf build",
+    "build": "./node_modules/.bin/babel src --out-dir build",
+    "prepublish": "npm run clean && npm run build"
   },
+  "files": [
+    "build"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TrueCar/react-launch-darkly.git"
@@ -29,6 +35,7 @@
     "jsdom": "^9.8.3",
     "mocha": "3.1.2",
     "react-addons-test-utils": "15.3.2",
+    "rimraf": "^2.5.4",
     "sinon": "1.17.6"
   },
   "dependencies": {
