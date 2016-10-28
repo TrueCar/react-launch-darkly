@@ -3,11 +3,12 @@ import React, { Component } from "react";
 import { Broadcast } from "react-broadcast";
 
 import { BROADCAST_CHANNEL } from "../constants/LaunchDarkly.js";
+import { UserType } from "../types/User";
 
 export default class LaunchDarkly extends Component {
   props: {
-    clientId: String,
-    user: String,
+    clientId: Object,
+    user: UserType,
     children: any
   };
 
