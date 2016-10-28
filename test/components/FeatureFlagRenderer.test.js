@@ -6,7 +6,7 @@ import { spy, stub } from "sinon";
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import * as launchDarkly from "../../src/lib/launchDarkly";
 
-describe("<FeatureFlagRenderer />", () => {
+describe("components/FeatureFlagRenderer", () => {
   const renderFeatureCallback = stub().returns("feature rendered");
   const renderDefaultCallback = stub().returns("default rendered");
   const initialRenderCallback = stub().returns("initial rendered");

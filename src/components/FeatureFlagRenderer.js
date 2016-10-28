@@ -1,19 +1,15 @@
 /* @flow */
 import React, { Component } from "react";
+
 import { ldBrowserInit } from "../lib/launchDarkly";
+import { FeatureFlagType } from "../types/FeatureFlag";
 
 type LaunchDarklyConfig = {
   apiKey: String,
   user: String
 };
 
-type Props = {
-  flagKey: String,
-  renderFeatureCallback: Function,
-  renderDefaultCallback: ?Function,
-  initialRenderCallback: ?Function,
-  launchDarklyConfig: LaunchDarklyConfig
-};
+type Props = FeatureFlagType & LaunchDarklyConfig;
 
 export default class FeatureFlagRenderer extends Component {
   props: Props;
