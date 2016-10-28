@@ -16,7 +16,7 @@ describe("components/FeatureFlag", () => {
 
   it("should pass the correct broadcast channel to it", () => {
     const subject = mount(
-      <LaunchDarkly apiKey="80808080" user="hi">
+      <LaunchDarkly clientId="80808080" user="hi">
         <FeatureFlag {...defaultProps} />
       </LaunchDarkly>
     );
@@ -34,7 +34,7 @@ describe("components/FeatureFlag", () => {
     };
 
     const subject = mount(
-      <LaunchDarkly apiKey="80808080" user="hi">
+      <LaunchDarkly clientId="80808080" user="hi">
         <FeatureFlag {...allProps} />
       </LaunchDarkly>
     );
@@ -48,14 +48,14 @@ describe("components/FeatureFlag", () => {
 
   it("should pass the launchDarklyConfig to FeatuerFlagRenderer", () => {
     const subject = mount(
-      <LaunchDarkly apiKey="80808080" user="hi">
+      <LaunchDarkly clientId="80808080" user="hi">
         <FeatureFlag {...defaultProps} />
       </LaunchDarkly>
     );
 
     const renderer = subject.find(FeatureFlagRenderer);
     expect(renderer.prop("launchDarklyConfig")).to.deep.equal({
-      apiKey: "80808080",
+      clientId: "80808080",
       user: "hi"
     });
   });

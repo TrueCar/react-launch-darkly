@@ -5,7 +5,7 @@ import { ldBrowserInit } from "../lib/launchDarkly";
 import { FeatureFlagType } from "../types/FeatureFlag";
 
 type LaunchDarklyConfig = {
-  apiKey: String,
+  clientId: String,
   user: String
 };
 
@@ -55,8 +55,8 @@ export default class FeatureFlagRenderer extends Component {
   }
 
   _checkFeatureFlag () {
-    const { launchDarklyConfig: { apiKey, user }, flagKey } = this.props;
-    const ldClient = ldBrowserInit(apiKey, user);
+    const { launchDarklyConfig: { clientId, user }, flagKey } = this.props;
+    const ldClient = ldBrowserInit(clientId, user);
 
     ldClient.on("ready", () => {
       const showFeature = ldClient.variation(flagKey, false);

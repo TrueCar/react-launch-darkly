@@ -6,15 +6,15 @@ import { BROADCAST_CHANNEL } from "../constants/LaunchDarkly.js";
 
 export default class LaunchDarkly extends Component {
   props: {
-    apiKey: String,
+    clientId: String,
     user: String,
     children: any
   };
 
   render () {
-    const { apiKey, user } = this.props;
+    const { clientId, user } = this.props;
     const value = {
-      apiKey,
+      clientId,
       user
     };
 

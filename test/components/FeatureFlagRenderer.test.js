@@ -12,7 +12,7 @@ describe("components/FeatureFlagRenderer", () => {
   const initialRenderCallback = stub().returns("initial rendered");
 
   const launchDarklyConfig = {
-    apiKey: "abcdefg",
+    clientId: "abcdefg",
     user: "yoloman"
   };
 

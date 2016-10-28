@@ -11,7 +11,7 @@ import { BROADCAST_CHANNEL } from "../../src/constants/LaunchDarkly";
 describe("components/LaunchDarkly", () => {
   it("should setup a broadcast with on the correct channel", () => {
     const subject = shallow(
-      <LaunchDarkly apiKey="080808" user="zeke">
+      <LaunchDarkly clientId="080808" user="zeke">
         <div>Hi</div>
       </LaunchDarkly>
     );
@@ -20,23 +20,23 @@ describe("components/LaunchDarkly", () => {
     expect(broadcast.prop("channel")).to.equal(BROADCAST_CHANNEL);
   });
 
-  it("should pass the apiKey and user as the value to the broadcast", () => {
+  it("should pass the clientId and user as the value to the broadcast", () => {
     const subject = shallow(
-      <LaunchDarkly apiKey="080808" user="zeke">
+      <LaunchDarkly clientId="080808" user="zeke">
         <div>Hi</div>
       </LaunchDarkly>
     );
 
     const broadcast = subject.find(Broadcast);
     expect(broadcast.prop("value")).to.deep.equal({
-      apiKey: "080808",
+      clientId: "080808",
       user: "zeke"
     });
   });
 
   it("should render the children", () => {
     const subject = shallow(
-      <LaunchDarkly apiKey="080808" user="zeke">
+      <LaunchDarkly clientId="080808" user="zeke">
         <div>Hi</div>
       </LaunchDarkly>
     );
@@ -45,7 +45,7 @@ describe("components/LaunchDarkly", () => {
     expect(child.text()).to.equal("Hi");
   });
 
-  it("should propagate apiKey and user even when shouldComponentUpdate is false somewhere above the flag renderer", () => {
+  it("should propagate clientId and user even when shouldComponentUpdate is false somewhere above the flag renderer", () => {
     class A extends Component {
       props: {
         children: any
@@ -79,7 +79,7 @@ describe("components/LaunchDarkly", () => {
 
       render () {
         return (
-          <LaunchDarkly apiKey="808080" user={this.state.user}>
+          <LaunchDarkly clientId="808080" user={this.state.user}>
             <div>
               <button id="updateUser" onClick={this._updateUser}>UpdateUser</button>
               <A>
