@@ -8,7 +8,7 @@ If you'd like to see a feature implemented, feel free to submit a PR and we'll h
 ## Usage
 To setup the LaunchDarkly client container, you'll probably want to include it one of your top-level
 layout components:
-```
+```javascript
 // MasterLayout.js
 import React, { Component, PropTypes } from "react";
 import { LaunchDarkly } from "react-launch-darkly";
@@ -27,7 +27,8 @@ export default class MasterLayout extends Component {
 ```
 
 Then in your lower-level components, if you wanted to feature flag a specific feature:
-```
+```javascript
+// Home.js
 import React, { Component } from "react";
 import { FeatureFlag } from "react-launch-darkly";
 
