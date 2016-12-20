@@ -148,10 +148,18 @@ describe("components/FeatureFlagRenderer", () => {
   });
 
   describe("the _checkFeatureFlag function", () => {
+
+    const variation = stub();
+    const getWrapper = () => {
+      return mount(
+        <FeatureFlagRenderer
+          launchDarklyConfig={launchDarklyConfig}
+          flagKey="my-test"
+          renderFeatureCallback={renderFeatureCallback}
+        />
+      );
+    };
     before(() => {
-      const variation = stub();
-      variation.onCall(0).returns(true);
-      variation.onCall(1).returns(false);
 
       const ldClientStub = stub().returns({
         on: (ready, callback) => {
@@ -164,26 +172,16 @@ describe("components/FeatureFlagRenderer", () => {
 
     context("when the feature flag comes back true", () => {
       it("sets the state", () => {
-        const wrapper = mount(
-          <FeatureFlagRenderer
-            launchDarklyConfig={launchDarklyConfig}
-            flagKey="my-test"
-            renderFeatureCallback={renderFeatureCallback}
-          />
-        );
+        variation.returns(true);
+        const wrapper = getWrapper();
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
       });
     });
 
     context("when the feature flag comes back false", () => {
       it("sets the state", () => {
-        const wrapper = mount(
-          <FeatureFlagRenderer
-            launchDarklyConfig={launchDarklyConfig}
-            flagKey="my-test"
-            renderFeatureCallback={renderFeatureCallback}
-          />
-        );
+        variation.returns(false);
+        const wrapper = getWrapper();
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: false });
       });
     });
