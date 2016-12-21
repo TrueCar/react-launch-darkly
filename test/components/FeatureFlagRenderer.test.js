@@ -163,7 +163,7 @@ describe("components/FeatureFlagRenderer", () => {
     };
     before(() => {
 
-      window.location = Location;
+      //window.location = Location;
       const ldClientStub = stub().returns({
         on: (ready, callback) => {
           callback();
@@ -191,10 +191,11 @@ describe("components/FeatureFlagRenderer", () => {
     });
 
     describe("query param flag overrides if not undefined", () => {
+      //stub(window, "location", Location);
       it("param \"features.flag=false\" overrides LD data \"on\"", () => {
         variation.returns(true);
         override.returns(false);
-        //window.location.assign("http://ab.cdef.com?features.my-test=false");
+        //Location.assign("http://ab.cdef.com?features.my-test=false");
         const wrapper = getWrapper();
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: false });
       });
@@ -202,6 +203,7 @@ describe("components/FeatureFlagRenderer", () => {
         variation.returns(false);
         override.returns(true);
         //window.location.assign("http://ab.cdef.com?features.my-test");
+        //Location.assign("http://ab.cdef.com?features.my-test");
         const wrapper = getWrapper();
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
       });
