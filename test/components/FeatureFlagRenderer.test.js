@@ -2,6 +2,7 @@ import React from "react";
 import { shallow, mount } from "enzyme";
 import { expect } from "chai";
 import { spy, stub } from "sinon";
+import { Location } from "jsdom";
 
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import * as launchDarkly from "../../src/lib/launchDarkly";
@@ -161,6 +162,7 @@ describe("components/FeatureFlagRenderer", () => {
     };
     before(() => {
 
+      window.location = Location;
       const ldClientStub = stub().returns({
         on: (ready, callback) => {
           callback();
@@ -183,6 +185,21 @@ describe("components/FeatureFlagRenderer", () => {
         variation.returns(false);
         const wrapper = getWrapper();
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: false });
+      });
+    });
+
+    describe("query param flag overrides", () => {
+      it("param \"features.flag=false\" overrides LD data \"on\"", () => {
+        variation.returns(true);
+        window.location.assign("http://ab.cdef.com?features.my-test=false");
+        const wrapper = getWrapper();
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: false });
+      });
+      it("param \"features.flag\" overrides LD data \"off\"", () => {
+        variation.returns(false);
+        window.location.assign("http://ab.cdef.com?features.my-test");
+        const wrapper = getWrapper();
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
       });
     });
   });
