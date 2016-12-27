@@ -25,6 +25,7 @@ export function ldOverrideFlag(flagKey) {
    */
   const query = url.parse(exports.getLocation(), true).query;
   const queryFlag = query["features." + flagKey];
+  const queryFeatures = query['features'];
 
   if (typeof queryFlag !== "undefined"){
     if (queryFlag === ""){
@@ -32,7 +33,14 @@ export function ldOverrideFlag(flagKey) {
     } else if (queryFlag === "false"){
       override = false;
     }
+  } else if (queryFeatures) {
+    queryFeatures.split(',').forEach((f) => {
+      if (f === flagKey){
+        override = true;
+      }
+    })
   }
+
   return override;
 }
 
