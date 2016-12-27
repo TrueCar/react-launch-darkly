@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
 import { expect } from "chai";
-import { spy, stub } from "sinon";
+import { spy, stub, sandbox } from "sinon";
 import { Location } from "jsdom";
 
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
@@ -151,7 +151,6 @@ describe("components/FeatureFlagRenderer", () => {
   describe("the _checkFeatureFlag function", () => {
 
     const variation = stub();
-    const override = stub().returns(void 0);
     const getWrapper = () => {
       return mount(
         <FeatureFlagRenderer
@@ -162,8 +161,6 @@ describe("components/FeatureFlagRenderer", () => {
       );
     };
     before(() => {
-
-      //window.location = Location;
       const ldClientStub = stub().returns({
         on: (ready, callback) => {
           callback();
@@ -171,7 +168,6 @@ describe("components/FeatureFlagRenderer", () => {
         variation: variation
       });
       stub(launchDarkly, "ldBrowserInit", ldClientStub);
-      stub(launchDarkly, "ldOverrideFlag", override);
     });
 
     context("when the feature flag comes back true", () => {
@@ -191,19 +187,22 @@ describe("components/FeatureFlagRenderer", () => {
     });
 
     describe("query param flag overrides if not undefined", () => {
-      //stub(window, "location", Location);
+      let _sandbox;
+      before(() => {
+        _sandbox = sandbox.create();
+      });
+      afterEach(() => {
+        _sandbox.restore();
+      })
       it("param \"features.flag=false\" overrides LD data \"on\"", () => {
         variation.returns(true);
-        override.returns(false);
-        //Location.assign("http://ab.cdef.com?features.my-test=false");
+        sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features.my-test=false");
         const wrapper = getWrapper();
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: false });
       });
       it("param \"features.flag\" overrides LD data \"off\"", () => {
         variation.returns(false);
-        override.returns(true);
-        //window.location.assign("http://ab.cdef.com?features.my-test");
-        //Location.assign("http://ab.cdef.com?features.my-test");
+        sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features.my-test");
         const wrapper = getWrapper();
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
       });

@@ -1,17 +1,29 @@
 import launchDarklyBrowser from "ldclient-js";
 const url = require('url');
 
+export function getLocation() {
+  if (window.location) {
+    return window.location.toString();
+  } else {
+    return '';
+  }
+}
+
 export function ldBrowserInit (key, user) {
   return launchDarklyBrowser.initialize(key, user);
 }
 
 export function ldOverrideFlag(flagKey) {
   let override;
-  /**
-   * Follow this overriding convention:
-   * @link https://git.corp.tc/capsela/tc_feature_flagging#overriding-feature-flags
-   **/
-  const query = url.parse(window.location.toString(), true).query;
+  /*
+   POST /users?features=send-onboarding-email
+   # Overrides the `send-onboarding-email` boolean feature flag, setting it to `true`
+   GET /users/101?features=show-user-email,user-nicknames,hide-inactive-users
+   # Enables the `show-user-email`, `user-nicknames`, and `hide-inactive-users` feature flags
+   POST /users?features.verify-email=false&features.email-frequency=weekly
+   # Disables the `verify-email` feature flag and sets the `email-frequency` variation to "weekly"
+   */
+  const query = url.parse(exports.getLocation(), true).query;
   const queryFlag = query["features." + flagKey];
 
   if (typeof queryFlag !== "undefined"){
