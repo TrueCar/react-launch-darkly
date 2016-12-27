@@ -206,6 +206,20 @@ describe("components/FeatureFlagRenderer", () => {
         const wrapper = getWrapper();
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
       });
+      it("param \"features=flag\" overrides LD data \"off\"", () => {
+        variation.returns(false);
+        sandbox.stub(launchDarkly, "getLocation").returns("httpd://ab.cdef.com?features=my-test");
+        const wrapper = getWrapper();
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
+      });
+      it("param comma-list of features to enable", () => {
+        variation.withArgs('one').returns(false);
+        variation.withArgs('my-test').returns(false);
+        variation.withArgs('two').returns(false);
+        sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features=one,my-test");
+        const wrapper = getWrapper();
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
+      });
     });
   });
 });
