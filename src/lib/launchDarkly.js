@@ -6,7 +6,7 @@ export function ldBrowserInit (key, user) {
 
 export function getAllFeatureFlags (key, user) {
   const ldClient = ldBrowserInit(key, user);
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     ldClient.on("ready", () => {
       resolve(ldClient.allFlags());
     });
