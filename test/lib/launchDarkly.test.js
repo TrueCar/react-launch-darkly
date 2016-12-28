@@ -5,9 +5,9 @@ import launchDarklyBrowser from "ldclient-js";
 
 describe("lib/launchDarkly", () => {
   it("exports three functions", () => {
-    expect(ldClient).to.have.property('ldBrowserInit');
-    expect(ldClient).to.have.property('ldOverrideFlag');
-    expect(ldClient).to.have.property('getAllFeatureFlags');
+    expect(ldClient).to.have.property("ldBrowserInit");
+    expect(ldClient).to.have.property("ldOverrideFlag");
+    expect(ldClient).to.have.property("getAllFeatureFlags");
   });
 
   describe("ldBroswerInit", () => {
@@ -20,7 +20,7 @@ describe("lib/launchDarkly", () => {
       // this is misuse of sinon; the expectation fails
       //expect(launchDarklyBrowser.initialize.withArgs(key, user).calledOnce).to.be.ok()
 
-    })
+    });
   });
   describe("getAllFeatureFlags", () => {
 

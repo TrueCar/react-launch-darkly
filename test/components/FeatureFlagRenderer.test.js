@@ -2,7 +2,6 @@ import React from "react";
 import { shallow, mount } from "enzyme";
 import { expect } from "chai";
 import { spy, stub, sandbox } from "sinon";
-import { Location } from "jsdom";
 
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import * as launchDarkly from "../../src/lib/launchDarkly";
@@ -193,7 +192,7 @@ describe("components/FeatureFlagRenderer", () => {
       });
       afterEach(() => {
         _sandbox.restore();
-      })
+      });
       it("param 'features.flag=false' overrides LD data 'on'", () => {
         variation.returns(true);
         sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features.my-test=false");
@@ -213,9 +212,9 @@ describe("components/FeatureFlagRenderer", () => {
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
       });
       it("param comma-list of features to enable", () => {
-        variation.withArgs('one').returns(false);
-        variation.withArgs('my-test').returns(false);
-        variation.withArgs('two').returns(false);
+        variation.withArgs("one").returns(false);
+        variation.withArgs("my-test").returns(false);
+        variation.withArgs("two").returns(false);
         sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features=one,my-test");
         const wrapper = getWrapper();
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });

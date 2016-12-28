@@ -1,12 +1,11 @@
 import launchDarklyBrowser from "ldclient-js";
-const url = require('url');
+const url = require("url");
 
 export function getLocation() {
   if (window.location) {
     return window.location.toString();
-  } else {
-    return '';
   }
+  return "";
 }
 
 export function ldBrowserInit (key, user) {
@@ -25,7 +24,7 @@ export function ldOverrideFlag(flagKey) {
    */
   const query = url.parse(exports.getLocation(), true).query;
   const queryFlag = query["features." + flagKey];
-  const queryFeatures = query['features'];
+  const queryFeatures = query["features"];
 
   if (typeof queryFlag !== "undefined"){
     if (queryFlag === ""){
@@ -34,11 +33,11 @@ export function ldOverrideFlag(flagKey) {
       override = false;
     }
   } else if (queryFeatures) {
-    queryFeatures.split(',').forEach((f) => {
+    queryFeatures.split(",").forEach((f) => {
       if (f === flagKey){
         override = true;
       }
-    })
+    });
   }
 
   return override;
