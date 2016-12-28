@@ -194,19 +194,19 @@ describe("components/FeatureFlagRenderer", () => {
       afterEach(() => {
         _sandbox.restore();
       })
-      it("param \"features.flag=false\" overrides LD data \"on\"", () => {
+      it("param 'features.flag=false' overrides LD data 'on'", () => {
         variation.returns(true);
         sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features.my-test=false");
         const wrapper = getWrapper();
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: false });
       });
-      it("param \"features.flag\" overrides LD data \"off\"", () => {
+      it("param 'features.flag' overrides LD data 'off'", () => {
         variation.returns(false);
         sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features.my-test");
         const wrapper = getWrapper();
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
       });
-      it("param \"features=flag\" overrides LD data \"off\"", () => {
+      it("param 'features=flag' overrides LD data 'off'", () => {
         variation.returns(false);
         sandbox.stub(launchDarkly, "getLocation").returns("httpd://ab.cdef.com?features=my-test");
         const wrapper = getWrapper();
