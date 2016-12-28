@@ -8,7 +8,8 @@
     "test-coverage": "NODE_ENV=test babel-node ./node_modules/.bin/babel-istanbul cover --include-all-sources --report html --dir coverage/html ./node_modules/.bin/_mocha -- --recursive test/.setup.js test/**/*.test.js",
     "clean": "rimraf build",
     "build": "./node_modules/.bin/babel src --out-dir build",
-    "prepublish": "npm run clean && npm run build"
+    "prepublish": "npm run clean && npm run build",
+    "lint": "./node_modules/.bin/eslint src test"
   },
   "files": [
     "build"
