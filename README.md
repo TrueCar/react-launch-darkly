@@ -1,8 +1,8 @@
 # React-Launch-Darkly
-[![npm](https://img.shields.io/npm/v/react-launch-darkly.svg)](https://www.npmjs.com/package/react-launch-darkly)
-[![Build Status](https://travis-ci.org/TrueCar/react-launch-darkly.svg?branch=master)](https://travis-ci.org/TrueCar/react-launch-darkly)
 *Simple component helpers to support LaunchDarkly in your react app.*
 
+[![npm](https://img.shields.io/npm/v/react-launch-darkly.svg)](https://www.npmjs.com/package/react-launch-darkly)
+[![Build Status](https://travis-ci.org/TrueCar/react-launch-darkly.svg?branch=master)](https://travis-ci.org/TrueCar/react-launch-darkly)
 
 ## Features
 Supports bare minimum usage of LaunchDarkly, take a look at this [issue](https://github.com/TrueCar/react-launch-darkly/issues/2) to see what we don't support, yet.
