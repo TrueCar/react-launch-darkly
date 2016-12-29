@@ -1,10 +1,18 @@
 language: node_js
 node_js:
-  - "node"
+- node
 cache: yarn
 script:
-  - yarn lint
-  - yarn test
+- yarn lint
+- yarn test
 branches:
   only:
-    - master
+  - master
+deploy:
+  provider: npm
+  email: me@jacobmoretti.com
+  api_key:
+    secure: PBuooSWxKbWm20nkV1pJOw0unbSurDkhaIRWLZ4yzYXIx1WQbza+sI5jK9NRc3PuEwQkwt9MHSxMIEWFXGFb8+dewNZwF2K9Hwi6yoXy/xRmVMd088C/FxsCw77UKlZ0+kVhagLFJQ3lxlek3/5Fx7AQ+UWOOiD8e6hAoovrPUVbvQVfU2ohM3DuK8gHyNgCxZLeMK044G8KPD4Un0lVCmQsY4RuhA6HcQSymQWiTet5r7AM/9uVnLlGsvCFCFg75pBlGdT12+HL8XoOPndyezFp197NhgbHFXYJfoG0DvAEbHEObL82C6BKukV8wb+iYIjDq/IOuvvLCkU63Lsi00/VwRDaYjc+ZAsWV5h/E323GNjUFiDhXS5BAbXpkbo/fBmsNO2crKTVvwi4ib8kcLwReSLJi4by3HTE4lNELx43A4O+bSo73HRPPLYQXz0lRc2VhR9xFc5f3h1MkExuhiyGvk2r6u9REJ0UcUejxD/wleRJhWItsP6kKy/WHRm3Y5r9e1JOH7v7lYXZzGYUQ1NhU7eD65s1bSolCpb/tT/jCeY2xQwiPtFd1xqHCxi0peWPLLoKx/tqTCNfPnpE5NguBwTzUten3REWKNut5AwG4c0+VeDi0Q8aKllk2hfsZlwUJwoVEaUIfrj7D+Y8nldGtkcsVV7+I72WUPaGkaY=
+  on:
+    tags: true
+    repo: TrueCar/react-launch-darkly
