@@ -1,13 +1,14 @@
 language: node_js
 node_js:
-- node
+  - node
 cache: yarn
 script:
-- yarn lint
-- yarn test
+  - yarn lint
+  - yarn test
 branches:
   only:
-  - master
+    - master
+    - /^v[\d]+\.[\d]+\.[\d]+$/
 deploy:
   provider: npm
   email: me@jacobmoretti.com
