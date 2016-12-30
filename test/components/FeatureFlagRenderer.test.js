@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
 import { expect } from "chai";
-import { spy, stub } from "sinon";
+import { spy, stub, sandbox } from "sinon";
 
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import * as launchDarkly from "../../src/lib/launchDarkly";
@@ -148,11 +148,18 @@ describe("components/FeatureFlagRenderer", () => {
   });
 
   describe("the _checkFeatureFlag function", () => {
-    before(() => {
-      const variation = stub();
-      variation.onCall(0).returns(true);
-      variation.onCall(1).returns(false);
 
+    const variation = stub();
+    const getWrapper = () => {
+      return mount(
+        <FeatureFlagRenderer
+          launchDarklyConfig={launchDarklyConfig}
+          flagKey="my-test"
+          renderFeatureCallback={renderFeatureCallback}
+        />
+      );
+    };
+    before(() => {
       const ldClientStub = stub().returns({
         on: (ready, callback) => {
           callback();
@@ -164,27 +171,53 @@ describe("components/FeatureFlagRenderer", () => {
 
     context("when the feature flag comes back true", () => {
       it("sets the state", () => {
-        const wrapper = mount(
-          <FeatureFlagRenderer
-            launchDarklyConfig={launchDarklyConfig}
-            flagKey="my-test"
-            renderFeatureCallback={renderFeatureCallback}
-          />
-        );
+        variation.returns(true);
+        const wrapper = getWrapper();
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
       });
     });
 
     context("when the feature flag comes back false", () => {
       it("sets the state", () => {
-        const wrapper = mount(
-          <FeatureFlagRenderer
-            launchDarklyConfig={launchDarklyConfig}
-            flagKey="my-test"
-            renderFeatureCallback={renderFeatureCallback}
-          />
-        );
+        variation.returns(false);
+        const wrapper = getWrapper();
         expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: false });
+      });
+    });
+
+    describe("query param flag overrides if not undefined", () => {
+      let _sandbox;
+      before(() => {
+        _sandbox = sandbox.create();
+      });
+      afterEach(() => {
+        _sandbox.restore();
+      });
+      it("param 'features.flag=false' overrides LD data 'on'", () => {
+        variation.returns(true);
+        sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features.my-test=false");
+        const wrapper = getWrapper();
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: false });
+      });
+      it("param 'features.flag' overrides LD data 'off'", () => {
+        variation.returns(false);
+        sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features.my-test");
+        const wrapper = getWrapper();
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
+      });
+      it("param 'features=flag' overrides LD data 'off'", () => {
+        variation.returns(false);
+        sandbox.stub(launchDarkly, "getLocation").returns("httpd://ab.cdef.com?features=my-test");
+        const wrapper = getWrapper();
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
+      });
+      it("param comma-list of features to enable", () => {
+        variation.withArgs("one").returns(false);
+        variation.withArgs("my-test").returns(false);
+        variation.withArgs("two").returns(false);
+        sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features=one,my-test");
+        const wrapper = getWrapper();
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
       });
     });
   });

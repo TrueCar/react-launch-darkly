@@ -1,7 +1,7 @@
 /* @flow */
 import React, { Component } from "react";
 
-import { ldBrowserInit } from "../lib/launchDarkly";
+import { ldBrowserInit, ldOverrideFlag } from "../lib/launchDarkly";
 import { FeatureFlagType } from "../types/FeatureFlag";
 
 type LaunchDarklyConfig = {
@@ -61,8 +61,11 @@ export default class FeatureFlagRenderer extends Component {
     ldClient.on("ready", () => {
       const showFeature = ldClient.variation(flagKey, false);
       const defaultState = { checkFeatureFlagComplete: true };
+      const override = ldOverrideFlag(flagKey);
 
-      if (showFeature) {
+      if (typeof override !== "undefined"){
+        this.setState({ showFeature: override, ...defaultState});
+      } else if (showFeature) {
         this.setState({ showFeature: true, ...defaultState });
       } else {
         this.setState({ showFeature: false, ...defaultState });
