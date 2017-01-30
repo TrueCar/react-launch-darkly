@@ -1,5 +1,5 @@
-import { expect } from "chai";
 import { spy } from "sinon";
+import { expect } from "chai";
 import * as ldClient from "./../../src/lib/launchDarkly.js";
 import launchDarklyBrowser from "ldclient-js";
 
