@@ -1,5 +1,4 @@
 import React from "react";
-import { expect } from "chai";
 import { mount } from "enzyme";
 import { Subscriber } from "react-broadcast";
 
@@ -23,7 +22,7 @@ describe("components/FeatureFlag", () => {
 
     const subscriber = subject.find(Subscriber);
 
-    expect(subscriber.prop("channel")).to.equal(BROADCAST_CHANNEL);
+    expect(subscriber.prop("channel")).toEqual(BROADCAST_CHANNEL);
   });
 
   it("should pass the props to FeatuerFlagRenderer", () => {
@@ -40,10 +39,10 @@ describe("components/FeatureFlag", () => {
     );
 
     const renderer = subject.find(FeatureFlagRenderer);
-    expect(renderer.prop("flagKey")).to.equal(allProps.flagKey);
-    expect(renderer.prop("renderFeatureCallback")).to.equal(allProps.renderFeatureCallback);
-    expect(renderer.prop("renderDefaultCallback")).to.equal(allProps.renderDefaultCallback);
-    expect(renderer.prop("initialRenderCallback")).to.equal(allProps.initialRenderCallback);
+    expect(renderer.prop("flagKey")).toEqual(allProps.flagKey);
+    expect(renderer.prop("renderFeatureCallback")).toEqual(allProps.renderFeatureCallback);
+    expect(renderer.prop("renderDefaultCallback")).toEqual(allProps.renderDefaultCallback);
+    expect(renderer.prop("initialRenderCallback")).toEqual(allProps.initialRenderCallback);
   });
 
   it("should pass the launchDarklyConfig to FeatuerFlagRenderer", () => {
@@ -54,7 +53,7 @@ describe("components/FeatureFlag", () => {
     );
 
     const renderer = subject.find(FeatureFlagRenderer);
-    expect(renderer.prop("launchDarklyConfig")).to.deep.equal({
+    expect(renderer.prop("launchDarklyConfig")).toEqual({
       clientId: "80808080",
       user: "hi"
     });

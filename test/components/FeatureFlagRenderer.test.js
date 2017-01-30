@@ -1,7 +1,6 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
-import { expect } from "chai";
-import { spy, stub, sandbox } from "sinon";
+import sinon, { spy, stub, sandbox } from "sinon";
 
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import * as launchDarkly from "../../src/lib/launchDarkly";
@@ -24,7 +23,7 @@ describe("components/FeatureFlagRenderer", () => {
         renderFeatureCallback={renderFeatureCallback}
       />
     );
-    expect(wrapper).to.exist;
+    expect(wrapper).toContainEqual;
   });
 
   it("renders the proper data-qa attribute", () => {
@@ -35,7 +34,7 @@ describe("components/FeatureFlagRenderer", () => {
         renderFeatureCallback={renderFeatureCallback}
       />
     );
-    expect(wrapper.find("[data-qa='FeatureFlag-my-test']")).to.exist;
+    expect(wrapper.find("[data-qa='FeatureFlag-my-test']")).toContainEqual;
   });
 
   it("calls componentDidMount", () => {
@@ -47,11 +46,11 @@ describe("components/FeatureFlagRenderer", () => {
         renderFeatureCallback={renderFeatureCallback}
       />
     );
-    expect(FeatureFlagRenderer.prototype.componentDidMount).to.have.property("callCount", 1);
+    expect(FeatureFlagRenderer.prototype.componentDidMount).toContainEqual;
   });
 
   describe("the _renderLogic function", () => {
-    context("when showFeature is true", () => {
+    describe("when showFeature is true", () => {
       it("renders the feature callback", () => {
         const wrapper = shallow(
           <FeatureFlagRenderer
@@ -61,13 +60,13 @@ describe("components/FeatureFlagRenderer", () => {
           />
         );
         wrapper.setState({ showFeature: true });
-        expect(wrapper.text()).to.equal(renderFeatureCallback());
+        expect(wrapper.text()).toEqual(renderFeatureCallback());
       });
     });
 
-    context("when showFeature is false", () => {
-      context("when checkFeatureFlagComplete is true", () => {
-        context("when renderDefaultCallback is provided", () => {
+    describe("when showFeature is false", () => {
+      describe("when checkFeatureFlagComplete is true", () => {
+        describe("when renderDefaultCallback is provided", () => {
           it("renders the default callback", () => {
             const wrapper = shallow(
               <FeatureFlagRenderer
@@ -78,11 +77,11 @@ describe("components/FeatureFlagRenderer", () => {
               />
             );
             wrapper.setState({ showFeature: false, checkFeatureFlagComplete: true });
-            expect(wrapper.text()).to.equal(renderDefaultCallback());
+            expect(wrapper.text()).toEqual(renderDefaultCallback());
           });
         });
 
-        context("when renderDefaultCallback is not provided", () => {
+        describe("when renderDefaultCallback is not provided", () => {
           it("renders nothing", () => {
             const wrapper = shallow(
               <FeatureFlagRenderer
@@ -93,13 +92,13 @@ describe("components/FeatureFlagRenderer", () => {
             );
             wrapper.setState({ showFeature: false, checkFeatureFlagComplete: true });
             wrapper.setProps({ renderDefaultCallback: null });
-            expect(wrapper.text()).to.equal("");
+            expect(wrapper.text()).toEqual("");
           });
         });
       });
 
-      context("when checkFeatureFlagComplete is false", () => {
-        context("when initialRenderCallback is provided", () => {
+      describe("when checkFeatureFlagComplete is false", () => {
+        describe("when initialRenderCallback is provided", () => {
           it("renders the initial callback", () => {
             const wrapper = shallow(
               <FeatureFlagRenderer
@@ -110,11 +109,11 @@ describe("components/FeatureFlagRenderer", () => {
               />
             );
             wrapper.setState({ showFeature: false, checkFeatureFlagComplete: false });
-            expect(wrapper.text()).to.equal(initialRenderCallback());
+            expect(wrapper.text()).toEqual(initialRenderCallback());
           });
         });
 
-        context("when initialRenderCallback is not provided", () => {
+        describe("when initialRenderCallback is not provided", () => {
           it("renders nothing", () => {
             const wrapper = shallow(
               <FeatureFlagRenderer
@@ -125,13 +124,13 @@ describe("components/FeatureFlagRenderer", () => {
             );
             wrapper.setState({ showFeature: false, checkFeatureFlagComplete: false });
             wrapper.setProps({ initialRenderCallback: null });
-            expect(wrapper.text()).to.equal("");
+            expect(wrapper.text()).toEqual("");
           });
         });
       });
     });
 
-    context("when all else fails", () => {
+    describe("when all else fails", () => {
       it("it renders nothing", () => {
         const wrapper = shallow(
           <FeatureFlagRenderer
@@ -142,7 +141,7 @@ describe("components/FeatureFlagRenderer", () => {
         );
         wrapper.setState({ showFeature: false, checkFeatureFlagComplete: false });
         wrapper.setProps({ renderDefaultCallback: null, initialRenderCallback: null });
-        expect(wrapper.text()).to.equal("");
+        expect(wrapper.text()).toEqual("");
       });
     });
   });
@@ -159,7 +158,8 @@ describe("components/FeatureFlagRenderer", () => {
         />
       );
     };
-    before(() => {
+
+    beforeEach(() => {
       const ldClientStub = stub().returns({
         on: (ready, callback) => {
           callback();
@@ -169,25 +169,29 @@ describe("components/FeatureFlagRenderer", () => {
       stub(launchDarkly, "ldBrowserInit", ldClientStub);
     });
 
-    context("when the feature flag comes back true", () => {
+    afterEach(() => {
+      sinon.restore(launchDarkly);
+    });
+
+    describe("when the feature flag comes back true", () => {
       it("sets the state", () => {
         variation.returns(true);
         const wrapper = getWrapper();
-        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
+        expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, showFeature: true });
       });
     });
 
-    context("when the feature flag comes back false", () => {
+    describe("when the feature flag comes back false", () => {
       it("sets the state", () => {
         variation.returns(false);
         const wrapper = getWrapper();
-        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: false });
+        expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, showFeature: false });
       });
     });
 
     describe("query param flag overrides if not undefined", () => {
       let _sandbox;
-      before(() => {
+      beforeEach(() => {
         _sandbox = sandbox.create();
       });
       afterEach(() => {
@@ -197,19 +201,19 @@ describe("components/FeatureFlagRenderer", () => {
         variation.returns(true);
         sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features.my-test=false");
         const wrapper = getWrapper();
-        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: false });
+        expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, showFeature: false });
       });
       it("param 'features.flag' overrides LD data 'off'", () => {
         variation.returns(false);
         sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features.my-test");
         const wrapper = getWrapper();
-        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
+        expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, showFeature: true });
       });
       it("param 'features=flag' overrides LD data 'off'", () => {
         variation.returns(false);
         sandbox.stub(launchDarkly, "getLocation").returns("httpd://ab.cdef.com?features=my-test");
         const wrapper = getWrapper();
-        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
+        expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, showFeature: true });
       });
       it("param comma-list of features to enable", () => {
         variation.withArgs("one").returns(false);
@@ -217,9 +221,8 @@ describe("components/FeatureFlagRenderer", () => {
         variation.withArgs("two").returns(false);
         sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features=one,my-test");
         const wrapper = getWrapper();
-        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
+        expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, showFeature: true });
       });
     });
   });
 });
-

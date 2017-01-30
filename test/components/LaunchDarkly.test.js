@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { expect } from "chai";
 import { shallow, mount } from "enzyme";
 import { Broadcast } from "react-broadcast";
 
@@ -17,7 +16,7 @@ describe("components/LaunchDarkly", () => {
     );
 
     const broadcast = subject.find(Broadcast);
-    expect(broadcast.prop("channel")).to.equal(BROADCAST_CHANNEL);
+    expect(broadcast.prop("channel")).toEqual(BROADCAST_CHANNEL);
   });
 
   it("should pass the clientId and user as the value to the broadcast", () => {
@@ -28,7 +27,7 @@ describe("components/LaunchDarkly", () => {
     );
 
     const broadcast = subject.find(Broadcast);
-    expect(broadcast.prop("value")).to.deep.equal({
+    expect(broadcast.prop("value")).toEqual({
       clientId: "080808",
       user: "zeke"
     });
@@ -42,7 +41,7 @@ describe("components/LaunchDarkly", () => {
     );
 
     const child = subject.find("div");
-    expect(child.text()).to.equal("Hi");
+    expect(child.text()).toEqual("Hi");
   });
 
   it("should propagate clientId and user even when shouldComponentUpdate is false somewhere above the flag renderer", () => {
@@ -109,9 +108,9 @@ describe("components/LaunchDarkly", () => {
     );
 
     const renderer = subject.find(FeatureFlagRenderer);
-    expect(renderer.prop("launchDarklyConfig").user).to.equal("i");
+    expect(renderer.prop("launchDarklyConfig").user).toEqual("i");
     subject.find("#updateUser").simulate("click");
-    expect(renderer.prop("launchDarklyConfig").user).to.equal("imarealuser");
+    expect(renderer.prop("launchDarklyConfig").user).toEqual("imarealuser");
   });
 });
 
