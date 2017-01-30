@@ -23,7 +23,7 @@ export default class FeatureFlagRenderer extends Component {
 
     this.state = {
       checkFeatureFlagComplete: false,
-      showFeature: false
+      showFeature: false,
     };
   }
 
@@ -42,7 +42,7 @@ export default class FeatureFlagRenderer extends Component {
     const { renderFeatureCallback, renderDefaultCallback, initialRenderCallback } = this.props;
 
     if (showFeature) {
-      return renderFeatureCallback();
+      return renderFeatureCallback(showFeature);
     } else if (checkFeatureFlagComplete && renderDefaultCallback) {
       return renderDefaultCallback();
     }
@@ -66,11 +66,10 @@ export default class FeatureFlagRenderer extends Component {
       if (typeof override !== "undefined"){
         this.setState({ showFeature: override, ...defaultState});
       } else if (showFeature) {
-        this.setState({ showFeature: true, ...defaultState });
+        this.setState({ showFeature: showFeature, ...defaultState });
       } else {
         this.setState({ showFeature: false, ...defaultState });
       }
     });
   }
 }
-
