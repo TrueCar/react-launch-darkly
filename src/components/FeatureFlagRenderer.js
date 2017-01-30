@@ -23,7 +23,7 @@ export default class FeatureFlagRenderer extends Component {
 
     this.state = {
       checkFeatureFlagComplete: false,
-      showFeature: false,
+      showFeature: false
     };
   }
 
@@ -59,9 +59,10 @@ export default class FeatureFlagRenderer extends Component {
     const ldClient = ldBrowserInit(clientId, user);
 
     ldClient.on("ready", () => {
-      const showFeature = ldClient.variation(flagKey, false);
+      const showFeature = ldClient.variation( flagKey, false);
+      const typeShowFeature = typeof showFeature;
       const defaultState = { checkFeatureFlagComplete: true };
-      const override = ldOverrideFlag(flagKey);
+      const override = ldOverrideFlag(flagKey, typeShowFeature);
 
       if (typeof override !== "undefined"){
         this.setState({ showFeature: override, ...defaultState});

@@ -12,7 +12,7 @@ export function ldBrowserInit (key, user) {
   return launchDarklyBrowser.initialize(key, user);
 }
 
-export function ldOverrideFlag(flagKey) {
+export function ldOverrideFlag(flagKey, typeShowFeature) {
   let override;
   /*
    POST /users?features=send-onboarding-email
@@ -31,6 +31,12 @@ export function ldOverrideFlag(flagKey) {
       override = true;
     } else if (queryFlag === "false"){
       override = false;
+    } else {
+      override = queryFlag;
+    }
+
+    if (typeShowFeature === "number") {
+      override = parseFloat(override);
     }
   } else if (queryFeatures) {
     queryFeatures.split(",").forEach((f) => {
@@ -39,7 +45,6 @@ export function ldOverrideFlag(flagKey) {
       }
     });
   }
-
   return override;
 }
 
