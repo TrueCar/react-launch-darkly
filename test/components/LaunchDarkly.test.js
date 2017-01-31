@@ -18,7 +18,7 @@ describe("components/LaunchDarkly", () => {
     expect(broadcast.prop("channel")).toEqual(BROADCAST_CHANNEL);
   });
 
-  fit("should pass the clientId and user as the value to the broadcast", () => {
+  it("should pass the clientId and user as the value to the broadcast", () => {
     const subject = shallow(
       <LaunchDarkly clientId="080808" user="zeke">
         <div>Hi</div>
