@@ -1,14 +1,13 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
-import sinon, { spy, stub, sandbox } from "sinon";
 
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import * as launchDarkly from "../../src/lib/launchDarkly";
 
 describe("components/FeatureFlagRenderer", () => {
-  const renderFeatureCallback = stub().returns("feature rendered");
-  const renderDefaultCallback = stub().returns("default rendered");
-  const initialRenderCallback = stub().returns("initial rendered");
+  const renderFeatureCallback = jest.fn().mockReturnValue("feature rendered");
+  const renderDefaultCallback = jest.fn().mockReturnValue("default rendered");
+  const initialRenderCallback = jest.fn().mockReturnValue("initial rendered");
 
   const launchDarklyConfig = {
     clientId: "abcdefg",
@@ -23,7 +22,7 @@ describe("components/FeatureFlagRenderer", () => {
         renderFeatureCallback={renderFeatureCallback}
       />
     );
-    expect(wrapper).toContainEqual;
+    expect(wrapper).toBeDefined();
   });
 
   it("renders the proper data-qa attribute", () => {
@@ -34,19 +33,18 @@ describe("components/FeatureFlagRenderer", () => {
         renderFeatureCallback={renderFeatureCallback}
       />
     );
-    expect(wrapper.find("[data-qa='FeatureFlag-my-test']")).toContainEqual;
+    expect(wrapper.find("[data-qa='FeatureFlag-my-test']")).toBeDefined();
   });
 
   it("calls componentDidMount", () => {
-    spy(FeatureFlagRenderer.prototype, "componentDidMount");
-    mount(
+    const wrapper = mount(
       <FeatureFlagRenderer
         launchDarklyConfig={launchDarklyConfig}
         flagKey="my-test"
         renderFeatureCallback={renderFeatureCallback}
       />
     );
-    expect(FeatureFlagRenderer.prototype.componentDidMount).toContainEqual;
+    expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: false, showFeature: false });
   });
 
   describe("the _renderLogic function", () => {
@@ -148,7 +146,7 @@ describe("components/FeatureFlagRenderer", () => {
 
   describe("the _checkFeatureFlag function", () => {
 
-    const variation = stub();
+    const variation = jest.fn();
     const getWrapper = () => {
       return mount(
         <FeatureFlagRenderer
@@ -160,22 +158,22 @@ describe("components/FeatureFlagRenderer", () => {
     };
 
     beforeEach(() => {
-      const ldClientStub = stub().returns({
+      launchDarkly.ldBrowserInit = jest.fn();
+      launchDarkly.ldBrowserInit.mockImplementation(() => ({
         on: (ready, callback) => {
           callback();
         },
-        variation: variation
-      });
-      stub(launchDarkly, "ldBrowserInit", ldClientStub);
+        variation
+      }));
     });
 
     afterEach(() => {
-      sinon.restore(launchDarkly);
+      launchDarkly.ldBrowserInit.mockReset();
     });
 
     describe("when the feature flag comes back true", () => {
       it("sets the state", () => {
-        variation.returns(true);
+        variation.mockImplementation(() => true);
         const wrapper = getWrapper();
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, showFeature: true });
       });
@@ -183,43 +181,39 @@ describe("components/FeatureFlagRenderer", () => {
 
     describe("when the feature flag comes back false", () => {
       it("sets the state", () => {
-        variation.returns(false);
+        variation.mockImplementation(() => false);
         const wrapper = getWrapper();
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, showFeature: false });
       });
     });
 
     describe("query param flag overrides if not undefined", () => {
-      let _sandbox;
-      beforeEach(() => {
-        _sandbox = sandbox.create();
-      });
-      afterEach(() => {
-        _sandbox.restore();
-      });
       it("param 'features.flag=false' overrides LD data 'on'", () => {
-        variation.returns(true);
-        sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features.my-test=false");
+        variation.mockImplementation(() => false);
+        launchDarkly.getLocation = jest.fn().mockImplementation(() => "http://ab.cdef.com?features.my-test=false");
         const wrapper = getWrapper();
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, showFeature: false });
       });
       it("param 'features.flag' overrides LD data 'off'", () => {
-        variation.returns(false);
-        sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features.my-test");
+        variation.mockImplementation(() => false);
+        launchDarkly.getLocation = jest.fn().mockImplementation(() => "http://ab.cdef.com?features.my-test");
         const wrapper = getWrapper();
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, showFeature: true });
       });
       it("param 'features=flag' overrides LD data 'off'", () => {
-        variation.returns(false);
-        sandbox.stub(launchDarkly, "getLocation").returns("httpd://ab.cdef.com?features=my-test");
+        variation.mockImplementation(() => false);
+        launchDarkly.getLocation = jest.fn().mockImplementation(() => "http://ab.cdef.com?features=my-test");
         const wrapper = getWrapper();
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, showFeature: true });
       });
       it("param comma-list of features to enable", () => {
-        variation.withArgs("one").returns(false);
-        variation.withArgs("my-test").returns(false);
-        variation.withArgs("two").returns(false);
-        sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features=one,my-test");
+        variation.mockImplementation((flagKey, defaultValue) => {
+          if(flagKey === "one" || flagKey === "my-test") {
+            return false;
+          }
+          return true;
+        });
+        launchDarkly.getLocation = jest.fn().mockImplementation(() => "http://ab.cdef.com?features=one,my-test");
         const wrapper = getWrapper();
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, showFeature: true });
       });
