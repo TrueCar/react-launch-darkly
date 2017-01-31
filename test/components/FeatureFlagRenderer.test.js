@@ -1,6 +1,5 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
-
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import * as launchDarkly from "../../src/lib/launchDarkly";
 
@@ -207,7 +206,8 @@ describe("components/FeatureFlagRenderer", () => {
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, showFeature: true });
       });
       it("param comma-list of features to enable", () => {
-        variation.mockImplementation((flagKey, defaultValue) => {
+
+        variation.mockImplementation((flagKey) => {
           if(flagKey === "one" || flagKey === "my-test") {
             return false;
           }

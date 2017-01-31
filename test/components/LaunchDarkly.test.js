@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { shallow, mount } from "enzyme";
 import { Broadcast } from "react-broadcast";
-
 import LaunchDarkly from "../../src/components/LaunchDarkly";
 import FeatureFlag from "../../src/components/FeatureFlag";
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
