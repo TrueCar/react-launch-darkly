@@ -8,6 +8,9 @@ import * as launchDarkly from "../../src/lib/launchDarkly";
 
 describe("components/FeatureFlagRenderer", () => {
   const renderFeatureCallback = stub().returns("feature rendered");
+  renderFeatureCallback.withArgs({a: 1}).returns("feature object 1");
+  renderFeatureCallback.withArgs(1).returns("feature number 1");
+  renderFeatureCallback.withArgs([1]).returns("feature array 1");
   const renderDefaultCallback = stub().returns("default rendered");
   const initialRenderCallback = stub().returns("initial rendered");
 
@@ -51,7 +54,7 @@ describe("components/FeatureFlagRenderer", () => {
   });
 
   describe("the _renderLogic function", () => {
-    context("when showFeature is true", () => {
+    context("when flagValue is true", () => {
       it("renders the feature callback", () => {
         const wrapper = shallow(
           <FeatureFlagRenderer
@@ -60,12 +63,54 @@ describe("components/FeatureFlagRenderer", () => {
             renderFeatureCallback={renderFeatureCallback}
           />
         );
-        wrapper.setState({ showFeature: true });
+        wrapper.setState({ flagValue: true });
         expect(wrapper.text()).to.equal(renderFeatureCallback());
       });
     });
 
-    context("when showFeature is false", () => {
+    context("when flagValue is object", () => {
+      it("renders the feature callback for that object", () => {
+        const wrapper = shallow(
+          <FeatureFlagRenderer
+            launchDarklyConfig={launchDarklyConfig}
+            flagKey="my-test"
+            renderFeatureCallback={renderFeatureCallback}
+          />
+        );
+        wrapper.setState({ flagValue: { a: 1 } });
+        expect(wrapper.text()).to.equal(renderFeatureCallback({ a: 1 }));
+      });
+    });
+
+    context("when flagValue is number", () => {
+      it("renders the feature callback for that number", () => {
+        const wrapper = shallow(
+          <FeatureFlagRenderer
+            launchDarklyConfig={launchDarklyConfig}
+            flagKey="my-test"
+            renderFeatureCallback={renderFeatureCallback}
+          />
+        );
+        wrapper.setState({ flagValue: 1 });
+        expect(wrapper.text()).to.equal(renderFeatureCallback(1));
+      });
+    });
+
+    context("when flagValue is array", () => {
+      it("renders the feature callback for that array", () => {
+        const wrapper = shallow(
+          <FeatureFlagRenderer
+            launchDarklyConfig={launchDarklyConfig}
+            flagKey="my-test"
+            renderFeatureCallback={renderFeatureCallback}
+          />
+        );
+        wrapper.setState({ flagValue: [1] });
+        expect(wrapper.text()).to.equal(renderFeatureCallback([1]));
+      });
+    });
+
+    context("when flagValue is false", () => {
       context("when checkFeatureFlagComplete is true", () => {
         context("when renderDefaultCallback is provided", () => {
           it("renders the default callback", () => {
@@ -77,7 +122,7 @@ describe("components/FeatureFlagRenderer", () => {
                 renderDefaultCallback={renderDefaultCallback}
               />
             );
-            wrapper.setState({ showFeature: false, checkFeatureFlagComplete: true });
+            wrapper.setState({ flagValue: false, checkFeatureFlagComplete: true });
             expect(wrapper.text()).to.equal(renderDefaultCallback());
           });
         });
@@ -91,7 +136,7 @@ describe("components/FeatureFlagRenderer", () => {
                 renderFeatureCallback={renderFeatureCallback}
               />
             );
-            wrapper.setState({ showFeature: false, checkFeatureFlagComplete: true });
+            wrapper.setState({ flagValue: false, checkFeatureFlagComplete: true });
             wrapper.setProps({ renderDefaultCallback: null });
             expect(wrapper.text()).to.equal("");
           });
@@ -109,7 +154,7 @@ describe("components/FeatureFlagRenderer", () => {
                 initialRenderCallback={initialRenderCallback}
               />
             );
-            wrapper.setState({ showFeature: false, checkFeatureFlagComplete: false });
+            wrapper.setState({ flagValue: false, checkFeatureFlagComplete: false });
             expect(wrapper.text()).to.equal(initialRenderCallback());
           });
         });
@@ -123,7 +168,7 @@ describe("components/FeatureFlagRenderer", () => {
                 renderFeatureCallback={renderFeatureCallback}
               />
             );
-            wrapper.setState({ showFeature: false, checkFeatureFlagComplete: false });
+            wrapper.setState({ flagValue: false, checkFeatureFlagComplete: false });
             wrapper.setProps({ initialRenderCallback: null });
             expect(wrapper.text()).to.equal("");
           });
@@ -140,7 +185,7 @@ describe("components/FeatureFlagRenderer", () => {
             renderFeatureCallback={renderFeatureCallback}
           />
         );
-        wrapper.setState({ showFeature: false, checkFeatureFlagComplete: false });
+        wrapper.setState({ flagValue: false, checkFeatureFlagComplete: false });
         wrapper.setProps({ renderDefaultCallback: null, initialRenderCallback: null });
         expect(wrapper.text()).to.equal("");
       });
@@ -173,7 +218,7 @@ describe("components/FeatureFlagRenderer", () => {
       it("sets the state", () => {
         variation.returns(true);
         const wrapper = getWrapper();
-        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, flagValue: true });
       });
     });
 
@@ -181,7 +226,7 @@ describe("components/FeatureFlagRenderer", () => {
       it("sets the state", () => {
         variation.returns(false);
         const wrapper = getWrapper();
-        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: false });
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, flagValue: false });
       });
     });
 
@@ -197,19 +242,19 @@ describe("components/FeatureFlagRenderer", () => {
         variation.returns(true);
         sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features.my-test=false");
         const wrapper = getWrapper();
-        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: false });
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, flagValue: false });
       });
       it("param 'features.flag' overrides LD data 'off'", () => {
         variation.returns(false);
         sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features.my-test");
         const wrapper = getWrapper();
-        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, flagValue: true });
       });
       it("param 'features=flag' overrides LD data 'off'", () => {
         variation.returns(false);
         sandbox.stub(launchDarkly, "getLocation").returns("httpd://ab.cdef.com?features=my-test");
         const wrapper = getWrapper();
-        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, flagValue: true });
       });
       it("param comma-list of features to enable", () => {
         variation.withArgs("one").returns(false);
@@ -217,9 +262,8 @@ describe("components/FeatureFlagRenderer", () => {
         variation.withArgs("two").returns(false);
         sandbox.stub(launchDarkly, "getLocation").returns("http://ab.cdef.com?features=one,my-test");
         const wrapper = getWrapper();
-        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, showFeature: true });
+        expect(wrapper.state()).to.deep.equal({ checkFeatureFlagComplete: true, flagValue: true });
       });
     });
   });
 });
-

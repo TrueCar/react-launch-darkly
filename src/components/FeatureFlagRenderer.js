@@ -15,7 +15,7 @@ export default class FeatureFlagRenderer extends Component {
   props: Props;
   state: {
     checkFeatureFlagComplete: boolean,
-    showFeature: boolean
+    flagValue: any
   };
 
   constructor (props:Props) {
@@ -23,7 +23,7 @@ export default class FeatureFlagRenderer extends Component {
 
     this.state = {
       checkFeatureFlagComplete: false,
-      showFeature: false
+      flagValue: false
     };
   }
 
@@ -38,11 +38,11 @@ export default class FeatureFlagRenderer extends Component {
   }
 
   _renderLogic () {
-    const { showFeature, checkFeatureFlagComplete } = this.state;
+    const { flagValue, checkFeatureFlagComplete } = this.state;
     const { renderFeatureCallback, renderDefaultCallback, initialRenderCallback } = this.props;
 
-    if (showFeature) {
-      return renderFeatureCallback(showFeature);
+    if (flagValue) {
+      return renderFeatureCallback(flagValue);
     } else if (checkFeatureFlagComplete && renderDefaultCallback) {
       return renderDefaultCallback();
     }
@@ -59,17 +59,17 @@ export default class FeatureFlagRenderer extends Component {
     const ldClient = ldBrowserInit(clientId, user);
 
     ldClient.on("ready", () => {
-      const showFeature = ldClient.variation( flagKey, false);
-      const typeShowFeature = typeof showFeature;
+      const flagValue = ldClient.variation( flagKey, false);
+      const typeShowFeature = typeof flagValue;
       const defaultState = { checkFeatureFlagComplete: true };
       const override = ldOverrideFlag(flagKey, typeShowFeature);
 
       if (typeof override !== "undefined"){
-        this.setState({ showFeature: override, ...defaultState});
-      } else if (showFeature) {
-        this.setState({ showFeature: showFeature, ...defaultState });
+        this.setState({ flagValue: override, ...defaultState});
+      } else if (flagValue) {
+        this.setState({ flagValue: flagValue, ...defaultState });
       } else {
-        this.setState({ showFeature: false, ...defaultState });
+        this.setState({ flagValue: false, ...defaultState });
       }
     });
   }

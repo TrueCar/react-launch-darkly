@@ -81,5 +81,4 @@ export default class Home extends Component {
 
 ```
 ### Support for multivariate flags
-React-Launch-Darkly supports five types of flags which are:
-booleans, strings, numbers, JSON objects, and JSON arrays. `renderFeatureCallback` prop function takes an argument which is value of flag. That's the way you can use multivariate feature flags.
+The prop function `renderFeatureCallback`, passes the value of the flag as an argument. Then when you define your render feature callback, you can decide if you need it or not. This provides the flexibility for supporting both simple boolean feature flags and multivariate flags where you need to do something more complex with the flag's value."
