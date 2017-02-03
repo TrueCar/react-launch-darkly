@@ -40,7 +40,8 @@ export default class Home extends Component {
     return (
       <div>
         <FeatureFlag
-          // This is the feature flag key you defined in LaunchDarkly
+          // This is the feature flag key you defined in LaunchDarkly,
+          // supporting booleans, strings, numbers, JSON objects, and JSON arrays
           flagKey="home-test"
 
           // What to render if the feature is "on"
@@ -65,9 +66,9 @@ export default class Home extends Component {
     );
   }
 
-  _renderFeature () {
+  _renderFeature (featureFlagValue) {
     return (
-      <div>The feature is turned on</div>
+      <div>FeatureFlag value : {featureFlagValue}</div>
     );
   }
 
@@ -79,3 +80,5 @@ export default class Home extends Component {
 }
 
 ```
+### Support for multivariate flags
+The prop function `renderFeatureCallback`, passes the value of the flag as an argument. Then when you define your render feature callback, you can decide if you need it or not. This provides the flexibility for supporting both simple boolean feature flags and multivariate flags where you need to do something more complex with the flag's value."
