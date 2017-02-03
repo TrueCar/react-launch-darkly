@@ -12,7 +12,7 @@ export function ldBrowserInit (key, user) {
   return launchDarklyBrowser.initialize(key, user);
 }
 
-export function ldOverrideFlag(flagKey, typeShowFeature) {
+export function ldOverrideFlag(flagKey, typeFlagValue) {
   let override;
   /*
    POST /users?features=send-onboarding-email
@@ -35,7 +35,7 @@ export function ldOverrideFlag(flagKey, typeShowFeature) {
       override = queryFlag;
     }
 
-    if (typeShowFeature === "number") {
+    if (typeFlagValue === "number") {
       override = parseFloat(override);
     }
   } else if (queryFeatures) {

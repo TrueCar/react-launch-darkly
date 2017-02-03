@@ -60,9 +60,9 @@ export default class FeatureFlagRenderer extends Component {
 
     ldClient.on("ready", () => {
       const flagValue = ldClient.variation( flagKey, false);
-      const typeShowFeature = typeof flagValue;
+      const typeFlagValue = typeof flagValue;
       const defaultState = { checkFeatureFlagComplete: true };
-      const override = ldOverrideFlag(flagKey, typeShowFeature);
+      const override = ldOverrideFlag(flagKey, typeFlagValue);
 
       if (typeof override !== "undefined"){
         this.setState({ flagValue: override, ...defaultState});
