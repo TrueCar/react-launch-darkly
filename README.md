@@ -4,16 +4,12 @@
 [![npm](https://img.shields.io/npm/v/react-launch-darkly.svg)](https://www.npmjs.com/package/react-launch-darkly)
 [![Build Status](https://travis-ci.org/TrueCar/react-launch-darkly.svg?branch=master)](https://travis-ci.org/TrueCar/react-launch-darkly)
 
-## Features
-Supports bare minimum usage of LaunchDarkly, take a look at this [issue](https://github.com/TrueCar/react-launch-darkly/issues/2) to see what we don't support, yet.
-If you'd like to see a feature implemented, feel free to submit a PR and we'll have a look.
-
 ## Usage
 To setup the LaunchDarkly client container, you'll probably want to include it one of your top-level
 layout components:
 ```javascript
 // MasterLayout.js
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import { LaunchDarkly } from "react-launch-darkly";
 
 export default class MasterLayout extends Component {
@@ -40,45 +36,71 @@ export default class Home extends Component {
     return (
       <div>
         <FeatureFlag
-          // This is the feature flag key you defined in LaunchDarkly,
-          // supporting booleans, strings, numbers, JSON objects, and JSON arrays
           flagKey="home-test"
-
-          // What to render if the feature is "on"
           renderFeatureCallback={this._renderFeature}
-
-          // (Optional) If you want to have a fallback of some sort when the feature is "off"
-          renderDefaultCallback={this._renderDefault}
-
-          // (Optional) Since the feature flags are requested from LaunchDarkly after DOM load,
-          // there might be some latency in the rendering. This render callback allows you to
-          // provide some sort of feedback to indicate loading or perhaps a placeholder to avoid
-          // a FOUC or a jump in element rendering.
-          initialRenderCallback={this._initialRender}
         />
       </div>
     );
   }
 
-  _initialRender () {
+  _renderFeature () {
     return (
-      <div>Loading…</div>
-    );
-  }
-
-  _renderFeature (featureFlagValue) {
-    return (
-      <div>FeatureFlag value : {featureFlagValue}</div>
-    );
-  }
-
-  _renderDefault () {
-    return (
-      <div>_default_</div>
+      <div>Your new feature!</div>
     );
   }
 }
-
 ```
-### Support for multivariate flags
-The prop function `renderFeatureCallback`, passes the value of the flag as an argument. Then when you define your render feature callback, you can decide if you need it or not. This provides the flexibility for supporting both simple boolean feature flags and multivariate flags where you need to do something more complex with the flag's value."
+## Component Helpers
+
+### `LaunchDarkly`
+The main wrapper component, the props define the settings for initializing the LaunchDarkly JS client. You'll want this to be at a higher level than any children that make use of the `FeatureFlag` component so they have access to the settings.
+
+#### props
+
+##### `clientId` : `string` (required)
+This is the client id that is provided to you by LaunchDarkly.
+
+##### `user` : `object` (required)
+See the [LaunchDarkly docs](http://docs.launchdarkly.com/docs/js-sdk-reference#section-users) for more info.
+
+### `FeatureFlag`
+#### props
+
+##### `flagKey` : `string` (required)
+The `flagKey` prop is the feature flag key you defined in LaunchDarkly.
+
+#### `renderFeatureCallback` : `function` (required)
+The main callback function that renders your feature. In typical scenarios where your flag is a boolean,
+you can simply create your function to return the necessary JSX:
+```javascript
+// Example FeatureFlag component
+<FeatureFlag flagKey="example" renderFeatureCallback={this._renderFeature} />
+
+// Callback function
+_renderFeature () {
+  return (<div>New Feature Here!</div>);
+}
+```
+
+##### Multivariate Flag Support
+When using a multivariate feature flag, the `renderFeatureCallback` prop will pass the value of
+the flag as an argument to your callback function:
+```javascript
+// Example FeatureFlag component
+<FeatureFlag flagKey="multivariate-example" renderFeatureCallback={this._renderFeature} />
+
+// Callback function with feature flag value passed in
+_renderFeature (featureFlagValue) {
+  if (featureFlagValue === "A") {
+    return (<div>Bucket "A" Feature!</div>);
+  }
+
+  return (<div>Default Bucket Feature Here!</div>);
+}
+```
+
+#### `initialRenderCallback` : `function` (optional)
+Since the feature flags are requested from LaunchDarkly after DOM load, there may be some latency in the rendering. This render callback allows you to provide some sort of feedback to indicate loading (e.g., the typical spinning loader) or perhaps a placeholder to avoid a FOUC or a jump in element rendering.
+
+#### `renderDefaultCallback` : `function` (optional)
+This callback is provided for cases where you want to render something by default, think of it when your feature flag is "off" or falsy.
