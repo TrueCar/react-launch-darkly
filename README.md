@@ -4,9 +4,9 @@
 [![npm](https://img.shields.io/npm/v/react-launch-darkly.svg)](https://www.npmjs.com/package/react-launch-darkly)
 [![Build Status](https://travis-ci.org/TrueCar/react-launch-darkly.svg?branch=master)](https://travis-ci.org/TrueCar/react-launch-darkly)
 
-## Usage
-To setup the LaunchDarkly client container, you'll probably want to include it one of your top-level
-layout components:
+# Usage
+To setup the `LaunchDarkly` component wrapper, you'll probably want to include it in a top-level
+layout component:
 ```javascript
 // MasterLayout.js
 import React, { Component } from "react";
@@ -25,7 +25,7 @@ export default class MasterLayout extends Component {
 }
 ```
 
-Then in your lower-level components, if you wanted to feature flag a specific feature:
+Then in your lower-level components, to make use of the `FeatureFlag` component:
 ```javascript
 // Home.js
 import React, { Component } from "react";
@@ -50,11 +50,9 @@ export default class Home extends Component {
   }
 }
 ```
-## Component Helpers
+# Component Helpers
 
 ### `LaunchDarkly`
-The main wrapper component, the props define the settings for initializing the LaunchDarkly JS client. You'll want this to be at a higher level than any children that make use of the `FeatureFlag` component so they have access to the settings.
-
 #### props
 
 ##### `clientId` : `string` (required)
@@ -63,13 +61,15 @@ This is the client id that is provided to you by LaunchDarkly.
 ##### `user` : `object` (required)
 See the [LaunchDarkly docs](http://docs.launchdarkly.com/docs/js-sdk-reference#section-users) for more info.
 
+---
+
 ### `FeatureFlag`
 #### props
 
 ##### `flagKey` : `string` (required)
 The `flagKey` prop is the feature flag key you defined in LaunchDarkly.
 
-#### `renderFeatureCallback` : `function` (required)
+##### `renderFeatureCallback` : `function` (required)
 The main callback function that renders your feature. In typical scenarios where your flag is a boolean,
 you can simply create your function to return the necessary JSX:
 ```javascript
@@ -100,7 +100,7 @@ _renderFeature (featureFlagValue) {
 ```
 
 #### `initialRenderCallback` : `function` (optional)
-Since the feature flags are requested from LaunchDarkly after DOM load, there may be some latency in the rendering. This render callback allows you to provide some sort of feedback to indicate loading (e.g., the typical spinning loader) or perhaps a placeholder to avoid a FOUC or a jump in element rendering.
+Since the feature flags are requested from LaunchDarkly after DOM load, there may be some latency in the rendering. This render callback allows you to provide some sort of feedback to indicate loading, e.g., the typical spinning loader.
 
 #### `renderDefaultCallback` : `function` (optional)
 This callback is provided for cases where you want to render something by default, think of it when your feature flag is "off" or falsy.
