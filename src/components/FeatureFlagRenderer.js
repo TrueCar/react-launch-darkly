@@ -17,9 +17,13 @@ export default class FeatureFlagRenderer extends Component {
     checkFeatureFlagComplete: boolean,
     flagValue: any
   };
+  ldClient: Object
 
   constructor (props:Props) {
     super(props);
+
+    const { launchDarklyConfig: { clientId, user } } = this.props;
+    this.ldClient = ldBrowserInit(clientId, user);
 
     this.state = {
       checkFeatureFlagComplete: false,
@@ -29,6 +33,7 @@ export default class FeatureFlagRenderer extends Component {
 
   componentDidMount () {
     this._checkFeatureFlag();
+    this._listenChangeFlag();
   }
 
   render () {
@@ -54,12 +59,19 @@ export default class FeatureFlagRenderer extends Component {
     return null;
   }
 
-  _checkFeatureFlag () {
-    const { launchDarklyConfig: { clientId, user }, flagKey } = this.props;
-    const ldClient = ldBrowserInit(clientId, user);
+  _listenChangeFlag () {
+    const { flagKey } = this.props;
 
-    ldClient.on("ready", () => {
-      const flagValue = ldClient.variation( flagKey, false);
+    this.ldClient.on("change", (v) => {
+      this.setState({ flagValue: v[flagKey].current });
+    });
+  }
+
+  _checkFeatureFlag () {
+    const { flagKey } = this.props;
+
+    this.ldClient.on("ready", () => {
+      const flagValue = this.ldClient.variation(flagKey, false);
       const typeFlagValue = typeof flagValue;
       const defaultState = { checkFeatureFlagComplete: true };
       const override = ldOverrideFlag(flagKey, typeFlagValue);
