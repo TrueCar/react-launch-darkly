@@ -8,8 +8,12 @@ export function getLocation() {
   return "";
 }
 
+let ldClient;
 export function ldBrowserInit (key, user) {
-  return launchDarklyBrowser.initialize(key, user);
+  if (!ldClient) {
+    ldClient = launchDarklyBrowser.initialize(key, user);
+  }
+  return ldClient;
 }
 
 export function ldOverrideFlag(flagKey, typeFlagValue) {
