@@ -1,4 +1,4 @@
-import LDClient from "LDClient";
+import LDClientWrapper from "LDClientWrapper";
 const url = require("url");
 
 export function getLocation() {
@@ -45,7 +45,7 @@ export function ldOverrideFlag(flagKey, typeFlagValue) {
 }
 
 export function getAllFeatureFlags (key, user) {
-  const ldClient = LDClient.init(key, user);
+  const ldClient = LDClientWrapper.init(key, user);
   return new Promise((resolve) => {
     ldClient.on("ready", () => {
       resolve(ldClient.allFlags());
