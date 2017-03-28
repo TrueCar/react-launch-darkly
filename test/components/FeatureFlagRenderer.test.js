@@ -206,8 +206,10 @@ describe("components/FeatureFlagRenderer", () => {
     beforeEach(() => {
       launchDarkly.ldBrowserInit = jest.fn();
       launchDarkly.ldBrowserInit.mockImplementation(() => ({
-        on: (ready, callback) => {
-          callback();
+        on: (type, callback) => {
+          if(type === "ready") {
+            callback();
+          }
         },
         variation
       }));
