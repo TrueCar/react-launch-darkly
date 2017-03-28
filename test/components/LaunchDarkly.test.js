@@ -5,6 +5,7 @@ import LaunchDarkly from "../../src/components/LaunchDarkly";
 import FeatureFlag from "../../src/components/FeatureFlag";
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import { BROADCAST_CHANNEL } from "../../src/constants/LaunchDarkly";
+import * as utils from "../../src/lib/utils";
 
 describe("components/LaunchDarkly", () => {
   it("should setup a broadcast with on the correct channel", () => {
@@ -18,7 +19,7 @@ describe("components/LaunchDarkly", () => {
     expect(broadcast.prop("channel")).toEqual(BROADCAST_CHANNEL);
   });
 
-  it("should pass the clientId and user as the value to the broadcast", () => {
+  it("should pass ldClient as the value to the broadcast", () => {
     const subject = shallow(
       <LaunchDarkly clientId="080808" user="zeke">
         <div>Hi</div>
@@ -26,10 +27,7 @@ describe("components/LaunchDarkly", () => {
     );
 
     const broadcast = subject.find(Broadcast);
-    expect(broadcast.prop("value")).toEqual({
-      clientId: "080808",
-      user: "zeke"
-    });
+    expect(broadcast.prop("value")).toEqual(utils.ldClientWrapper());
   });
 
   it("should render the children", () => {
@@ -43,7 +41,10 @@ describe("components/LaunchDarkly", () => {
     expect(child.text()).toEqual("Hi");
   });
 
-  it("should propagate clientId and user even when shouldComponentUpdate is false somewhere above the flag renderer", () => {
+  // No longer a valid concern since we are not passing the clientId or user to any of the children.
+  // Instead the ldClient is initialized in the LaunchDarkly component and passed down.
+  // Keeping this test for now in case we need to alter it for some other concern.
+  it.skip("should propagate clientId and user even when shouldComponentUpdate is false somewhere above the flag renderer", () => {
     class A extends Component {
       props: {
         children: any
@@ -112,4 +113,3 @@ describe("components/LaunchDarkly", () => {
     expect(renderer.prop("launchDarklyConfig").user).toEqual("imarealuser");
   });
 });
-

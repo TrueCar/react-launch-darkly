@@ -8,8 +8,12 @@ export function getLocation() {
   return "";
 }
 
-export function ldBrowserInit (key, user) {
-  return launchDarklyBrowser.initialize(key, user);
+let ldClient;
+export function ldClientWrapper (key, user) {
+  if (!ldClient) {
+    ldClient = launchDarklyBrowser.initialize(key, user);
+  }
+  return ldClient;
 }
 
 export function ldOverrideFlag(flagKey, typeFlagValue) {
@@ -49,7 +53,7 @@ export function ldOverrideFlag(flagKey, typeFlagValue) {
 }
 
 export function getAllFeatureFlags (key, user) {
-  const ldClient = ldBrowserInit(key, user);
+  const ldClient = ldClientWrapper(key, user);
   return new Promise((resolve) => {
     ldClient.on("ready", () => {
       resolve(ldClient.allFlags());

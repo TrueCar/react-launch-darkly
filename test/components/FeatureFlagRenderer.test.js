@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
-import * as launchDarkly from "../../src/lib/launchDarkly";
+import * as utils from "../../src/lib/utils";
 
 describe("components/FeatureFlagRenderer", () => {
   const renderFeatureCallback = jest.fn().mockImplementation((flagValue) => {
@@ -12,16 +12,26 @@ describe("components/FeatureFlagRenderer", () => {
   });
   const renderDefaultCallback = jest.fn().mockReturnValue("default rendered");
   const initialRenderCallback = jest.fn().mockReturnValue("initial rendered");
+  const variation = jest.fn();
 
-  const launchDarklyConfig = {
-    clientId: "abcdefg",
-    user: "yoloman"
-  };
+  beforeEach(() => {
+    utils.ldClientWrapper = jest.fn();
+    utils.ldClientWrapper.mockImplementation(() => ({
+      on: (ready, callback) => {
+        callback();
+      },
+      variation
+    }));
+  });
+
+  afterEach(() => {
+    utils.ldClientWrapper.mockReset();
+  });
 
   it("renders without an issue", () => {
     const wrapper = shallow(
       <FeatureFlagRenderer
-        launchDarklyConfig={launchDarklyConfig}
+        ldClientWrapper={utils.ldClientWrapper()}
         flagKey="my-test"
         renderFeatureCallback={renderFeatureCallback}
       />
@@ -32,7 +42,7 @@ describe("components/FeatureFlagRenderer", () => {
   it("renders the proper data-qa attribute", () => {
     const wrapper = shallow(
       <FeatureFlagRenderer
-        launchDarklyConfig={launchDarklyConfig}
+        ldClientWrapper={utils.ldClientWrapper()}
         flagKey="my-test"
         renderFeatureCallback={renderFeatureCallback}
       />
@@ -40,23 +50,12 @@ describe("components/FeatureFlagRenderer", () => {
     expect(wrapper.find("[data-qa='FeatureFlag-my-test']")).toBeDefined();
   });
 
-  it("calls componentDidMount", () => {
-    const wrapper = mount(
-      <FeatureFlagRenderer
-        launchDarklyConfig={launchDarklyConfig}
-        flagKey="my-test"
-        renderFeatureCallback={renderFeatureCallback}
-      />
-    );
-    expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: false, flagValue: false });
-  });
-
   describe("the _renderLogic function", () => {
     describe("when flagValue is true", () => {
       it("renders the feature callback", () => {
         const wrapper = shallow(
           <FeatureFlagRenderer
-            launchDarklyConfig={launchDarklyConfig}
+            ldClientWrapper={utils.ldClientWrapper()}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -70,7 +69,7 @@ describe("components/FeatureFlagRenderer", () => {
       it("renders the feature callback for that object", () => {
         const wrapper = shallow(
           <FeatureFlagRenderer
-            launchDarklyConfig={launchDarklyConfig}
+            ldClientWrapper={utils.ldClientWrapper()}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -84,7 +83,7 @@ describe("components/FeatureFlagRenderer", () => {
       it("renders the feature callback for that number", () => {
         const wrapper = shallow(
           <FeatureFlagRenderer
-            launchDarklyConfig={launchDarklyConfig}
+            ldClientWrapper={utils.ldClientWrapper()}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -98,7 +97,7 @@ describe("components/FeatureFlagRenderer", () => {
       it("renders the feature callback for that array", () => {
         const wrapper = shallow(
           <FeatureFlagRenderer
-            launchDarklyConfig={launchDarklyConfig}
+            ldClientWrapper={utils.ldClientWrapper()}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -114,7 +113,7 @@ describe("components/FeatureFlagRenderer", () => {
           it("renders the default callback", () => {
             const wrapper = shallow(
               <FeatureFlagRenderer
-                launchDarklyConfig={launchDarklyConfig}
+                ldClientWrapper={utils.ldClientWrapper()}
                 flagKey="my-test"
                 renderFeatureCallback={renderFeatureCallback}
                 renderDefaultCallback={renderDefaultCallback}
@@ -129,7 +128,7 @@ describe("components/FeatureFlagRenderer", () => {
           it("renders nothing", () => {
             const wrapper = shallow(
               <FeatureFlagRenderer
-                launchDarklyConfig={launchDarklyConfig}
+                ldClientWrapper={utils.ldClientWrapper()}
                 flagKey="my-test"
                 renderFeatureCallback={renderFeatureCallback}
               />
@@ -146,7 +145,7 @@ describe("components/FeatureFlagRenderer", () => {
           it("renders the initial callback", () => {
             const wrapper = shallow(
               <FeatureFlagRenderer
-                launchDarklyConfig={launchDarklyConfig}
+                ldClientWrapper={utils.ldClientWrapper()}
                 flagKey="my-test"
                 renderFeatureCallback={renderFeatureCallback}
                 initialRenderCallback={initialRenderCallback}
@@ -161,7 +160,7 @@ describe("components/FeatureFlagRenderer", () => {
           it("renders nothing", () => {
             const wrapper = shallow(
               <FeatureFlagRenderer
-                launchDarklyConfig={launchDarklyConfig}
+                ldClientWrapper={utils.ldClientWrapper()}
                 flagKey="my-test"
                 renderFeatureCallback={renderFeatureCallback}
               />
@@ -178,7 +177,7 @@ describe("components/FeatureFlagRenderer", () => {
       it("it renders nothing", () => {
         const wrapper = shallow(
           <FeatureFlagRenderer
-            launchDarklyConfig={launchDarklyConfig}
+            ldClientWrapper={utils.ldClientWrapper()}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -191,31 +190,15 @@ describe("components/FeatureFlagRenderer", () => {
   });
 
   describe("the _checkFeatureFlag function", () => {
-
-    const variation = jest.fn();
     const getWrapper = () => {
       return mount(
         <FeatureFlagRenderer
-          launchDarklyConfig={launchDarklyConfig}
+          ldClientWrapper={utils.ldClientWrapper()}
           flagKey="my-test"
           renderFeatureCallback={renderFeatureCallback}
         />
       );
     };
-
-    beforeEach(() => {
-      launchDarkly.ldBrowserInit = jest.fn();
-      launchDarkly.ldBrowserInit.mockImplementation(() => ({
-        on: (ready, callback) => {
-          callback();
-        },
-        variation
-      }));
-    });
-
-    afterEach(() => {
-      launchDarkly.ldBrowserInit.mockReset();
-    });
 
     describe("when the feature flag comes back true", () => {
       it("sets the state", () => {
@@ -236,31 +219,33 @@ describe("components/FeatureFlagRenderer", () => {
     describe("query param flag overrides if not undefined", () => {
       it("param 'features.flag=false' overrides LD data 'on'", () => {
         variation.mockImplementation(() => false);
-        launchDarkly.getLocation = jest.fn().mockImplementation(() => "http://ab.cdef.com?features.my-test=false");
+        utils.getLocation = jest.fn().mockImplementation(() => "http://ab.cdef.com?features.my-test=false");
         const wrapper = getWrapper();
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: false });
       });
+
       it("param 'features.flag' overrides LD data 'off'", () => {
         variation.mockImplementation(() => false);
-        launchDarkly.getLocation = jest.fn().mockImplementation(() => "http://ab.cdef.com?features.my-test");
+        utils.getLocation = jest.fn().mockImplementation(() => "http://ab.cdef.com?features.my-test");
         const wrapper = getWrapper();
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: true });
       });
+
       it("param 'features=flag' overrides LD data 'off'", () => {
         variation.mockImplementation(() => false);
-        launchDarkly.getLocation = jest.fn().mockImplementation(() => "http://ab.cdef.com?features=my-test");
+        utils.getLocation = jest.fn().mockImplementation(() => "http://ab.cdef.com?features=my-test");
         const wrapper = getWrapper();
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: true });
       });
-      it("param comma-list of features to enable", () => {
 
+      it("param comma-list of features to enable", () => {
         variation.mockImplementation((flagKey) => {
           if(flagKey === "one" || flagKey === "my-test") {
             return false;
           }
           return true;
         });
-        launchDarkly.getLocation = jest.fn().mockImplementation(() => "http://ab.cdef.com?features=one,my-test");
+        utils.getLocation = jest.fn().mockImplementation(() => "http://ab.cdef.com?features=one,my-test");
         const wrapper = getWrapper();
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: true });
       });

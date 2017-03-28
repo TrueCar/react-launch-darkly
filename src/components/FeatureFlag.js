@@ -9,14 +9,15 @@ import { FeatureFlagType } from "../types/FeatureFlag";
 export default function FeatureFlag (props:FeatureFlagType) {
   return (
     <Subscriber channel={BROADCAST_CHANNEL}>
-      { (launchDarklyConfig) => (
-          <FeatureFlagRenderer
-            launchDarklyConfig={launchDarklyConfig}
-            {...props}
-          />
-        )
+      {
+        (ldClientWrapper) => {
+          if (ldClientWrapper) {
+            return (<FeatureFlagRenderer ldClientWrapper={ldClientWrapper} {...props} />);
+          }
+
+          return null;
+        }
       }
     </Subscriber>
   );
 }
-
