@@ -10,9 +10,9 @@ export default function FeatureFlag (props:FeatureFlagType) {
   return (
     <Subscriber channel={BROADCAST_CHANNEL}>
       {
-        (ldClient) => {
-          if (ldClient) {
-            return (<FeatureFlagRenderer ldClient={ldClient} {...props} />);
+        (ldClientWrapper) => {
+          if (ldClientWrapper) {
+            return (<FeatureFlagRenderer ldClientWrapper={ldClientWrapper} {...props} />);
           }
 
           return null;

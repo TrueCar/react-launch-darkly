@@ -1,4 +1,4 @@
-import LDClientWrapper from "LDClientWrapper";
+import launchDarklyBrowser from "ldclient-js";
 const url = require("url");
 
 export function getLocation() {
@@ -6,6 +6,14 @@ export function getLocation() {
     return window.location.toString();
   }
   return "";
+}
+
+let ldClient;
+export function ldClientWrapper (key, user) {
+  if (!ldClient) {
+    ldClient = launchDarklyBrowser.initialize(key, user);
+  }
+  return ldClient;
 }
 
 export function ldOverrideFlag(flagKey, typeFlagValue) {
@@ -45,7 +53,7 @@ export function ldOverrideFlag(flagKey, typeFlagValue) {
 }
 
 export function getAllFeatureFlags (key, user) {
-  const ldClient = LDClientWrapper.init(key, user);
+  const ldClient = ldClientWrapper(key, user);
   return new Promise((resolve) => {
     ldClient.on("ready", () => {
       resolve(ldClient.allFlags());

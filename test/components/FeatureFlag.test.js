@@ -6,6 +6,7 @@ import FeatureFlag from "../../src/components/FeatureFlag";
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import LaunchDarkly from "../../src/components/LaunchDarkly";
 import { BROADCAST_CHANNEL } from "../../src/constants/LaunchDarkly";
+import * as utils from "../../src/lib/utils";
 
 describe("components/FeatureFlag", () => {
   const defaultProps = {
@@ -21,7 +22,6 @@ describe("components/FeatureFlag", () => {
     );
 
     const subscriber = subject.find(Subscriber);
-
     expect(subscriber.prop("channel")).toEqual(BROADCAST_CHANNEL);
   });
 
@@ -45,7 +45,7 @@ describe("components/FeatureFlag", () => {
     expect(renderer.prop("initialRenderCallback")).toEqual(allProps.initialRenderCallback);
   });
 
-  it("should pass the launchDarklyConfig to FeatuerFlagRenderer", () => {
+  it("should pass the ldClientWrapper to FeatuerFlagRenderer", () => {
     const subject = mount(
       <LaunchDarkly clientId="80808080" user="hi">
         <FeatureFlag {...defaultProps} />
@@ -53,10 +53,16 @@ describe("components/FeatureFlag", () => {
     );
 
     const renderer = subject.find(FeatureFlagRenderer);
-    expect(renderer.prop("launchDarklyConfig")).toEqual({
-      clientId: "80808080",
-      user: "hi"
+    expect(renderer.prop("ldClientWrapper")).toEqual(utils.ldClientWrapper());
+  });
+
+  describe("when FeatureFlag is rendered outside the scope of LaunchDarkly", () => {
+    it("should not render the FeatureFlagRenderer component", () => {
+      const subject = mount(
+        <FeatureFlag {...defaultProps} />
+      );
+      const renderer = subject.find(FeatureFlagRenderer);
+      expect(renderer).toHaveLength(0);
     });
   });
 });
-
