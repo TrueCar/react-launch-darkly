@@ -46,7 +46,7 @@
     "rimraf": "^2.5.4"
   },
   "dependencies": {
-    "ldclient-js": "^1.1.4",
+    "ldclient-js": "^1.1.8",
     "react-broadcast": "^0.1.2"
   },
   "peerDependencies": {
