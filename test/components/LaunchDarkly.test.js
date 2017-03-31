@@ -5,7 +5,6 @@ import LaunchDarkly from "../../src/components/LaunchDarkly";
 import FeatureFlag from "../../src/components/FeatureFlag";
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import { BROADCAST_CHANNEL } from "../../src/constants/LaunchDarkly";
-import * as utils from "../../src/lib/utils";
 
 describe("components/LaunchDarkly", () => {
   it("should setup a broadcast with on the correct channel", () => {
@@ -19,15 +18,21 @@ describe("components/LaunchDarkly", () => {
     expect(broadcast.prop("channel")).toEqual(BROADCAST_CHANNEL);
   });
 
-  it("should pass ldClient as the value to the broadcast", () => {
+  it("should pass config object as the value to the broadcast", () => {
+    const expectedConfig = {
+      clientId: "12345",
+      user: {
+        key: "user123"
+      }
+    };
     const subject = shallow(
-      <LaunchDarkly clientId="080808" user="zeke">
+      <LaunchDarkly clientId={expectedConfig.clientId} user={expectedConfig.user}>
         <div>Hi</div>
       </LaunchDarkly>
     );
 
     const broadcast = subject.find(Broadcast);
-    expect(broadcast.prop("value")).toEqual(utils.ldClientWrapper());
+    expect(broadcast.prop("value")).toEqual(expectedConfig);
   });
 
   it("should render the children", () => {

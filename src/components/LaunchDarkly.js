@@ -2,7 +2,6 @@
 import React from "react";
 import { Broadcast } from "react-broadcast";
 
-import { ldClientWrapper } from "../lib/utils";
 import { BROADCAST_CHANNEL } from "../constants/LaunchDarkly.js";
 import { UserType } from "../types/User";
 
@@ -14,10 +13,13 @@ type Props = {
 
 export default function LaunchDarkly (props:Props) {
   const { clientId, user, children } = props;
-  const ldClient = ldClientWrapper(clientId, user);
+  const config = {
+    clientId,
+    user
+  };
 
   return (
-    <Broadcast channel={BROADCAST_CHANNEL} value={ldClient}>
+    <Broadcast channel={BROADCAST_CHANNEL} value={config}>
       {children}
     </Broadcast>
   );
