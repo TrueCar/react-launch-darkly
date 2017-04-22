@@ -9,10 +9,39 @@ export function getLocation() {
 }
 
 let ldClient;
+let ldClientOn;
+let ldClientReady = false;
 export function ldClientWrapper (key, user) {
+  const queue = [];
+
   if (!ldClient) {
     ldClient = launchDarklyBrowser.initialize(key, user);
+    ldClientOn = ldClient.on;
   }
+
+  if (!ldClientReady) {
+    ldClientOn("ready", () => {
+      ldClientReady = true;
+
+      if (queue.length) {
+        queue.forEach((args) => {
+          // args: [event, callback, context]
+          args[1]();
+        });
+      }
+    });
+  }
+
+  // Create our own mocked implementation of the ldclient-js' `on` function.
+  // Multiple calls with `on('ready')` seem to not fire after the original client has been initialized.
+  ldClient.on = function(event, callback) {
+    if (ldClientReady) {
+      callback();
+    } else {
+      queue.push(arguments);
+    }
+  };
+
   return ldClient;
 }
 

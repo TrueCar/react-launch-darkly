@@ -12,14 +12,18 @@ describe("lib/utils", () => {
     const key = "my key";
     const user = "my user";
 
+    launchDarklyBrowser.initialize = jest.fn().mockImplementation(() => ({
+      on: (event, callback) => {
+        callback();
+      }
+    }));
+
     it("proxies to ldclient-js", () => {
-      launchDarklyBrowser.initialize = jest.fn();
       utils.ldClientWrapper(key, user);
       expect(launchDarklyBrowser.initialize).toBeCalledWith(key, user);
     });
 
     it("does not instantiate ldclient-js more than once", () => {
-      launchDarklyBrowser.initialize = jest.fn(() => ({}));
       utils.ldClientWrapper(key, user);
       utils.ldClientWrapper(key, user);
       utils.ldClientWrapper(key, user);
