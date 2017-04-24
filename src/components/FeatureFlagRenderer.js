@@ -52,7 +52,7 @@ export default class FeatureFlagRenderer extends Component {
   _checkFeatureFlag () {
     const { ldClientWrapper, flagKey } = this.props;
 
-    ldClientWrapper.on("ready", () => {
+    ldClientWrapper.onReady(() => {
       const flagValue = ldClientWrapper.variation(flagKey, false);
       const typeFlagValue = typeof flagValue;
       const defaultState = { checkFeatureFlagComplete: true };

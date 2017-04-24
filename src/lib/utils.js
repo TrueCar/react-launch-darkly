@@ -9,36 +9,34 @@ export function getLocation() {
 }
 
 let ldClient;
-let ldClientOn;
 let ldClientReady = false;
 export function ldClientWrapper (key, user) {
   const queue = [];
 
   if (!ldClient) {
     ldClient = launchDarklyBrowser.initialize(key, user);
-    ldClientOn = ldClient.on;
   }
 
   if (!ldClientReady) {
-    ldClientOn("ready", () => {
+    ldClient.on("ready", () => {
       ldClientReady = true;
 
       if (queue.length) {
-        queue.forEach((args) => {
-          // args: [event, callback, context]
-          args[1]();
+        queue.forEach((callback) => {
+          callback();
         });
       }
     });
   }
 
-  // Create our own mocked implementation of the ldclient-js' `on` function.
+  // Create our own implementation of the ldclient-js' `on` function.
   // Multiple calls with `on('ready')` seem to not fire after the original client has been initialized.
-  ldClient.on = function(event, callback) {
+  // By implementing our own, we can track the initial "ready" fire and decide how to proceed.
+  ldClient.onReady = (callback) => {
     if (ldClientReady) {
       callback();
     } else {
-      queue.push(arguments);
+      queue.push(callback);
     }
   };
 
@@ -84,7 +82,7 @@ export function ldOverrideFlag(flagKey, typeFlagValue) {
 export function getAllFeatureFlags (key, user) {
   const ldClient = ldClientWrapper(key, user);
   return new Promise((resolve) => {
-    ldClient.on("ready", () => {
+    ldClient.onReady(() => {
       resolve(ldClient.allFlags());
     });
   });
