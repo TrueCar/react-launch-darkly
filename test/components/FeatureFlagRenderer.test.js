@@ -17,7 +17,7 @@ describe("components/FeatureFlagRenderer", () => {
   beforeEach(() => {
     utils.ldClientWrapper = jest.fn();
     utils.ldClientWrapper.mockImplementation(() => ({
-      on: (ready, callback) => {
+      onReady: (callback) => {
         callback();
       },
       variation
