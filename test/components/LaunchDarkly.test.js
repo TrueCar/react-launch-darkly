@@ -46,6 +46,23 @@ describe("components/LaunchDarkly", () => {
     expect(child.text()).toEqual("Hi");
   });
 
+  it("should render Broadcast with a value of null when either clientId or user are missing", () => {
+    // with neither
+    let subject = shallow(<LaunchDarkly><div>Hi</div></LaunchDarkly>);
+    let child = subject.find("Broadcast");
+    expect(child.props().value).toEqual(null);
+
+    // with clientId
+    subject = shallow(<LaunchDarkly clientId="asdf"><div>Hi</div></LaunchDarkly>);
+    child = subject.find("Broadcast");
+    expect(child.props().value).toEqual(null);
+
+    // with user
+    subject = shallow(<LaunchDarkly user={{name: "Kelly Slater"}}><div>Hi</div></LaunchDarkly>);
+    child = subject.find("Broadcast");
+    expect(child.props().value).toEqual(null);
+  });
+
   // No longer a valid concern since we are not passing the clientId or user to any of the children.
   // Instead the ldClient is initialized in the LaunchDarkly component and passed down.
   // Keeping this test for now in case we need to alter it for some other concern.
