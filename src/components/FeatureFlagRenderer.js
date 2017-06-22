@@ -27,9 +27,7 @@ export default class FeatureFlagRenderer extends Component {
   }
 
   render () {
-    return (
-      this._renderLogic()
-      );
+    return this._renderLogic();
   }
 
   _renderLogic () {
