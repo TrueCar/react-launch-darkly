@@ -5,13 +5,15 @@ import * as utils from "../../src/lib/utils";
 
 describe("components/FeatureFlagRenderer", () => {
   const renderFeatureCallback = jest.fn().mockImplementation((flagValue) => {
-    if(flagValue === {a: 1}) {return "feature object 1";}
-    if(flagValue === 1) {return "feature number 1";}
-    if(flagValue === [1]) {return "feature array 1";}
-    return "feature rendered";
+    if(flagValue === {a: 1}) {return <div>"feature object 1"</div>;}
+    if(flagValue === 1) {return <div>"feature number 1"</div>;}
+    if(flagValue === [1]) {return <div>"feature array 1"</div>;}
+    return (
+      <div>"feature rendered"</div>
+    );
   });
-  const renderDefaultCallback = jest.fn().mockReturnValue("default rendered");
-  const initialRenderCallback = jest.fn().mockReturnValue("initial rendered");
+  const renderDefaultCallback = jest.fn().mockReturnValue(<div>"default rendered"</div>);
+  const initialRenderCallback = jest.fn().mockReturnValue(<div>"initial rendered"</div>);
   const variation = jest.fn();
 
   beforeEach(() => {
@@ -61,7 +63,7 @@ describe("components/FeatureFlagRenderer", () => {
           />
         );
         wrapper.setState({ flagValue: true });
-        expect(wrapper.text()).toEqual(renderFeatureCallback());
+        expect(wrapper.text()).toEqual(renderFeatureCallback().props.children);
       });
     });
 
@@ -75,7 +77,7 @@ describe("components/FeatureFlagRenderer", () => {
           />
         );
         wrapper.setState({ flagValue: { a: 1 } });
-        expect(wrapper.text()).toEqual(renderFeatureCallback({ a: 1 }));
+        expect(wrapper.text()).toEqual(renderFeatureCallback({ a: 1 }).props.children);
       });
     });
 
@@ -89,7 +91,7 @@ describe("components/FeatureFlagRenderer", () => {
           />
         );
         wrapper.setState({ flagValue: 1 });
-        expect(wrapper.text()).toEqual(renderFeatureCallback(1));
+        expect(wrapper.text()).toEqual(renderFeatureCallback(1).props.children);
       });
     });
 
@@ -103,7 +105,7 @@ describe("components/FeatureFlagRenderer", () => {
           />
         );
         wrapper.setState({ flagValue: [1] });
-        expect(wrapper.text()).toEqual(renderFeatureCallback([1]));
+        expect(wrapper.text()).toEqual(renderFeatureCallback([1]).props.children);
       });
     });
 
@@ -120,7 +122,7 @@ describe("components/FeatureFlagRenderer", () => {
               />
             );
             wrapper.setState({ flagValue: false, checkFeatureFlagComplete: true });
-            expect(wrapper.text()).toEqual(renderDefaultCallback());
+            expect(wrapper.text()).toEqual(renderDefaultCallback().props.children);
           });
         });
 
@@ -152,7 +154,7 @@ describe("components/FeatureFlagRenderer", () => {
               />
             );
             wrapper.setState({ flagValue: false, checkFeatureFlagComplete: false });
-            expect(wrapper.text()).toEqual(initialRenderCallback());
+            expect(wrapper.text()).toEqual(initialRenderCallback().props.children);
           });
         });
 
