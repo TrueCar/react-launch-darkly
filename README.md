@@ -4,7 +4,7 @@
 [![npm](https://img.shields.io/npm/v/react-launch-darkly.svg)](https://www.npmjs.com/package/react-launch-darkly)
 [![Build Status](https://travis-ci.org/TrueCar/react-launch-darkly.svg?branch=master)](https://travis-ci.org/TrueCar/react-launch-darkly)
 
-# Usage
+## Usage
 To setup the `LaunchDarkly` component wrapper, you'll probably want to include it in a top-level
 layout component:
 ```javascript
@@ -50,7 +50,25 @@ export default class Home extends Component {
   }
 }
 ```
-# Component Helpers
+## Local testing
+In addition to configuring flags via the LaunchDarkly interface, flags can be set manually via URL parameters.  See https://github.com/TrueCar/react-launch-darkly/pull/6
+
+### Examples
+```
+# Overrides the `send-onboarding-email` boolean feature flag, setting it to `true`
+POST /users?features=send-onboarding-email
+
+# Enables the `show-user-email`, `user-nicknames`, and `hide-inactive-users` feature flags
+GET /users/101?features=show-user-email,user-nicknames,hide-inactive-users
+
+# Disables the `verify-email` feature flag and sets the `email-frequency` variation to "weekly"
+POST /users?features.verify-email=false&features.email-frequency=weekly
+
+# Enables the `show-user-email` feature flag
+GET /users/101?features.show-user-email
+```
+
+## Component Helpers
 
 ### `LaunchDarkly`
 #### props
