@@ -44,7 +44,7 @@ export default class FeatureFlagRenderer extends Component {
       return initialRenderCallback();
     }
 
-    return <div></div>;
+    return null;
   }
 
   _checkFeatureFlag () {
