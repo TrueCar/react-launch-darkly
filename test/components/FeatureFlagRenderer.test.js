@@ -186,7 +186,7 @@ describe("components/FeatureFlagRenderer", () => {
         );
         wrapper.setState({ flagValue: false, checkFeatureFlagComplete: false });
         wrapper.setProps({ renderDefaultCallback: null, initialRenderCallback: null });
-        expect(wrapper.type()).toEqual(null);
+        expect(wrapper.text()).toEqual("");
       });
     });
   });
