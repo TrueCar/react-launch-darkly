@@ -1,5 +1,5 @@
 /* @flow */
-import React, { Component } from "react";
+import { Component } from "react";
 
 import { ldOverrideFlag } from "../lib/utils";
 import { FeatureFlagType } from "../types/FeatureFlag";
