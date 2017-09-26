@@ -4,9 +4,6 @@ node_js:
 cache:
   directories:
     - "node_modules"
-script:
-  - npm lint
-  - npm test
 branches:
   only:
     - master
