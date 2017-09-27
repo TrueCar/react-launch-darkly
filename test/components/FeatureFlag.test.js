@@ -56,10 +56,12 @@ describe("components/FeatureFlag", () => {
     expect(renderer.prop("ldClientWrapper")).toEqual(utils.ldClientWrapper());
   });
 
-  describe("when FeatureFlag is rendered outside the scope of LaunchDarkly", () => {
+  describe("when Broadcast sends no value", () => {
     it("should not render the FeatureFlagRenderer component", () => {
       const subject = mount(
-        <FeatureFlag {...defaultProps} />
+        <LaunchDarkly>
+          <FeatureFlag {...defaultProps} />
+        </LaunchDarkly>
       );
       const renderer = subject.find(FeatureFlagRenderer);
       expect(renderer).toHaveLength(0);
