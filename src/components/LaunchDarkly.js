@@ -10,7 +10,8 @@ type Props = {
   user: UserType,
   children: any,
   // Any option accepted by the Javascript client
-  //
+  // https://github.com/launchdarkly/js-client/blob/master/src/index.js#L241
+  // See src/lib/utils.js for details
   clientOptions: Object
 };
 
