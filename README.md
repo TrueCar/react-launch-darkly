@@ -79,6 +79,10 @@ This is the client id that is provided to you by LaunchDarkly.
 ##### `user` : `object` (required)
 See the [LaunchDarkly docs](http://docs.launchdarkly.com/docs/js-sdk-reference#section-users) for more info.
 
+##### `clientOptions` : `object` (optional)
+This is an advanced option required when pointing to an Enterprise version of launch darkly (different URLs).
+See #41 for details.
+
 ---
 
 ### `FeatureFlag`
