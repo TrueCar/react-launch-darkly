@@ -8,11 +8,14 @@ import { UserType } from "../types/User";
 type Props = {
   clientId: Object,
   user: UserType,
-  children: any
+  children: any,
+  // Any option accepted by the Javascript client
+  //
+  clientOptions: Object
 };
 
 export default function LaunchDarkly (props:Props) {
-  const { clientId, user, children } = props;
+  const { clientId, user, children, clientOptions } = props;
 
   let config = null;
 
@@ -22,7 +25,8 @@ export default function LaunchDarkly (props:Props) {
   if (clientId && user) {
     config = {
       clientId,
-      user
+      user,
+      clientOptions
     };
   }
 
