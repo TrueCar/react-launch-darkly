@@ -30,7 +30,6 @@ describe("components/LaunchDarkly", () => {
     );
 
     const broadcast = subject.find(Broadcast);
-    Object.assign(expectedConfig, {clientOptions: {}});
     expect(broadcast.prop("value")).toEqual(expectedConfig);
   });
 

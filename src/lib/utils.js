@@ -10,7 +10,7 @@ export function getLocation() {
 
 let ldClient;
 let ldClientReady = false;
-export function ldClientWrapper (key, user, options) {
+export function ldClientWrapper (key, user, options = {}) {
   const queue = [];
 
   if (!ldClient) {
