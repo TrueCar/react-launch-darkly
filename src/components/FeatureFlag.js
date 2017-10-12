@@ -13,8 +13,8 @@ export default function FeatureFlag (props:FeatureFlagType) {
       {
         (config) => {
           if (config) {
-            const { clientId, user } = config;
-            const ldClient = ldClientWrapper(clientId, user);
+            const { clientId, user, clientOptions } = config;
+            const ldClient = ldClientWrapper(clientId, user, clientOptions);
 
             return (<FeatureFlagRenderer ldClientWrapper={ldClient} {...props} />);
           }

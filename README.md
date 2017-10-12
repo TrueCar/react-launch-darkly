@@ -79,6 +79,13 @@ This is the client id that is provided to you by LaunchDarkly.
 ##### `user` : `object` (required)
 See the [LaunchDarkly docs](http://docs.launchdarkly.com/docs/js-sdk-reference#section-users) for more info.
 
+##### `clientOptions` : `object` (optional)
+
+Options that are passed to the LaunchDarkly JS client for additional configuration and features:
+- [Bootstrapping](https://docs.launchdarkly.com/docs/js-sdk-reference#section-bootstrapping)
+- [Secure Mode](https://docs.launchdarkly.com/docs/js-sdk-reference#section-secure-mode)
+- [Setting LaunchDarkly Enterprise URLs](https://github.com/launchdarkly/js-client/blob/master/src/index.js#L241-L243)
+
 ---
 
 ### `FeatureFlag`

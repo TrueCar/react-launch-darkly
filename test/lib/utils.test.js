@@ -24,7 +24,8 @@ describe("lib/utils", () => {
 
     it("proxies to ldclient-js", () => {
       utils.ldClientWrapper(key, user);
-      expect(launchDarklyBrowser.initialize).toBeCalledWith(key, user);
+      // there's a default options param for the client wrapper with {}
+      expect(launchDarklyBrowser.initialize).toBeCalledWith(key, user, {});
     });
 
     it("does not instantiate ldclient-js more than once", () => {
