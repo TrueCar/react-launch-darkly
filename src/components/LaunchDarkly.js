@@ -27,7 +27,7 @@ export default function LaunchDarkly (props:Props) {
     config = {
       clientId,
       user,
-      clientOptions: clientOptions
+      clientOptions
     };
   }
 
