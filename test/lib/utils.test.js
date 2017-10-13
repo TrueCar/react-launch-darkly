@@ -13,7 +13,6 @@ describe("lib/utils", () => {
       }
     }));
   });
-
   mockLdClient();
 
   it("exports functions", () => {
