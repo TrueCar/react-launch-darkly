@@ -50,8 +50,8 @@
     "react-broadcast": "^0.3.1"
   },
   "peerDependencies": {
-    "react": ">=15.4.2",
-    "react-dom": ">=15.4.2"
+    "react": ">=15.0.0",
+    "react-dom": ">=15.0.0"
   },
   "jest": {
     "unmockedModulePathPatterns": [
