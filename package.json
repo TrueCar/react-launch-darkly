@@ -4,7 +4,7 @@
   "description": "",
   "main": "./build/index",
   "scripts": {
-    "test": "NODE_ENV=test jest && npm run lint",
+    "test": "jest && npm run lint",
     "test-coverage": "jest --coverage",
     "clean": "rimraf build",
     "build": "./node_modules/.bin/babel src --out-dir build",
@@ -39,9 +39,9 @@
     "eslint-plugin-react": "6.4.1",
     "flow-bin": "^0.33.0",
     "jest": "^21.2.1",
-    "react": "15.4.0",
-    "react-addons-test-utils": "^15.3.2",
-    "react-dom": "15.4.0",
+    "react": "15.4.2",
+    "react-addons-test-utils": "15.4.2",
+    "react-dom": "15.4.2",
     "react-hot-loader": "^1.3.1",
     "rimraf": "^2.5.4"
   },
@@ -50,8 +50,8 @@
     "react-broadcast": "^0.3.1"
   },
   "peerDependencies": {
-    "react": ">=15.0.0",
-    "react-dom": ">=15.0.0"
+    "react": ">=15.4.2",
+    "react-dom": ">=15.4.2"
   },
   "jest": {
     "unmockedModulePathPatterns": [
