@@ -1,8 +1,20 @@
-import launchDarklyBrowser from "ldclient-js";
-import * as utils from "./../../src/lib/utils.js";
-
 describe("lib/utils", () => {
   jest.useFakeTimers();
+
+  let utils = require("./../../src/lib/utils");
+  let ldClient = require("ldclient-js");
+
+  const mockLdClient = (() => {
+    ldClient.initialize = jest.fn().mockImplementation(() => ({
+      on: (event, callback) => {
+        setTimeout(() => {
+          callback();
+        }, 1000);
+      }
+    }));
+  });
+
+  mockLdClient();
 
   it("exports functions", () => {
     expect(utils["ldClientWrapper"]).toBeDefined();
@@ -13,26 +25,34 @@ describe("lib/utils", () => {
   describe("ldClientWrapper", () => {
     const key = "my key";
     const user = "my user";
+    const options = { baseUrl: "http://test" };
 
-    launchDarklyBrowser.initialize = jest.fn().mockImplementation(() => ({
-      on: (event, callback) => {
-        setTimeout(() => {
-          callback();
-        }, 1000);
-      }
-    }));
+    describe("proxies to ldClient", () => {
+      beforeEach(() => {
+        // `ldClientWrapper` is a singleton, we need to reset the module cache with each test
+        // to be able to properly assert each instance of `ldClientWrapper`
+        jest.resetModules();
+        utils = require("./../../src/lib/utils");
+        ldClient = require("ldclient-js");
+        mockLdClient();
+      });
 
-    it("proxies to ldclient-js", () => {
-      utils.ldClientWrapper(key, user);
-      // there's a default options param for the client wrapper with {}
-      expect(launchDarklyBrowser.initialize).toBeCalledWith(key, user, {});
+      it("initializes with key, user and default options parameter", () => {
+        utils.ldClientWrapper(key, user);
+        expect(ldClient.initialize).toBeCalledWith(key, user, {});
+      });
+
+      it("initializes with key, user and options", () => {
+        utils.ldClientWrapper(key, user, options);
+        expect(ldClient.initialize).toBeCalledWith(key, user, options);
+      });
     });
 
     it("does not instantiate ldclient-js more than once", () => {
       utils.ldClientWrapper(key, user);
       utils.ldClientWrapper(key, user);
       utils.ldClientWrapper(key, user);
-      expect(launchDarklyBrowser.initialize).toHaveBeenCalledTimes(1);
+      expect(ldClient.initialize).toHaveBeenCalledTimes(1);
     });
 
     it("onReady calls wait for ready event to fire", () => {
