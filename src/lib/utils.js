@@ -10,11 +10,11 @@ export function getLocation() {
 
 let ldClient;
 let ldClientReady = false;
-export function ldClientWrapper (key, user) {
+export function ldClientWrapper (key, user, options = {}) {
   const queue = [];
 
   if (!ldClient) {
-    ldClient = launchDarklyBrowser.initialize(key, user);
+    ldClient = launchDarklyBrowser.initialize(key, user, options);
   }
 
   if (!ldClientReady) {
