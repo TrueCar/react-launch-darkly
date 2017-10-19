@@ -22,6 +22,8 @@ describe("components/FeatureFlagRenderer", () => {
       onReady: (callback) => {
         callback();
       },
+      on: (type, callback) => {
+      },
       variation
     }));
   });

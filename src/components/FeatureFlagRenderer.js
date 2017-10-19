@@ -24,6 +24,14 @@ export default class FeatureFlagRenderer extends Component {
 
   componentDidMount () {
     this._checkFeatureFlag();
+    this._listenFlagChangeEvent();
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return (
+      nextState.flagValue !== this.state.flagValue ||
+      nextState.checkFeatureFlagComplete !== this.state.checkFeatureFlagComplete
+    );
   }
 
   render () {
@@ -52,17 +60,31 @@ export default class FeatureFlagRenderer extends Component {
 
     ldClientWrapper.onReady(() => {
       const flagValue = ldClientWrapper.variation(flagKey, false);
-      const typeFlagValue = typeof flagValue;
-      const defaultState = { checkFeatureFlagComplete: true };
-      const override = ldOverrideFlag(flagKey, typeFlagValue);
-
-      if (typeof override !== "undefined") {
-        this.setState({ flagValue: override, ...defaultState });
-      } else if (flagValue) {
-        this.setState({ flagValue: flagValue, ...defaultState });
-      } else {
-        this.setState({ flagValue: false, ...defaultState });
-      }
+      this._setStateFlagValue(flagValue);
     });
+  }
+
+  _listenFlagChangeEvent () {
+    const { ldClientWrapper, flagKey } = this.props;
+
+    ldClientWrapper.on(`change:${flagKey}`, function(value) {
+      this._setStateFlagValue(value);
+    });
+  }
+
+  _setStateFlagValue (flagValue) {
+    const { flagKey } = this.props;
+    const typeFlagValue = typeof flagValue;
+    const defaultState = { checkFeatureFlagComplete: true };
+    const override = ldOverrideFlag(flagKey, typeFlagValue);
+
+    if (typeof override !== "undefined") {
+      // Override is set for this flag key, use override instead
+      this.setState({ flagValue: override, ...defaultState });
+    } else if (flagValue) {
+      this.setState({ flagValue: flagValue, ...defaultState });
+    } else {
+      this.setState({ flagValue: false, ...defaultState });
+    }
   }
 }
