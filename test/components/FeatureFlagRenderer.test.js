@@ -204,7 +204,7 @@ describe("components/FeatureFlagRenderer", () => {
       )
     );
 
-    describe("when change even emits", () => {
+    describe("when change event emits", () => {
       jest.useFakeTimers();
 
       it("updates the state", () => {
@@ -222,7 +222,6 @@ describe("components/FeatureFlagRenderer", () => {
 
         jest.runAllTimers();
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: expectedFlagValue });
-
       });
     });
 
