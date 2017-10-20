@@ -22,8 +22,7 @@ describe("components/FeatureFlagRenderer", () => {
       onReady: (callback) => {
         callback();
       },
-      on: (type, callback) => {
-      },
+      on: jest.fn(),
       variation
     }));
   });
@@ -54,7 +53,7 @@ describe("components/FeatureFlagRenderer", () => {
     expect(wrapper.find("[data-qa='FeatureFlag-my-test']")).toBeDefined();
   });
 
-  describe("the _renderLogic function", () => {
+  describe("the renderLogic function", () => {
     describe("when flagValue is true", () => {
       it("renders the feature callback", () => {
         const wrapper = shallow(
@@ -193,7 +192,7 @@ describe("components/FeatureFlagRenderer", () => {
     });
   });
 
-  describe("the _checkFeatureFlag function", () => {
+  describe("the checkFeatureFlag function", () => {
     const getWrapper = () => {
       return mount(
         <FeatureFlagRenderer
