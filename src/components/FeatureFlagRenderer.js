@@ -23,14 +23,22 @@ export default class FeatureFlagRenderer extends Component {
   }
 
   componentDidMount () {
-    this._checkFeatureFlag();
+    this.checkFeatureFlag();
+    this.listenFlagChangeEvent();
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return (
+      nextState.flagValue !== this.state.flagValue ||
+      nextState.checkFeatureFlagComplete !== this.state.checkFeatureFlagComplete
+    );
   }
 
   render () {
-    return this._renderLogic();
+    return this.renderLogic();
   }
 
-  _renderLogic () {
+  renderLogic () {
     const { flagValue, checkFeatureFlagComplete } = this.state;
     const { renderFeatureCallback, renderDefaultCallback, initialRenderCallback } = this.props;
 
@@ -47,22 +55,36 @@ export default class FeatureFlagRenderer extends Component {
     return null;
   }
 
-  _checkFeatureFlag () {
+  checkFeatureFlag () {
     const { ldClientWrapper, flagKey } = this.props;
 
     ldClientWrapper.onReady(() => {
       const flagValue = ldClientWrapper.variation(flagKey, false);
-      const typeFlagValue = typeof flagValue;
-      const defaultState = { checkFeatureFlagComplete: true };
-      const override = ldOverrideFlag(flagKey, typeFlagValue);
-
-      if (typeof override !== "undefined") {
-        this.setState({ flagValue: override, ...defaultState });
-      } else if (flagValue) {
-        this.setState({ flagValue: flagValue, ...defaultState });
-      } else {
-        this.setState({ flagValue: false, ...defaultState });
-      }
+      this.setStateFlagValue(flagValue);
     });
+  }
+
+  listenFlagChangeEvent () {
+    const { ldClientWrapper, flagKey } = this.props;
+
+    ldClientWrapper.on(`change:${flagKey}`, (value) => {
+      this.setStateFlagValue(value);
+    });
+  }
+
+  setStateFlagValue (flagValue) {
+    const { flagKey } = this.props;
+    const typeFlagValue = typeof flagValue;
+    const defaultState = { checkFeatureFlagComplete: true };
+    const override = ldOverrideFlag(flagKey, typeFlagValue);
+
+    if (typeof override !== "undefined") {
+      // Override is set for this flag key, use override instead
+      this.setState({ flagValue: override, ...defaultState });
+    } else if (flagValue) {
+      this.setState({ flagValue: flagValue, ...defaultState });
+    } else {
+      this.setState({ flagValue: false, ...defaultState });
+    }
   }
 }
