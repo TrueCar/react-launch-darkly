@@ -23,8 +23,8 @@ export default class FeatureFlagRenderer extends Component {
   }
 
   componentDidMount () {
-    this._checkFeatureFlag();
-    this._listenFlagChangeEvent();
+    this.checkFeatureFlag();
+    this.listenFlagChangeEvent();
   }
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -35,10 +35,10 @@ export default class FeatureFlagRenderer extends Component {
   }
 
   render () {
-    return this._renderLogic();
+    return this.renderLogic();
   }
 
-  _renderLogic () {
+  renderLogic () {
     const { flagValue, checkFeatureFlagComplete } = this.state;
     const { renderFeatureCallback, renderDefaultCallback, initialRenderCallback } = this.props;
 
@@ -55,24 +55,24 @@ export default class FeatureFlagRenderer extends Component {
     return null;
   }
 
-  _checkFeatureFlag () {
+  checkFeatureFlag () {
     const { ldClientWrapper, flagKey } = this.props;
 
     ldClientWrapper.onReady(() => {
       const flagValue = ldClientWrapper.variation(flagKey, false);
-      this._setStateFlagValue(flagValue);
+      this.setStateFlagValue(flagValue);
     });
   }
 
-  _listenFlagChangeEvent () {
+  listenFlagChangeEvent () {
     const { ldClientWrapper, flagKey } = this.props;
 
-    ldClientWrapper.on(`change:${flagKey}`, function(value) {
-      this._setStateFlagValue(value);
+    ldClientWrapper.on(`change:${flagKey}`, (value) => {
+      this.setStateFlagValue(value);
     });
   }
 
-  _setStateFlagValue (flagValue) {
+  setStateFlagValue (flagValue) {
     const { flagKey } = this.props;
     const typeFlagValue = typeof flagValue;
     const defaultState = { checkFeatureFlagComplete: true };
