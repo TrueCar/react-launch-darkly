@@ -15,6 +15,7 @@ describe("components/FeatureFlagRenderer", () => {
   const renderDefaultCallback = jest.fn().mockReturnValue(<div>"default rendered"</div>);
   const initialRenderCallback = jest.fn().mockReturnValue(<div>"initial rendered"</div>);
   const variation = jest.fn();
+  const ldClientWrapperOn = jest.fn();
 
   beforeEach(() => {
     utils.ldClientWrapper = jest.fn();
@@ -22,7 +23,7 @@ describe("components/FeatureFlagRenderer", () => {
       onReady: (callback) => {
         callback();
       },
-      on: jest.fn(),
+      on: ldClientWrapperOn,
       variation
     }));
   });
@@ -53,7 +54,7 @@ describe("components/FeatureFlagRenderer", () => {
     expect(wrapper.find("[data-qa='FeatureFlag-my-test']")).toBeDefined();
   });
 
-  describe("the renderLogic function", () => {
+  describe("renderLogic()", () => {
     describe("when flagValue is true", () => {
       it("renders the feature callback", () => {
         const wrapper = shallow(
@@ -192,16 +193,38 @@ describe("components/FeatureFlagRenderer", () => {
     });
   });
 
-  describe("the checkFeatureFlag function", () => {
-    const getWrapper = () => {
-      return mount(
+  describe("when mounted", () => {
+    const getWrapper = () => (
+      mount(
         <FeatureFlagRenderer
           ldClientWrapper={utils.ldClientWrapper()}
           flagKey="my-test"
           renderFeatureCallback={renderFeatureCallback}
         />
-      );
-    };
+      )
+    );
+
+    describe("when change even emits", () => {
+      jest.useFakeTimers();
+
+      it("updates the state", () => {
+        const expectedFlagValue = { foo: "bar" };
+        variation.mockImplementation(() => true);
+        ldClientWrapperOn.mockImplementation((type, callback) => {
+          if (type === "change:my-test") {
+            setTimeout(() => {
+              callback(expectedFlagValue);
+            }, 1000);
+          }
+        });
+        const wrapper = getWrapper();
+        expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: true });
+
+        jest.runAllTimers();
+        expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: expectedFlagValue });
+
+      });
+    });
 
     describe("when the feature flag comes back true", () => {
       it("sets the state", () => {
