@@ -33,13 +33,6 @@ export default class FeatureFlagRenderer extends Component {
     this.listenFlagChangeEvent(ldClient);
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return (
-      nextState.flagValue !== this.state.flagValue ||
-      nextState.checkFeatureFlagComplete !== this.state.checkFeatureFlagComplete
-    );
-  }
-
   render () {
     return this.renderLogic();
   }
