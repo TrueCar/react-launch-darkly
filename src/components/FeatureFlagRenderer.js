@@ -1,7 +1,7 @@
 /* @flow */
 import { Component } from "react";
 
-import { ldOverrideFlag } from "../lib/utils";
+import { ldClientWrapper, ldOverrideFlag } from "../lib/utils";
 import { FeatureFlagType } from "../types/FeatureFlag";
 
 type Props = FeatureFlagType & { ldClientWrapper: Object };
@@ -23,8 +23,14 @@ export default class FeatureFlagRenderer extends Component {
   }
 
   componentDidMount () {
-    this.checkFeatureFlag();
-    this.listenFlagChangeEvent();
+    const { clientId, user, clientOptions, ldClientWrapper } = this.props.ldClientConfig;
+
+    // Only initialize the launch darkly js-client when in browser,
+    // can not be initialized on SSR due to dependency on XMLHttpRequest.
+    const ldClient = ldClientWrapper(clientId, user, clientOptions);
+
+    this.checkFeatureFlag(ldClient);
+    this.listenFlagChangeEvent(ldClient);
   }
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -55,19 +61,19 @@ export default class FeatureFlagRenderer extends Component {
     return null;
   }
 
-  checkFeatureFlag () {
-    const { ldClientWrapper, flagKey } = this.props;
+  checkFeatureFlag (ldClient) {
+    const { flagKey } = this.props;
 
-    ldClientWrapper.onReady(() => {
+    ldClient.onReady(() => {
       const flagValue = ldClientWrapper.variation(flagKey, false);
       this.setStateFlagValue(flagValue);
     });
   }
 
-  listenFlagChangeEvent () {
-    const { ldClientWrapper, flagKey } = this.props;
+  listenFlagChangeEvent (ldClient) {
+    const { flagKey } = this.props;
 
-    ldClientWrapper.on(`change:${flagKey}`, (value) => {
+    ldClient.on(`change:${flagKey}`, (value) => {
       this.setStateFlagValue(value);
     });
   }
