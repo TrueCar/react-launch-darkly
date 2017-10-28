@@ -23,7 +23,7 @@ export default class FeatureFlagRenderer extends Component {
   }
 
   componentDidMount () {
-    const { clientId, user, clientOptions, ldClientWrapper } = this.props.ldClientConfig;
+    const { clientId, user, clientOptions } = this.props.ldClientConfig;
 
     // Only initialize the launch darkly js-client when in browser,
     // can not be initialized on SSR due to dependency on XMLHttpRequest.
@@ -58,7 +58,7 @@ export default class FeatureFlagRenderer extends Component {
     const { flagKey } = this.props;
 
     ldClient.onReady(() => {
-      const flagValue = ldClientWrapper.variation(flagKey, false);
+      const flagValue = ldClient.variation(flagKey, false);
       this.setStateFlagValue(flagValue);
     });
   }
