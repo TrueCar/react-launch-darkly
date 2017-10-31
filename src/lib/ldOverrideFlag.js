@@ -1,10 +1,3 @@
-export function getLocation() {
-  if (window.location) {
-    return window.location.toString();
-  }
-  return "";
-}
-
 export function ldOverrideFlag(flagKey, typeFlagValue) {
     const url = require("url");
     let override;

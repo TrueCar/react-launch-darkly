@@ -1,5 +1,10 @@
 import launchDarklyBrowser from "ldclient-js";
-
+export function getLocation() {
+  if (window.location) {
+    return window.location.toString();
+  }
+  return "";
+}
 let ldClient;
 let ldClientReady = false;
 export function ldClientWrapper (key, user, options = {}) {
