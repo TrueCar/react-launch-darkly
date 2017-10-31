@@ -1,7 +1,7 @@
-describe("lib/utils", () => {
+describe("lib/ldClientWrapper", () => {
   jest.useFakeTimers();
 
-  let utils = require("./../../src/lib/utils");
+  let utils = require("./../../src/lib/ldClientWrapper");
   let ldClient = require("ldclient-js");
 
   const mockLdClient = (() => {
@@ -16,9 +16,7 @@ describe("lib/utils", () => {
   mockLdClient();
 
   it("exports functions", () => {
-    expect(utils["ldClientWrapper"]).toBeDefined();
-    expect(utils["ldOverrideFlag"]).toBeDefined();
-    expect(utils["getAllFeatureFlags"]).toBeDefined();
+    expect("ldClientWrapper").toBeDefined();
   });
 
   describe("ldClientWrapper", () => {
@@ -31,7 +29,7 @@ describe("lib/utils", () => {
         // `ldClientWrapper` is a singleton, we need to reset the module cache with each test
         // to be able to properly assert each instance of `ldClientWrapper`
         jest.resetModules();
-        utils = require("./../../src/lib/utils");
+        utils = require("./../../src/lib/ldClientWrapper");
         ldClient = require("ldclient-js");
         mockLdClient();
       });
@@ -71,13 +69,4 @@ describe("lib/utils", () => {
       expect(callbackMock.mock.instances.length).toBe(3);
     });
   });
-
-  describe("getAllFeatureFlags", () => {
-
-  });
-
-  describe("ldOverrideFlag", () => {
-
-  });
-
 });
