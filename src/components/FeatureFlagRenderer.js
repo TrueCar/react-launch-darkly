@@ -1,7 +1,7 @@
 /* @flow */
 import { Component } from "react";
 
-import { ldOverrideFlag } from "../lib/utils";
+import { ldOverrideFlag } from "../lib/ldOverrideFlag";
 import { FeatureFlagType } from "../types/FeatureFlag";
 
 type Props = FeatureFlagType & { ldClientWrapper: Object };

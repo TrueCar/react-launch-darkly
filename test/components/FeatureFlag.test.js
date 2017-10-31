@@ -6,7 +6,7 @@ import FeatureFlag from "../../src/components/FeatureFlag";
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import LaunchDarkly from "../../src/components/LaunchDarkly";
 import { BROADCAST_CHANNEL } from "../../src/constants/LaunchDarkly";
-import * as utils from "../../src/lib/utils";
+import * as utils from "../../src/lib/ldClientWrapper";
 
 describe("components/FeatureFlag", () => {
   const defaultProps = {

@@ -2,7 +2,7 @@
 import React from "react";
 import { Subscriber } from "react-broadcast";
 
-import { ldClientWrapper } from "../lib/utils";
+import { ldClientWrapper } from "../lib/ldClientWrapper";
 import { BROADCAST_CHANNEL } from "../constants/LaunchDarkly.js";
 import FeatureFlagRenderer from "./FeatureFlagRenderer";
 import { FeatureFlagType } from "../types/FeatureFlag";
