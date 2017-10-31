@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
-import * as utils from "../../src/lib/utils";
+import * as utils from "../../src/lib/ldClientWrapper";
 
 describe("components/FeatureFlagRenderer", () => {
   const renderFeatureCallback = jest.fn().mockImplementation((flagValue) => {
