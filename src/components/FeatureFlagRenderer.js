@@ -16,10 +16,23 @@ export default class FeatureFlagRenderer extends Component {
   constructor (props:Props) {
     super(props);
 
+    const {
+      flagKey,
+      ldClientConfig: {
+        clientOptions: {
+          bootstrap
+        }
+      }
+    } = this.props;
+
     this.state = {
       checkFeatureFlagComplete: false,
-      flagValue: false
+      flagValue: bootstrap && bootstrap.hasOwnProperty(flagKey) ? bootstrap[flagKey] : false
     };
+
+    // this.checkFeatureFlag = this.checkFeatureFlag.bind(this);
+    // this.listenFlagChangeEvent = this.listenFlagChangeEvent.bind(this);
+    this.setStateFlagValue = this.setStateFlagValue.bind(this);
   }
 
   componentDidMount () {
@@ -29,8 +42,13 @@ export default class FeatureFlagRenderer extends Component {
     // can not be initialized on SSR due to dependency on XMLHttpRequest.
     const ldClient = ldClientWrapper(clientId, user, clientOptions);
 
+    this._isMounted = true;
     this.checkFeatureFlag(ldClient);
     this.listenFlagChangeEvent(ldClient);
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false;
   }
 
   render () {
@@ -76,6 +94,14 @@ export default class FeatureFlagRenderer extends Component {
     const typeFlagValue = typeof flagValue;
     const defaultState = { checkFeatureFlagComplete: true };
     const override = ldOverrideFlag(flagKey, typeFlagValue);
+
+    // Due to this function being called within a callback, we can run into issues
+    // where we try to set the state for an unmounted component. Since `isMounted()` is deprecated
+    // as part of a React class, we can create our own way to manage it within the protoype.
+    // See https://github.com/facebook/react/issues/5465#issuecomment-157888325 for more info
+    if (!this._isMounted) {
+      return;
+    }
 
     if (typeof override !== "undefined") {
       // Override is set for this flag key, use override instead
