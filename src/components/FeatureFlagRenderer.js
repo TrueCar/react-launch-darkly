@@ -29,10 +29,6 @@ export default class FeatureFlagRenderer extends Component {
       checkFeatureFlagComplete: false,
       flagValue: bootstrap && bootstrap.hasOwnProperty(flagKey) ? bootstrap[flagKey] : false
     };
-
-    // this.checkFeatureFlag = this.checkFeatureFlag.bind(this);
-    // this.listenFlagChangeEvent = this.listenFlagChangeEvent.bind(this);
-    this.setStateFlagValue = this.setStateFlagValue.bind(this);
   }
 
   componentDidMount () {
