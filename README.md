@@ -54,7 +54,7 @@ export default class Home extends Component {
 }
 ```
 
-## Component Helpers
+## Docs
 
 ### `LaunchDarkly`
 Main component that initializes the [LaunchDarkly js-client](https://github.com/launchdarkly/js-client).
@@ -149,7 +149,7 @@ Since the feature flags are requested from LaunchDarkly after DOM load, there ma
 This callback is provided for cases where you want to render something by default, think of it when your feature flag is "off" or falsy.
 
 
-### Overriding Feature Flags
+## Overriding Feature Flags
 
 If you need to temporarily override the variation reported by a feature flag for
 testing or demonstration purposes, you can do so using special query parameters
@@ -160,7 +160,7 @@ Do note that overriding a feature flag does not report it to LaunchDarkly nor do
 It's merely a mechanism for testing or demonstration purposes. One notable use-case is in
 integration and/or end-to-end testing.
 
-#### Enabling Boolean Feature Flags
+### Enabling Boolean Feature Flags
 
 You can enable a set of boolean feature flags with a comma-delimited list in the
 `features` query parameter:
@@ -175,7 +175,7 @@ http://localhost/users?features=send-onboarding-email
 http://localhost/users/101?features=show-user-email,user-nicknames,hide-inactive-users
 ```
 
-#### Advanced Feature Flag Overriding
+### Advanced Feature Flag Overriding
 
 If you need to temporarily set a boolean feature flag to `false` or override the
 variation reported by a multivariate feature flag, you can use
