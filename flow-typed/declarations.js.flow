@@ -1,0 +1,45 @@
+/* eslint-disable no-undef */
+
+declare type LdClientWrapperType = {
+  on: Function,
+  onReady: Function,
+  variation: Function
+};
+
+declare type FeatureFlagType = {
+  flagKey: string,
+  renderFeatureCallback: Function,
+  renderDefaultCallback?: Function,
+  initialRenderCallback?: Function
+};
+
+declare type ConfigType = {
+  clientId: string,
+  user: UserType,
+  clientOptions: ClientOptionsType
+};
+
+declare type UserType = {
+  // https://docs.launchdarkly.com/docs/js-sdk-reference#section-users
+  key: string,
+  firstName?: string,
+  lastName?: string,
+  email?: string,
+  custom?: Object
+};
+
+declare type FlagValueType = string | Object | boolean;
+
+declare type ClientOptionsType = {
+  // https://docs.launchdarkly.com/docs/js-sdk-reference#section-bootstrapping
+  // Additionally used for SSR when an Object
+  bootstrap?: string | { [flagKey: string]: FlagValueType },
+
+  // https://docs.launchdarkly.com/docs/js-sdk-reference#section-secure-mode
+  hash?: string,
+
+  // https://github.com/launchdarkly/js-client/blob/master/src/index.js#L241-L243
+  baseUrl?: string,
+  eventsUrl?: string,
+  streamUrl?: string
+};
