@@ -31,20 +31,26 @@
     "prefer-const": 2,
 
     "react/display-name": 0,
-    "react/jsx-wrap-multilines": 2
+    "react/jsx-wrap-multilines": 2,
+
+    "flowtype/define-flow-type": 1
   },
   "env": {
     "es6": true,
     "node": true,
     "browser": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+  ],
   "ecmaFeatures": {
     "jsx": true,
     "experimentalObjectRestSpread": true
   },
   "plugins": [
-    "react"
+    "react",
+    "flowtype"
   ],
   "globals": {
     "before": true,
