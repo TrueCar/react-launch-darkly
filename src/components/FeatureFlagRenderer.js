@@ -2,23 +2,22 @@
 import { Component } from "react";
 
 import { ldClientWrapper, ldOverrideFlag } from "../lib/utils";
-import { FeatureFlagType } from "../types/FeatureFlag";
 
-type Props = FeatureFlagType & { ldClientWrapper: Object };
+type Props = FeatureFlagType & { config: ConfigType };
+type State = {
+  checkFeatureFlagComplete: boolean,
+  flagValue: any
+};
 
-export default class FeatureFlagRenderer extends Component {
-  props: Props;
-  state: {
-    checkFeatureFlagComplete: boolean,
-    flagValue: any
-  };
+export default class FeatureFlagRenderer extends Component<Props, State> {
+  _isMounted: boolean;
 
   constructor (props:Props) {
     super(props);
 
     const {
       flagKey,
-      ldClientConfig: {
+      config: {
         clientOptions: {
           bootstrap
         }
@@ -32,7 +31,7 @@ export default class FeatureFlagRenderer extends Component {
   }
 
   componentDidMount () {
-    const { clientId, user, clientOptions } = this.props.ldClientConfig;
+    const { clientId, user, clientOptions } = this.props.config;
 
     // Only initialize the launch darkly js-client when in browser,
     // can not be initialized on SSR due to dependency on XMLHttpRequest.
@@ -68,7 +67,7 @@ export default class FeatureFlagRenderer extends Component {
     return null;
   }
 
-  checkFeatureFlag (ldClient) {
+  checkFeatureFlag (ldClient:LdClientWrapperType) {
     const { flagKey } = this.props;
 
     ldClient.onReady(() => {
@@ -77,7 +76,7 @@ export default class FeatureFlagRenderer extends Component {
     });
   }
 
-  listenFlagChangeEvent (ldClient) {
+  listenFlagChangeEvent (ldClient:LdClientWrapperType) {
     const { flagKey } = this.props;
 
     ldClient.on(`change:${flagKey}`, (value) => {
@@ -85,7 +84,7 @@ export default class FeatureFlagRenderer extends Component {
     });
   }
 
-  setStateFlagValue (flagValue) {
+  setStateFlagValue (flagValue:FlagValueType) {
     const { flagKey } = this.props;
     const typeFlagValue = typeof flagValue;
     const defaultState = { checkFeatureFlagComplete: true };
