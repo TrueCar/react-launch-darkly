@@ -3,7 +3,7 @@ import { Component } from "react";
 
 import { ldClientWrapper, ldOverrideFlag } from "../lib/utils";
 
-type Props = FeatureFlagType & { config: ConfigType };
+type Props = FeatureFlagType & ConfigType;
 type State = {
   checkFeatureFlagComplete: boolean,
   flagValue: any
@@ -17,21 +17,21 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
 
     const {
       flagKey,
-      config: {
-        clientOptions: {
-          bootstrap
-        }
+      clientOptions: {
+        bootstrap
       }
     } = this.props;
 
     this.state = {
       checkFeatureFlagComplete: false,
-      flagValue: bootstrap && bootstrap.hasOwnProperty(flagKey) ? bootstrap[flagKey] : false
+      flagValue: bootstrap &&
+        typeof bootstrap === "object" &&
+        bootstrap.hasOwnProperty(flagKey) ? bootstrap[flagKey] : false
     };
   }
 
   componentDidMount () {
-    const { clientId, user, clientOptions } = this.props.config;
+    const { clientId, user, clientOptions } = this.props;
 
     // Only initialize the launch darkly js-client when in browser,
     // can not be initialized on SSR due to dependency on XMLHttpRequest.

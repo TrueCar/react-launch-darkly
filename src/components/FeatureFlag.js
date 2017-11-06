@@ -11,7 +11,7 @@ export default function FeatureFlag (props:FeatureFlagType) {
       {
         (config) => {
           if (config) {
-            return (<FeatureFlagRenderer config={config} {...props} />);
+            return (<FeatureFlagRenderer {...config} {...props} />);
           }
 
           return null;
