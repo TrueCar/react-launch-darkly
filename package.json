@@ -37,6 +37,7 @@
     "babel-runtime": "6.18.0",
     "enzyme": "2.5.1",
     "eslint": "3.8.1",
+    "eslint-plugin-flowtype": "^2.39.1",
     "eslint-plugin-react": "6.4.1",
     "flow-bin": "^0.58.0",
     "flow-typed": "^2.2.3",

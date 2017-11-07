@@ -32,7 +32,17 @@ describe("components/FeatureFlagRenderer", () => {
     utils.ldClientWrapper.mockReset();
   });
 
-  describe("when ")
+  describe("when instantiated", () => {
+    it("sets the state", () => {
+
+    });
+
+    describe ("when bootstrap has flag key and value", () => {
+      it("sets the state", () => {
+
+      });
+    });
+  });
 
   describe("when rendered", () => {
     it("renders the proper data-qa attribute", () => {
@@ -277,6 +287,27 @@ describe("components/FeatureFlagRenderer", () => {
         const wrapper = getWrapper();
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: true });
       });
+    });
+  });
+
+  describe("when unmounted", () => {
+    jest.useFakeTimers();
+
+    it("short-circuits any remaining callbacks", () => {
+      // const expectedFlagValue = { foo: "bar" };
+      // variation.mockImplementation(() => true);
+      // ldClientWrapperOn.mockImplementation((type, callback) => {
+      //   if (type === "change:my-test") {
+      //     setTimeout(() => {
+      //       callback(expectedFlagValue);
+      //     }, 1000);
+      //   }
+      // });
+      // const wrapper = getWrapper();
+      // expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: true });
+      //
+      // jest.runAllTimers();
+      // expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: expectedFlagValue });
     });
   });
 });
