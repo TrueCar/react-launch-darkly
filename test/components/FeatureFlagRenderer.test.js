@@ -16,6 +16,9 @@ describe("components/FeatureFlagRenderer", () => {
   const initialRenderCallback = jest.fn().mockReturnValue(<div>"initial rendered"</div>);
   const variation = jest.fn();
   const ldClientWrapperOn = jest.fn();
+  const ldClientWrapperOnReady = jest.fn((callback) => {
+    callback();
+  });
 
   const shallowRender = (options) => (
     shallow(
@@ -39,9 +42,7 @@ describe("components/FeatureFlagRenderer", () => {
   beforeEach(() => {
     utils.ldClientWrapper = jest.fn();
     utils.ldClientWrapper.mockImplementation(() => ({
-      onReady: (callback) => {
-        callback();
-      },
+      onReady: ldClientWrapperOnReady,
       on: ldClientWrapperOn,
       variation
     }));
@@ -158,8 +159,29 @@ describe("components/FeatureFlagRenderer", () => {
   });
 
   describe("when mounted", () => {
+    describe("when disable xhr is true", () => {
+      const clientOptions = {
+        disableXhr: true
+      };
+
+      beforeEach(() => {
+        mountRender({ clientOptions });
+      });
+
+      it("does not initialize the ldClientWrapper", () => {
+        expect(utils.ldClientWrapper).not.toHaveBeenCalled();
+      });
+
+      it("does not listen to onReady", () => {
+        expect(ldClientWrapperOnReady).not.toHaveBeenCalled();
+      });
+
+      it("does not listen to change event", () => {
+        expect(ldClientWrapperOn).not.toHaveBeenCalled();
+      });
+    });
+
     it("initializes the ldClientWrapper", () => {
-      const ldClientWrapperSpy = jest.spyOn(utils, "ldClientWrapper");
       const config = {
         clientId: "80808080",
         user: {
@@ -171,7 +193,7 @@ describe("components/FeatureFlagRenderer", () => {
       };
 
       mountRender({ ...config });
-      expect(ldClientWrapperSpy).toHaveBeenCalledWith(config.clientId, config.user, config.clientOptions);
+      expect(utils.ldClientWrapper).toHaveBeenCalledWith(config.clientId, config.user, config.clientOptions);
     });
 
     describe("when change event emits", () => {

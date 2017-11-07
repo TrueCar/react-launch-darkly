@@ -29,11 +29,16 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
   componentDidMount () {
     const { clientId, user, clientOptions } = this.props;
 
+    this._isMounted = true;
+
+    if (clientOptions && clientOptions.disableXhr) {
+      return;
+    }
+
     // Only initialize the launch darkly js-client when in browser,
     // can not be initialized on SSR due to dependency on XMLHttpRequest.
     const ldClient = ldClientWrapper(clientId, user, clientOptions);
 
-    this._isMounted = true;
     this.checkFeatureFlag(ldClient);
     this.listenFlagChangeEvent(ldClient);
   }
