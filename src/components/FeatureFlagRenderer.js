@@ -15,12 +15,8 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
   constructor (props:Props) {
     super(props);
 
-    const {
-      flagKey,
-      clientOptions: {
-        bootstrap
-      }
-    } = this.props;
+    const { flagKey, clientOptions } = this.props;
+    const bootstrap = clientOptions && clientOptions.bootstrap;
 
     this.state = {
       checkFeatureFlagComplete: false,

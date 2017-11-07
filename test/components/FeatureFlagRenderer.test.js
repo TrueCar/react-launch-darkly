@@ -32,34 +32,23 @@ describe("components/FeatureFlagRenderer", () => {
     utils.ldClientWrapper.mockReset();
   });
 
-  it("renders without an issue", () => {
-    const wrapper = shallow(
-      <FeatureFlagRenderer
-        ldClientWrapper={utils.ldClientWrapper()}
-        flagKey="my-test"
-        renderFeatureCallback={renderFeatureCallback}
-      />
-    );
-    expect(wrapper).toBeDefined();
-  });
+  describe("when ")
 
-  it("renders the proper data-qa attribute", () => {
-    const wrapper = shallow(
-      <FeatureFlagRenderer
-        ldClientWrapper={utils.ldClientWrapper()}
-        flagKey="my-test"
-        renderFeatureCallback={renderFeatureCallback}
-      />
-    );
-    expect(wrapper.find("[data-qa='FeatureFlag-my-test']")).toBeDefined();
-  });
+  describe("when rendered", () => {
+    it("renders the proper data-qa attribute", () => {
+      const wrapper = shallow(
+        <FeatureFlagRenderer
+          flagKey="my-test"
+          renderFeatureCallback={renderFeatureCallback}
+        />
+      );
+      expect(wrapper.find("[data-qa='FeatureFlag-my-test']")).toBeDefined();
+    });
 
-  describe("renderLogic()", () => {
     describe("when flagValue is true", () => {
       it("renders the feature callback", () => {
         const wrapper = shallow(
           <FeatureFlagRenderer
-            ldClientWrapper={utils.ldClientWrapper()}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -73,7 +62,6 @@ describe("components/FeatureFlagRenderer", () => {
       it("renders the feature callback for that object", () => {
         const wrapper = shallow(
           <FeatureFlagRenderer
-            ldClientWrapper={utils.ldClientWrapper()}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -87,7 +75,6 @@ describe("components/FeatureFlagRenderer", () => {
       it("renders the feature callback for that number", () => {
         const wrapper = shallow(
           <FeatureFlagRenderer
-            ldClientWrapper={utils.ldClientWrapper()}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -101,7 +88,6 @@ describe("components/FeatureFlagRenderer", () => {
       it("renders the feature callback for that array", () => {
         const wrapper = shallow(
           <FeatureFlagRenderer
-            ldClientWrapper={utils.ldClientWrapper()}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -117,7 +103,6 @@ describe("components/FeatureFlagRenderer", () => {
           it("renders the default callback", () => {
             const wrapper = shallow(
               <FeatureFlagRenderer
-                ldClientWrapper={utils.ldClientWrapper()}
                 flagKey="my-test"
                 renderFeatureCallback={renderFeatureCallback}
                 renderDefaultCallback={renderDefaultCallback}
@@ -132,7 +117,6 @@ describe("components/FeatureFlagRenderer", () => {
           it("renders nothing", () => {
             const wrapper = shallow(
               <FeatureFlagRenderer
-                ldClientWrapper={utils.ldClientWrapper()}
                 flagKey="my-test"
                 renderFeatureCallback={renderFeatureCallback}
               />
@@ -149,7 +133,6 @@ describe("components/FeatureFlagRenderer", () => {
           it("renders the initial callback", () => {
             const wrapper = shallow(
               <FeatureFlagRenderer
-                ldClientWrapper={utils.ldClientWrapper()}
                 flagKey="my-test"
                 renderFeatureCallback={renderFeatureCallback}
                 initialRenderCallback={initialRenderCallback}
@@ -164,7 +147,6 @@ describe("components/FeatureFlagRenderer", () => {
           it("renders nothing", () => {
             const wrapper = shallow(
               <FeatureFlagRenderer
-                ldClientWrapper={utils.ldClientWrapper()}
                 flagKey="my-test"
                 renderFeatureCallback={renderFeatureCallback}
               />
@@ -181,7 +163,6 @@ describe("components/FeatureFlagRenderer", () => {
       it("it renders nothing", () => {
         const wrapper = shallow(
           <FeatureFlagRenderer
-            ldClientWrapper={utils.ldClientWrapper()}
             flagKey="my-test"
             renderFeatureCallback={renderFeatureCallback}
           />
@@ -197,12 +178,34 @@ describe("components/FeatureFlagRenderer", () => {
     const getWrapper = () => (
       mount(
         <FeatureFlagRenderer
-          ldClientWrapper={utils.ldClientWrapper()}
           flagKey="my-test"
           renderFeatureCallback={renderFeatureCallback}
         />
       )
     );
+
+    it("initializes the ldClientWrapper", () => {
+      const ldClientWrapperSpy = jest.spyOn(utils, "ldClientWrapper");
+      const config = {
+        clientId: "80808080",
+        user: {
+          key: "abc123"
+        },
+        clientOptions: {
+          baseUrl: "https://test"
+        }
+      };
+
+      mount(
+        <FeatureFlagRenderer
+          {...config}
+          flagKey="my-test"
+          renderFeatureCallback={renderFeatureCallback}
+        />
+      );
+
+      expect(ldClientWrapperSpy).toHaveBeenCalledWith(config.clientId, config.user, config.clientOptions);
+    });
 
     describe("when change event emits", () => {
       jest.useFakeTimers();
