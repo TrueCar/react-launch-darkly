@@ -1,16 +1,16 @@
 /* eslint-disable no-undef */
 
 declare type LdClientWrapperType = {
-  on: Function,
-  onReady: Function,
-  variation: Function
+  on: (string, (FlagValueType) => (void)) => void,
+  onReady: (() => void) => void,
+  variation: (string, boolean) => FlagValueType
 };
 
 declare type FeatureFlagType = {
   flagKey: string,
-  renderFeatureCallback: Function,
-  renderDefaultCallback?: Function,
-  initialRenderCallback?: Function
+  renderFeatureCallback: (FlagValueType) => ?React$Element<any>,
+  renderDefaultCallback?: () => ?React$Element<any>,
+  initialRenderCallback?: () => ?React$Element<any>
 };
 
 declare type ConfigType = {
