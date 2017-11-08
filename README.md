@@ -55,8 +55,12 @@ export default class Home extends Component {
 ```
 
 ## Docs
+- [LaunchDarkly component](https://github.com/TrueCar/react-launch-darkly#launchdarkly-component)
+- [FeatureFlag component](https://github.com/TrueCar/react-launch-darkly#featureflag-component)
+- [SSR Support](https://github.com/TrueCar/react-launch-darkly#ssr-support)
+- [Overriding Feature Flags](https://github.com/TrueCar/react-launch-darkly#overriding-feature-flags)
 
-### `LaunchDarkly`
+### `LaunchDarkly` component
 Main component that initializes the [LaunchDarkly js-client](https://github.com/launchdarkly/js-client).
 
 #### props
@@ -74,37 +78,9 @@ Options that are passed to the LaunchDarkly JS client for additional configurati
 - [Secure Mode](https://docs.launchdarkly.com/docs/js-sdk-reference#section-secure-mode)
 - [Setting LaunchDarkly Enterprise URLs](https://github.com/launchdarkly/js-client/blob/master/src/index.js#L241-L243)
 
-##### SSR Support
-SSR is opt-in and you need to specify the initial set of feature flag keys and values through
-the `bootstrap` property on `clientOptions`:
-```javascript
-// currentUser.featureFlags
-// >> { "your-feature-flag": true }
-const clientOptions = {
-  bootstrap: currentUser.featureFlags
-};
-```
-
-What this gives you is that on SSR, we use the set of feature flags found on `bootstrap` to render
-your `FeatureFlag` component. When your `FeatureFlag` component is mounted, it will then initialize
-the LaunchDarkly js-client and make the proper XHRs to LaunchDarkly to populate the available
-feature flags within js-client's internal state. Thus taking precedence over the feature flags
-present in `bootstrap`.
-
-###### Disable LaunchDarkly js-client Initialization (Preventing XHRs)
-In the event that you opt-in for SSR, you may not want to make any additional XHRs to LaunchDarkly
-since you already have the feature flags provided from your server through `bootstrap`, you can
-disable this by supplying `disableXhr: true`:
-```javascript
-const clientOptions = {
-  bootstrap: currentUser.featureFlags,
-  disableXhr: true
-};
-```
-
 ---
 
-### `FeatureFlag`
+### `FeatureFlag` component
 Note that this component has to be rendered as a child of `LaunchDarkly`
 
 #### props
@@ -148,8 +124,39 @@ Since the feature flags are requested from LaunchDarkly after DOM load, there ma
 #### `renderDefaultCallback` : `function` (optional)
 This callback is provided for cases where you want to render something by default, think of it when your feature flag is "off" or falsy.
 
+---
 
-## Overriding Feature Flags
+### SSR Support
+SSR is opt-in and you need to specify the initial set of feature flag keys and values through
+the `bootstrap` property on `clientOptions`:
+```javascript
+// currentUser.featureFlags
+// >> { "your-feature-flag": true }
+const clientOptions = {
+  bootstrap: currentUser.featureFlags
+};
+```
+
+What this gives you is that on SSR, we use the set of feature flags found on `bootstrap` to render
+your `FeatureFlag` component. When your `FeatureFlag` component is mounted, it will then initialize
+the LaunchDarkly js-client and make the proper XHRs to LaunchDarkly to populate the available
+feature flags within js-client's internal state. Thus taking precedence over the feature flags
+present in `bootstrap`.
+
+#### Disable LaunchDarkly js-client Initialization (Preventing XHRs)
+In the event that you opt-in for SSR, you may not want to make any additional XHRs to LaunchDarkly
+since you already have the feature flags provided from your server through `bootstrap`, you can
+disable this by supplying `disableXhr: true`:
+```javascript
+const clientOptions = {
+  bootstrap: currentUser.featureFlags,
+  disableXhr: true
+};
+```
+
+---
+
+### Overriding Feature Flags
 
 If you need to temporarily override the variation reported by a feature flag for
 testing or demonstration purposes, you can do so using special query parameters
@@ -160,7 +167,7 @@ Do note that overriding a feature flag does not report it to LaunchDarkly nor do
 It's merely a mechanism for testing or demonstration purposes. One notable use-case is in
 integration and/or end-to-end testing.
 
-### Enabling Boolean Feature Flags
+#### Enabling Boolean Feature Flags
 
 You can enable a set of boolean feature flags with a comma-delimited list in the
 `features` query parameter:
@@ -175,7 +182,7 @@ http://localhost/users?features=send-onboarding-email
 http://localhost/users/101?features=show-user-email,user-nicknames,hide-inactive-users
 ```
 
-### Advanced Feature Flag Overriding
+#### Advanced Feature Flag Overriding
 
 If you need to temporarily set a boolean feature flag to `false` or override the
 variation reported by a multivariate feature flag, you can use
@@ -195,7 +202,7 @@ reported as enabled:
 http://localhost/users/101?features.show-user-email
 ```
 
-### Examples
+#### Examples
 ```
 // Overrides the `send-onboarding-email` boolean feature flag, setting it to `true`
 http://localhost/users?features=send-onboarding-email
