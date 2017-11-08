@@ -60,6 +60,8 @@ export default class Home extends Component {
 - [SSR Support](https://github.com/TrueCar/react-launch-darkly#ssr-support)
 - [Overriding Feature Flags](https://github.com/TrueCar/react-launch-darkly#overriding-feature-flags)
 
+---
+
 ### `LaunchDarkly` component
 Main component that initializes the [LaunchDarkly js-client](https://github.com/launchdarkly/js-client).
 
