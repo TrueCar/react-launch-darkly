@@ -31,7 +31,7 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
 
     this._isMounted = true;
 
-    if (clientOptions && clientOptions.disableXhr) {
+    if (clientOptions && clientOptions.disableClient) {
       return;
     }
 

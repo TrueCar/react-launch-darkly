@@ -148,11 +148,11 @@ present in `bootstrap`.
 #### Disable LaunchDarkly js-client Initialization (Preventing XHRs)
 In the event that you opt-in for SSR, you may not want to make any additional XHRs to LaunchDarkly
 since you already have the feature flags provided from your server through `bootstrap`, you can
-disable this by supplying `disableXhr: true`:
+disable this by supplying `disableClient: true`:
 ```javascript
 const clientOptions = {
   bootstrap: currentUser.featureFlags,
-  disableXhr: true
+  disableClient: true
 };
 ```
 

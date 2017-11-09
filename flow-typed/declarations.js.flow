@@ -43,5 +43,5 @@ declare type ClientOptionsType = {
   eventsUrl?: string,
   streamUrl?: string,
 
-  disableXhr?: boolean
+  disableClient?: boolean
 };

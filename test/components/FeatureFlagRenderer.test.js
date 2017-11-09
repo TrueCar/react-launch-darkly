@@ -159,9 +159,9 @@ describe("components/FeatureFlagRenderer", () => {
   });
 
   describe("when mounted", () => {
-    describe("when disable xhr is true", () => {
+    describe("when disableClient is true", () => {
       const clientOptions = {
-        disableXhr: true
+        disableClient: true
       };
 
       beforeEach(() => {
