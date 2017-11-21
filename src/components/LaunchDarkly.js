@@ -1,8 +1,9 @@
-/* @flow */
+// @flow
 import React from "react";
 import { Broadcast } from "react-broadcast";
 
-import { BROADCAST_CHANNEL } from "../constants/LaunchDarkly.js";
+import type { UserType, ClientOptionsType } from "../types";
+import { BROADCAST_CHANNEL } from "../constants/LaunchDarkly";
 
 type Props = {
   clientId: string,

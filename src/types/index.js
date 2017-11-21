@@ -1,25 +1,24 @@
-/* eslint-disable no-undef */
-
-declare type LdClientWrapperType = {
+// @flow
+export type LdClientWrapperType = {
   on: (string, (FlagValueType) => (void)) => void,
   onReady: (() => void) => void,
   variation: (string, boolean) => FlagValueType
 };
 
-declare type FeatureFlagType = {
+export type FeatureFlagType = {
   flagKey: string,
   renderFeatureCallback: (FlagValueType) => ?React$Element<any>,
   renderDefaultCallback?: () => ?React$Element<any>,
   initialRenderCallback?: () => ?React$Element<any>
 };
 
-declare type ConfigType = {
+export type ConfigType = {
   clientId: string,
   user: UserType,
   clientOptions: ClientOptionsType
 };
 
-declare type UserType = {
+export type UserType = {
   // https://docs.launchdarkly.com/docs/js-sdk-reference#section-users
   key: string,
   firstName?: string,
@@ -28,9 +27,9 @@ declare type UserType = {
   custom?: Object
 };
 
-declare type FlagValueType = string | Object | boolean;
+export type FlagValueType = string | Object | boolean;
 
-declare type ClientOptionsType = {
+export type ClientOptionsType = {
   // https://docs.launchdarkly.com/docs/js-sdk-reference#section-bootstrapping
   // Additionally used for SSR when an Object
   bootstrap?: string | { [flagKey: string]: FlagValueType },
