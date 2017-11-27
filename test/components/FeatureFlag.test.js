@@ -6,7 +6,6 @@ import FeatureFlag from "../../src/components/FeatureFlag";
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import LaunchDarkly from "../../src/components/LaunchDarkly";
 import { BROADCAST_CHANNEL } from "../../src/constants/LaunchDarkly";
-import * as utils from "../../src/lib/utils";
 
 describe("components/FeatureFlag", () => {
   const defaultProps = {
@@ -25,7 +24,7 @@ describe("components/FeatureFlag", () => {
 
   it("subscribes to the correct broadcast channel", () => {
     const subject = mount(
-      <LaunchDarkly clientId={ config.clientId } user={ config.user }>
+      <LaunchDarkly clientId={config.clientId} user={config.user}>
         <FeatureFlag {...defaultProps} />
       </LaunchDarkly>
     );
@@ -42,7 +41,11 @@ describe("components/FeatureFlag", () => {
     };
 
     const subject = mount(
-      <LaunchDarkly clientId={ config.clientId } user={ config.user }>
+      <LaunchDarkly
+        clientId={config.clientId}
+        user={config.user}
+        clientOptions={config.clientOptions}
+      >
         <FeatureFlag {...allProps} />
       </LaunchDarkly>
     );
@@ -52,48 +55,9 @@ describe("components/FeatureFlag", () => {
     expect(renderer.prop("renderFeatureCallback")).toEqual(allProps.renderFeatureCallback);
     expect(renderer.prop("renderDefaultCallback")).toEqual(allProps.renderDefaultCallback);
     expect(renderer.prop("initialRenderCallback")).toEqual(allProps.initialRenderCallback);
-  });
-
-  describe("ldClientWrapper()", () => {
-    const ldClientWrapperSpy = jest.spyOn(utils, "ldClientWrapper");
-
-    it("gets called without clientOptions prop", () => {
-      mount(
-        <LaunchDarkly
-          clientId={ config.clientId }
-          user={ config.user }
-        >
-          <FeatureFlag {...defaultProps} />
-        </LaunchDarkly>
-      );
-
-      expect(ldClientWrapperSpy).toHaveBeenCalledWith(config.clientId, config.user, void(0));
-    });
-
-    it("gets called with clientOptions prop", () => {
-      mount(
-        <LaunchDarkly
-          clientId={ config.clientId }
-          user={ config.user }
-          clientOptions={ config.clientOptions }
-        >
-          <FeatureFlag {...defaultProps} />
-        </LaunchDarkly>
-      );
-
-      expect(ldClientWrapperSpy).toHaveBeenCalledWith(config.clientId, config.user, config.clientOptions);
-    });
-
-    it("gets set as a prop on FeatuerFlagRenderer", () => {
-      const subject = mount(
-        <LaunchDarkly clientId={ config.clientId } user={ config.user }>
-          <FeatureFlag {...defaultProps} />
-        </LaunchDarkly>
-      );
-
-      const renderer = subject.find(FeatureFlagRenderer);
-      expect(renderer.prop("ldClientWrapper")).toEqual(utils.ldClientWrapper());
-    });
+    expect(renderer.prop("clientId")).toEqual(config.clientId);
+    expect(renderer.prop("user")).toEqual(config.user);
+    expect(renderer.prop("clientOptions")).toEqual(config.clientOptions);
   });
 
   describe("when Broadcast sends no value", () => {

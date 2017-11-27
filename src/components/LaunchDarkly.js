@@ -1,18 +1,15 @@
-/* @flow */
+// @flow
 import React from "react";
 import { Broadcast } from "react-broadcast";
 
-import { BROADCAST_CHANNEL } from "../constants/LaunchDarkly.js";
-import { UserType } from "../types/User";
+import type { UserType, ClientOptionsType } from "../types";
+import { BROADCAST_CHANNEL } from "../constants/LaunchDarkly";
 
 type Props = {
-  clientId: Object,
+  clientId: string,
   user: UserType,
-  children: any,
-  // Any option accepted by the Javascript client
-  // https://github.com/launchdarkly/js-client/blob/master/src/index.js#L241
-  // See src/lib/utils.js for details
-  clientOptions: Object
+  clientOptions: ClientOptionsType,
+  children: any
 };
 
 export default function LaunchDarkly (props:Props) {
