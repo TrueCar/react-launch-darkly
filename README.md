@@ -4,7 +4,10 @@
 [![npm](https://img.shields.io/npm/v/react-launch-darkly.svg)](https://www.npmjs.com/package/react-launch-darkly)
 [![Build Status](https://travis-ci.org/TrueCar/react-launch-darkly.svg?branch=master)](https://travis-ci.org/TrueCar/react-launch-darkly)
 
-## Usage
+## Installation
+`npm install --save react-launch-darkly`
+
+## Basic Usage
 To setup the `LaunchDarkly` component wrapper, you'll probably want to include it in a top-level
 layout component:
 ```javascript
@@ -50,27 +53,18 @@ export default class Home extends Component {
   }
 }
 ```
-## Local testing
-In addition to configuring flags via the LaunchDarkly interface, flags can be set manually via URL parameters.  See https://github.com/TrueCar/react-launch-darkly/pull/6
 
-### Examples
-```
-# Overrides the `send-onboarding-email` boolean feature flag, setting it to `true`
-POST /users?features=send-onboarding-email
+## Docs
+- [LaunchDarkly component](https://github.com/TrueCar/react-launch-darkly#launchdarkly-component)
+- [FeatureFlag component](https://github.com/TrueCar/react-launch-darkly#featureflag-component)
+- [SSR Support](https://github.com/TrueCar/react-launch-darkly#ssr-support)
+- [Overriding Feature Flags](https://github.com/TrueCar/react-launch-darkly#overriding-feature-flags)
 
-# Enables the `show-user-email`, `user-nicknames`, and `hide-inactive-users` feature flags
-GET /users/101?features=show-user-email,user-nicknames,hide-inactive-users
+---
 
-# Disables the `verify-email` feature flag and sets the `email-frequency` variation to "weekly"
-POST /users?features.verify-email=false&features.email-frequency=weekly
+### `LaunchDarkly` component
+Main component that initializes the [LaunchDarkly js-client](https://github.com/launchdarkly/js-client).
 
-# Enables the `show-user-email` feature flag
-GET /users/101?features.show-user-email
-```
-
-## Component Helpers
-
-### `LaunchDarkly`
 #### props
 
 ##### `clientId` : `string` (required)
@@ -88,7 +82,9 @@ Options that are passed to the LaunchDarkly JS client for additional configurati
 
 ---
 
-### `FeatureFlag`
+### `FeatureFlag` component
+Note that this component has to be rendered as a child of `LaunchDarkly`
+
 #### props
 
 ##### `flagKey` : `string` (required)
@@ -129,3 +125,96 @@ Since the feature flags are requested from LaunchDarkly after DOM load, there ma
 
 #### `renderDefaultCallback` : `function` (optional)
 This callback is provided for cases where you want to render something by default, think of it when your feature flag is "off" or falsy.
+
+---
+
+### SSR Support
+SSR is opt-in and you need to specify the initial set of feature flag keys and values through
+the `bootstrap` property on `clientOptions`:
+```javascript
+// currentUser.featureFlags
+// >> { "your-feature-flag": true }
+const clientOptions = {
+  bootstrap: currentUser.featureFlags
+};
+```
+
+What this gives you is that on SSR, we use the set of feature flags found on `bootstrap` to render
+your `FeatureFlag` component. When your `FeatureFlag` component is mounted, it will then initialize
+the LaunchDarkly js-client and make the proper XHRs to LaunchDarkly to populate the available
+feature flags within js-client's internal state. Thus taking precedence over the feature flags
+present in `bootstrap`.
+
+#### Disable LaunchDarkly js-client Initialization (Preventing XHRs)
+In the event that you opt-in for SSR, you may not want to make any additional XHRs to LaunchDarkly
+since you already have the feature flags provided from your server through `bootstrap`, you can
+disable this by supplying `disableClient: true`:
+```javascript
+const clientOptions = {
+  bootstrap: currentUser.featureFlags,
+  disableClient: true
+};
+```
+
+---
+
+### Overriding Feature Flags
+
+If you need to temporarily override the variation reported by a feature flag for
+testing or demonstration purposes, you can do so using special query parameters
+in the request URL. This can be useful for seeing the possible effects of
+enabling a feature flag or to force a specific variation of a multivariate flag.
+
+Do note that overriding a feature flag does not report it to LaunchDarkly nor does it persist.
+It's merely a mechanism for testing or demonstration purposes. One notable use-case is in
+integration and/or end-to-end testing.
+
+#### Enabling Boolean Feature Flags
+
+You can enable a set of boolean feature flags with a comma-delimited list in the
+`features` query parameter:
+
+```
+// Overrides the `send-onboarding-email` boolean feature flag, setting it to `true`
+http://localhost/users?features=send-onboarding-email
+```
+
+```
+// Enables the `show-user-email`, `user-nicknames`, and `hide-inactive-users` feature flags
+http://localhost/users/101?features=show-user-email,user-nicknames,hide-inactive-users
+```
+
+#### Advanced Feature Flag Overriding
+
+If you need to temporarily set a boolean feature flag to `false` or override the
+variation reported by a multivariate feature flag, you can use
+`features.{feature_flag}` query parameters:
+
+```
+// Disables the `verify-email` feature flag and sets the `email-frequency` variation to "weekly"
+http://localhost/users?features.verify-email=false&features.email-frequency=weekly
+```
+
+The values "true" and "false" are converted into `true` and `false` boolean
+values. If the query parameter value is omitted, then the feature flag will be
+reported as enabled:
+
+```
+// Enables the `show-user-email` feature flag
+http://localhost/users/101?features.show-user-email
+```
+
+#### Examples
+```
+// Overrides the `send-onboarding-email` boolean feature flag, setting it to `true`
+http://localhost/users?features=send-onboarding-email
+
+// Enables the `show-user-email`, `user-nicknames`, and `hide-inactive-users` feature flags
+http://localhost/users/101?features=show-user-email,user-nicknames,hide-inactive-users
+
+// Disables the `verify-email` feature flag and sets the `email-frequency` variation to "weekly"
+http://localhost/users?features.verify-email=false&features.email-frequency=weekly
+
+// Enables the `show-user-email` feature flag
+http://localhost/users/101?features.show-user-email
+```

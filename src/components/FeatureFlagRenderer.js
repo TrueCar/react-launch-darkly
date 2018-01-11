@@ -1,30 +1,51 @@
-/* @flow */
+// @flow
 import { Component } from "react";
 
-import { ldOverrideFlag } from "../lib/utils";
-import { FeatureFlagType } from "../types/FeatureFlag";
+import type { FeatureFlagType, ConfigType, LdClientWrapperType, FlagValueType } from "../types";
+import { ldClientWrapper, ldOverrideFlag } from "../lib/utils";
 
-type Props = FeatureFlagType & { ldClientWrapper: Object };
+type Props = FeatureFlagType & ConfigType;
+type State = {
+  checkFeatureFlagComplete: boolean,
+  flagValue: any
+};
 
-export default class FeatureFlagRenderer extends Component {
-  props: Props;
-  state: {
-    checkFeatureFlagComplete: boolean,
-    flagValue: any
-  };
+export default class FeatureFlagRenderer extends Component<Props, State> {
+  _isMounted: boolean;
 
   constructor (props:Props) {
     super(props);
 
+    const { flagKey, clientOptions } = this.props;
+    const bootstrap = clientOptions && clientOptions.bootstrap;
+
     this.state = {
       checkFeatureFlagComplete: false,
-      flagValue: false
+      flagValue: bootstrap &&
+        typeof bootstrap === "object" &&
+        bootstrap.hasOwnProperty(flagKey) ? bootstrap[flagKey] : false
     };
   }
 
   componentDidMount () {
-    this.checkFeatureFlag();
-    this.listenFlagChangeEvent();
+    const { clientId, user, clientOptions } = this.props;
+
+    this._isMounted = true;
+
+    if (clientOptions && clientOptions.disableClient) {
+      return;
+    }
+
+    // Only initialize the launch darkly js-client when in browser,
+    // can not be initialized on SSR due to dependency on XMLHttpRequest.
+    const ldClient = ldClientWrapper(clientId, user, clientOptions);
+
+    this.checkFeatureFlag(ldClient);
+    this.listenFlagChangeEvent(ldClient);
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false;
   }
 
   render () {
@@ -48,28 +69,36 @@ export default class FeatureFlagRenderer extends Component {
     return null;
   }
 
-  checkFeatureFlag () {
-    const { ldClientWrapper, flagKey } = this.props;
+  checkFeatureFlag (ldClient:LdClientWrapperType) {
+    const { flagKey } = this.props;
 
-    ldClientWrapper.onReady(() => {
-      const flagValue = ldClientWrapper.variation(flagKey, false);
+    ldClient.onReady(() => {
+      const flagValue = ldClient.variation(flagKey, false);
       this.setStateFlagValue(flagValue);
     });
   }
 
-  listenFlagChangeEvent () {
-    const { ldClientWrapper, flagKey } = this.props;
+  listenFlagChangeEvent (ldClient:LdClientWrapperType) {
+    const { flagKey } = this.props;
 
-    ldClientWrapper.on(`change:${flagKey}`, (value) => {
+    ldClient.on(`change:${flagKey}`, (value) => {
       this.setStateFlagValue(value);
     });
   }
 
-  setStateFlagValue (flagValue) {
+  setStateFlagValue (flagValue:FlagValueType) {
     const { flagKey } = this.props;
     const typeFlagValue = typeof flagValue;
     const defaultState = { checkFeatureFlagComplete: true };
     const override = ldOverrideFlag(flagKey, typeFlagValue);
+
+    // Due to this function being called within a callback, we can run into issues
+    // where we try to set the state for an unmounted component. Since `isMounted()` is deprecated
+    // as part of a React class, we can create our own way to manage it within the protoype.
+    // See https://github.com/facebook/react/issues/5465#issuecomment-157888325 for more info
+    if (!this._isMounted) {
+      return;
+    }
 
     if (typeof override !== "undefined") {
       // Override is set for this flag key, use override instead
