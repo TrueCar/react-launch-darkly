@@ -88,11 +88,11 @@ export function getAllFeatureFlags (key, user) {
   });
 }
 
-export function identify (key, user) {
+export function identify (key, user, hash = null) {
   const ldClient = ldClientWrapper(key, user);
   return new Promise((resolve) => {
     ldClient.onReady(() => {
-      resolve(ldClient.identify(user, null));
+      resolve(ldClient.identify(user, hash));
     });
   });
 }

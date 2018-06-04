@@ -204,6 +204,20 @@ reported as enabled:
 http://localhost/users/101?features.show-user-email
 ```
 
+---
+
+### Identify a new user
+
+If you need to change the configured user for the launch darkly client you can do that by calling `identify`.
+```
+import { identify } from "react-launch-darkly";
+
+identify(launchDarklyClientKey, launchDarklyUser, optionalUserHash);
+
+```
+
+See Launch Darkly's [documentation](https://docs.launchdarkly.com/docs/js-sdk-reference#section-changing-the-user-context) for more information.
+
 #### Examples
 ```
 // Overrides the `send-onboarding-email` boolean feature flag, setting it to `true`
