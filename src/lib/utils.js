@@ -87,3 +87,12 @@ export function getAllFeatureFlags (key, user) {
     });
   });
 }
+
+export function identify (key, user) {
+  const ldClient = ldClientWrapper(key, user);
+  return new Promise((resolve) => {
+    ldClient.onReady(() => {
+      resolve(ldClient.identify(user, null));
+    });
+  });
+}
