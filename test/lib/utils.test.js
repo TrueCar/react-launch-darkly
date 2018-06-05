@@ -5,6 +5,7 @@ describe("lib/utils", () => {
   let ldClient = require("ldclient-js");
 
   const mockLdClient = (() => {
+    ldClient.identify = jest.fn();
     ldClient.initialize = jest.fn().mockImplementation(() => ({
       on: (event, callback) => {
         setTimeout(() => {
@@ -77,7 +78,11 @@ describe("lib/utils", () => {
   });
 
   describe("identify", () => {
-
+    it("ldclient-js identify is called", () => {
+      utils.identify(1234, {}).then( () => {
+        expect(ldClient.identify).toHaveBeenCalled();
+      });
+    });
   });
 
   describe("ldOverrideFlag", () => {

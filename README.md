@@ -59,6 +59,7 @@ export default class Home extends Component {
 - [FeatureFlag component](https://github.com/TrueCar/react-launch-darkly#featureflag-component)
 - [SSR Support](https://github.com/TrueCar/react-launch-darkly#ssr-support)
 - [Overriding Feature Flags](https://github.com/TrueCar/react-launch-darkly#overriding-feature-flags)
+- [Identifying new users](https://github.com/TrueCar/react-launch-darkly#Identify-a-new-user)
 
 ---
 
