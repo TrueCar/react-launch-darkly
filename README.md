@@ -59,6 +59,7 @@ export default class Home extends Component {
 - [FeatureFlag component](https://github.com/TrueCar/react-launch-darkly#featureflag-component)
 - [SSR Support](https://github.com/TrueCar/react-launch-darkly#ssr-support)
 - [Overriding Feature Flags](https://github.com/TrueCar/react-launch-darkly#overriding-feature-flags)
+- [Identifying new users](https://github.com/TrueCar/react-launch-darkly#Identify-a-new-user)
 
 ---
 
@@ -203,6 +204,20 @@ reported as enabled:
 // Enables the `show-user-email` feature flag
 http://localhost/users/101?features.show-user-email
 ```
+
+---
+
+### Identify a new user
+
+If you need to change the configured user for the launch darkly client you can do that by calling `identify`.
+```
+import { identify } from "react-launch-darkly";
+
+identify(launchDarklyClientKey, launchDarklyUser, optionalUserHash);
+
+```
+
+See Launch Darkly's [documentation](https://docs.launchdarkly.com/docs/js-sdk-reference#section-changing-the-user-context) for more information.
 
 #### Examples
 ```
