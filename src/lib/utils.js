@@ -88,6 +88,15 @@ export function getAllFeatureFlags (key, user) {
   });
 }
 
+/*
+
+  https://docs.launchdarkly.com/docs/js-sdk-reference#section-changing-the-user-context
+
+  "The hash parameter is the hash for the new user, assuming that the user's key has changed.
+  It is only required in secure mode-- if secure mode is not enabled,
+  you can pass in `null` for the hash."
+
+*/
 export function identify (key, user, hash = null) {
   const ldClient = ldClientWrapper(key, user);
   return new Promise((resolve) => {
