@@ -2,14 +2,16 @@
 export type LdClientWrapperType = {
   on: (string, (FlagValueType) => (void)) => void,
   onReady: (() => void) => void,
-  variation: (string, boolean) => FlagValueType
+  variation: (string, boolean) => FlagValueType,
+  identify: (Object, Object | null) => void
 };
 
 export type FeatureFlagType = {
   flagKey: string,
   renderFeatureCallback: (FlagValueType) => ?React$Element<any>,
   renderDefaultCallback?: () => ?React$Element<any>,
-  initialRenderCallback?: () => ?React$Element<any>
+  initialRenderCallback?: () => ?React$Element<any>,
+  identify?: IdentifyType
 };
 
 export type ConfigType = {
@@ -43,4 +45,13 @@ export type ClientOptionsType = {
   streamUrl?: string,
 
   disableClient?: boolean
+};
+
+export type IdentifyType = {
+  key?: string,
+  firstName?: string,
+  lastName?: string,
+  email?: string,
+  custom: Object,
+  hash?: Object
 };

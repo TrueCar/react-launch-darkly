@@ -1,13 +1,19 @@
 // @flow
 import { Component } from "react";
 
-import type { FeatureFlagType, ConfigType, LdClientWrapperType, FlagValueType } from "../types";
+import type {
+  FeatureFlagType,
+  ConfigType,
+  LdClientWrapperType,
+  FlagValueType,
+  IdentifyType
+} from "../types";
 import { ldClientWrapper, ldOverrideFlag } from "../lib/utils";
 
 type Props = FeatureFlagType & ConfigType;
 type State = {
   checkFeatureFlagComplete: boolean,
-  flagValue: any
+  flagValue: FlagValueType
 };
 
 export default class FeatureFlagRenderer extends Component<Props, State> {
@@ -42,6 +48,7 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
 
     this.checkFeatureFlag(ldClient);
     this.listenFlagChangeEvent(ldClient);
+    this.identify(ldClient);
   }
 
   componentWillUnmount () {
@@ -84,6 +91,17 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
     ldClient.on(`change:${flagKey}`, (value) => {
       this.setStateFlagValue(value);
     });
+  }
+
+  identify (ldClient: LdClientWrapperType) {
+    if (this.props.identify) {
+      const { user, identify } = this.props;
+      const mergedUser:IdentifyType = Object.assign(user, identify);
+
+      ldClient.onReady(() => {
+        ldClient.identify(mergedUser, identify.hash || null);
+      });
+    }
   }
 
   setStateFlagValue (flagValue:FlagValueType) {
