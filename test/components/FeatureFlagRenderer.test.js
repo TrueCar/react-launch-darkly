@@ -1,7 +1,10 @@
 import React from "react";
-import { shallow, mount } from "enzyme";
+import { shallow, mount, configure } from "enzyme";
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import * as utils from "../../src/lib/utils";
+
+const Adapter = require("enzyme-adapter-react-16");
+configure({ adapter: new Adapter() });
 
 describe("components/FeatureFlagRenderer", () => {
   const renderFeatureCallback = jest.fn().mockImplementation((flagValue) => {

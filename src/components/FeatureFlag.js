@@ -1,14 +1,13 @@
 // @flow
 import React from "react";
-import { Subscriber } from "react-broadcast";
+import { LaunchDarklyConsumer } from "./Context";
 
 import type { FeatureFlagType } from "../types";
-import { BROADCAST_CHANNEL } from "../constants/LaunchDarkly";
 import FeatureFlagRenderer from "./FeatureFlagRenderer";
 
 export default function FeatureFlag (props:FeatureFlagType) {
   return (
-    <Subscriber channel={BROADCAST_CHANNEL}>
+    <LaunchDarklyConsumer>
       {
         (config) => {
           if (config) {
@@ -18,6 +17,6 @@ export default function FeatureFlag (props:FeatureFlagType) {
           return null;
         }
       }
-    </Subscriber>
+    </LaunchDarklyConsumer>
   );
 }

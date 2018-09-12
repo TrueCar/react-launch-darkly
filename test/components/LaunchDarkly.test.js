@@ -1,21 +1,11 @@
 import React from "react";
-import { shallow } from "enzyme";
-import { Broadcast } from "react-broadcast";
+import { configure, shallow } from "enzyme";
 import LaunchDarkly from "../../src/components/LaunchDarkly";
-import { BROADCAST_CHANNEL } from "../../src/constants/LaunchDarkly";
+
+const Adapter = require("enzyme-adapter-react-16");
+configure({ adapter: new Adapter() });
 
 describe("components/LaunchDarkly", () => {
-  it("sets up a broadcast with the correct channel", () => {
-    const subject = shallow(
-      <LaunchDarkly clientId="080808" user="zeke">
-        <div>Hi</div>
-      </LaunchDarkly>
-    );
-
-    const broadcast = subject.find(Broadcast);
-    expect(broadcast.prop("channel")).toEqual(BROADCAST_CHANNEL);
-  });
-
   it("broadcasts the config object", () => {
     const expectedConfig = {
       clientId: "12345",
@@ -23,14 +13,12 @@ describe("components/LaunchDarkly", () => {
         key: "user123"
       }
     };
-    const subject = shallow(
+    const provider = shallow(
       <LaunchDarkly clientId={expectedConfig.clientId} user={expectedConfig.user}>
         <div>Hi</div>
       </LaunchDarkly>
     );
-
-    const broadcast = subject.find(Broadcast);
-    expect(broadcast.prop("value")).toEqual(expectedConfig);
+    expect(provider.props().value).toEqual(expectedConfig);
   });
 
   describe("when clientOptions is available", () => {
@@ -44,7 +32,7 @@ describe("components/LaunchDarkly", () => {
           baseUrl: "http://test"
         }
       };
-      const subject = shallow(
+      const provider = shallow(
         <LaunchDarkly
           clientId={expectedConfig.clientId}
           user={expectedConfig.user}
@@ -53,9 +41,7 @@ describe("components/LaunchDarkly", () => {
           <div>Hi</div>
         </LaunchDarkly>
       );
-
-      const broadcast = subject.find(Broadcast);
-      expect(broadcast.prop("value")).toEqual(expectedConfig);
+      expect(provider.prop("value")).toEqual(expectedConfig);
     });
   });
 
@@ -73,19 +59,16 @@ describe("components/LaunchDarkly", () => {
   describe("when either clientId or user are missing", () => {
     it("broadcasts null", () => {
       // with neither
-      let subject = shallow(<LaunchDarkly><div>Hi</div></LaunchDarkly>);
-      let child = subject.find("Broadcast");
-      expect(child.props().value).toEqual(null);
+      let provider = shallow(<LaunchDarkly><div>Hi</div></LaunchDarkly>);
+      expect(provider.props().value).toEqual(null);
 
       // with clientId
-      subject = shallow(<LaunchDarkly clientId="asdf"><div>Hi</div></LaunchDarkly>);
-      child = subject.find("Broadcast");
-      expect(child.props().value).toEqual(null);
+      provider = shallow(<LaunchDarkly clientId="asdf"><div>Hi</div></LaunchDarkly>);
+      expect(provider.props().value).toEqual(null);
 
       // with user
-      subject = shallow(<LaunchDarkly user={{name: "Kelly Slater"}}><div>Hi</div></LaunchDarkly>);
-      child = subject.find("Broadcast");
-      expect(child.props().value).toEqual(null);
+      provider = shallow(<LaunchDarkly user={{name: "Kelly Slater"}}><div>Hi</div></LaunchDarkly>);
+      expect(provider.props().value).toEqual(null);
     });
   });
 });
