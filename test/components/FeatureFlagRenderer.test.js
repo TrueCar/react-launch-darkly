@@ -58,7 +58,7 @@ describe("components/FeatureFlagRenderer", () => {
   describe("when instantiated", () => {
     it("sets the state", () => {
       const wrapper = shallowRender();
-      expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: false, flagValue: false });
+      expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: false });
     });
 
     describe ("when bootstrap has flag key and value", () => {
@@ -69,7 +69,7 @@ describe("components/FeatureFlagRenderer", () => {
           }
         };
         const wrapper = shallowRender({ clientOptions });
-        expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: false, flagValue: true });
+        expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: false });
       });
     });
   });

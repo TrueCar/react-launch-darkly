@@ -6,7 +6,7 @@ const Adapter = require("enzyme-adapter-react-16");
 configure({ adapter: new Adapter() });
 
 describe("components/LaunchDarkly", () => {
-  it("broadcasts the config object", () => {
+  it("sets props to the context provider value", () => {
     const expectedConfig = {
       clientId: "12345",
       user: {
@@ -14,15 +14,14 @@ describe("components/LaunchDarkly", () => {
       }
     };
     const provider = shallow(
-      <LaunchDarkly clientId={expectedConfig.clientId} user={expectedConfig.user}>
-        <div>Hi</div>
-      </LaunchDarkly>
-    );
-    expect(provider.props().value).toEqual(expectedConfig);
+        <LaunchDarkly clientId={expectedConfig.clientId} user={expectedConfig.user}>
+            <span>Hi</span>
+        </LaunchDarkly>);
+    expect(provider.find("ContextProvider").props().value).toEqual(expectedConfig);
   });
 
   describe("when clientOptions is available", () => {
-    it("adds clientOptions to broadcasted value", () => {
+    it("adds clientOptions to the context value", () => {
       const expectedConfig = {
         clientId: "12345",
         user: {
