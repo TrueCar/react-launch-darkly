@@ -176,11 +176,13 @@ describe("components/FeatureFlagRenderer", () => {
       });
 
       it("does not listen to onReady", () => {
-        expect(ldClientWrapperOnReady).not.toHaveBeenCalled();
+        expect(jest.fn((callback) => {
+          callback();
+        })).not.toHaveBeenCalled();
       });
 
       it("does not listen to change event", () => {
-        expect(ldClientWrapperOn).not.toHaveBeenCalled();
+        expect(jest.fn()).not.toHaveBeenCalled();
       });
     });
 
