@@ -29,7 +29,7 @@ describe("components/FeatureFlagRenderer", () => {
         flagKey="my-test"
         renderFeatureCallback={renderFeatureCallback}
         {...options}
-      />
+      />,{ disableLifecycleMethods: true }
     )
   );
   const mountRender = (options) => (
@@ -58,7 +58,7 @@ describe("components/FeatureFlagRenderer", () => {
   describe("when instantiated", () => {
     it("sets the state", () => {
       const wrapper = shallowRender();
-      expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: false });
+      expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: false, flagValue: false });
     });
 
     describe ("when bootstrap has flag key and value", () => {
@@ -69,7 +69,7 @@ describe("components/FeatureFlagRenderer", () => {
           }
         };
         const wrapper = shallowRender({ clientOptions });
-        expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: false });
+        expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: false, flagValue: true });
       });
     });
   });
@@ -176,13 +176,11 @@ describe("components/FeatureFlagRenderer", () => {
       });
 
       it("does not listen to onReady", () => {
-        expect(jest.fn((callback) => {
-          callback();
-        })).not.toHaveBeenCalled();
+        expect(ldClientWrapperOnReady).not.toHaveBeenCalled();
       });
 
       it("does not listen to change event", () => {
-        expect(jest.fn()).not.toHaveBeenCalled();
+        expect(ldClientWrapperOn).not.toHaveBeenCalled();
       });
     });
 
