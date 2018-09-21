@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import {LaunchDarklyProvider} from "./Context";
+import { LaunchDarklyProvider } from "./Context";
 
 import type { UserType, ClientOptionsType } from "../types";
 
