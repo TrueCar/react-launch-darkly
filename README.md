@@ -8,7 +8,7 @@
 `npm install --save react-launch-darkly`
 
 ## Dependencies
-- React version `16.3.0` or greater
+- React `v16.3.0` or greater
   - If you use an older version of React, you can continue to use [version 1.4.0](https://github.com/TrueCar/react-launch-darkly/releases/tag/v1.4.0) of this library. However, we will no longer be actively maintaining version 1.x.
 
 ## Basic Usage
