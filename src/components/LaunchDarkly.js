@@ -1,9 +1,8 @@
 // @flow
 import React from "react";
-import { Broadcast } from "react-broadcast";
+import { LaunchDarklyProvider } from "./Context";
 
 import type { UserType, ClientOptionsType } from "../types";
-import { BROADCAST_CHANNEL } from "../constants/LaunchDarkly";
 
 type Props = {
   clientId: string,
@@ -12,13 +11,14 @@ type Props = {
   children: any
 };
 
+
 export default function LaunchDarkly (props:Props) {
   const { clientId, user, children, clientOptions } = props;
 
   let config = null;
 
   // if clientId or user do not exist we still want to
-  // render the Broadcast component but we want value
+  // render the Consumer component but we want value
   // to be null.
   if (clientId && user) {
     config = {
@@ -29,8 +29,8 @@ export default function LaunchDarkly (props:Props) {
   }
 
   return (
-    <Broadcast channel={BROADCAST_CHANNEL} value={config}>
+    <LaunchDarklyProvider value={config}>
       {children}
-    </Broadcast>
+    </LaunchDarklyProvider>
   );
 }
