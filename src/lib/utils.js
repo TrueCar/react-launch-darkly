@@ -21,11 +21,9 @@ export function ldClientWrapper (key, user, options = {}) {
     ldClient.on("ready", () => {
       ldClientReady = true;
 
-      if (queue.length) {
-        queue.forEach((callback) => {
-          callback();
-        });
-      }
+      while (queue.length) {
+        queue.shift()();
+      };
     });
   }
 
