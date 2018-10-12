@@ -21,9 +21,11 @@ export function ldClientWrapper (key, user, options = {}) {
     ldClient.on("ready", () => {
       ldClientReady = true;
 
-      while (queue.length) {
-        queue.shift()();
-      };
+      if (queue.length) {
+        while (queue.length) {
+          queue.shift()();
+        }
+      }
     });
   }
 
