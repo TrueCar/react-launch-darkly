@@ -22,9 +22,9 @@ export function ldClientWrapper (key, user, options = {}) {
       ldClientReady = true;
 
       if (queue.length) {
-        queue.forEach((callback) => {
-          callback();
-        });
+        while (queue.length) {
+          queue.shift()();
+        }
       }
     });
   }
