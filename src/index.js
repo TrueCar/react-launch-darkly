@@ -1,3 +1,3 @@
 export LaunchDarkly from "./components/LaunchDarkly";
 export FeatureFlag from "./components/FeatureFlag";
-export { getAllFeatureFlags, identify } from "./lib/utils";
+export { getAllFeatureFlags, identify, track } from "./lib/utils";
