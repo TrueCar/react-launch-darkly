@@ -85,6 +85,14 @@ describe("lib/utils", () => {
     });
   });
 
+  describe("track", () => {
+    it("ldclient-js track is called", () => {
+      utils.track(1234, {}).then( () => {
+        expect(ldClient.track).toHaveBeenCalled();
+      });
+    });
+  });
+
   describe("ldOverrideFlag", () => {
 
   });
