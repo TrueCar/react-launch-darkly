@@ -2,7 +2,7 @@ describe("lib/utils", () => {
   jest.useFakeTimers();
 
   let utils = require("./../../src/lib/utils");
-  let ldClient = require("ldclient-js");
+  let ldClient = require("ldclient-js").default;
 
   const mockLdClient = (() => {
     ldClient.identify = jest.fn();
@@ -24,7 +24,7 @@ describe("lib/utils", () => {
 
   describe("ldClientWrapper", () => {
     const key = "my key";
-    const user = "my user";
+    const user = { key: "my user" };
     const options = { baseUrl: "http://test" };
 
     describe("proxies to ldClient", () => {
@@ -33,7 +33,7 @@ describe("lib/utils", () => {
         // to be able to properly assert each instance of `ldClientWrapper`
         jest.resetModules();
         utils = require("./../../src/lib/utils");
-        ldClient = require("ldclient-js");
+        ldClient = require("ldclient-js").default;
         mockLdClient();
       });
 
