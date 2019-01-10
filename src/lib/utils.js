@@ -105,3 +105,12 @@ export function identify (key, user, hash = null) {
     });
   });
 }
+
+export function track (key, user, goalKey) {
+  const ldClient = ldClientWrapper(key, user);
+  return new Promise((resolve) => {
+    ldClient.onReady(() => {
+      resolve(ldClient.track(goalKey));
+    });
+  });
+}
