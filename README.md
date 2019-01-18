@@ -137,7 +137,7 @@ This callback is provided for cases where you want to render something by defaul
 ---
 
 ### SSR Support
-SSR is opt-in and you need to specify the initial set of feature flag keys and values through
+React server side rendering(SSR) is opt-in and you need to specify the initial set of feature flag keys and values through
 the `bootstrap` property on `clientOptions`:
 ```javascript
 // currentUser.featureFlags
