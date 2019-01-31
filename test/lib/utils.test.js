@@ -97,4 +97,12 @@ describe("lib/utils", () => {
 
   });
 
+  describe("feature", () => {
+    it("ldclient-js feature is called", () => {
+      utils.feature("home-test", {}).then( () => {
+        expect(ldClient.feature).toHaveBeenCalled();
+      });
+    });
+  });
+
 });
