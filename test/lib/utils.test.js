@@ -13,7 +13,7 @@ describe("lib/utils", () => {
           callback();
         }, 1000);
       },
-      variation: () => {}
+      variation: jest.fn
     }));
   });
   mockLdClient();
@@ -104,7 +104,7 @@ describe("lib/utils", () => {
     const user = { key: "my user" };
     const featureFlag = "home-test";
 
-    it("feature is called", async () => {
+    it("is called", async () => {
       const spy = jest.spyOn(utils, "feature");
       await utils.feature(key, user, featureFlag);
       expect(spy).toHaveBeenCalled();
