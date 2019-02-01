@@ -6,12 +6,16 @@ describe("lib/utils", () => {
 
   const mockLdClient = (() => {
     ldClient.identify = jest.fn();
+
     ldClient.initialize = jest.fn().mockImplementation(() => ({
       on: (event, callback) => {
         setTimeout(() => {
           callback();
         }, 1000);
-      }
+      },
+      variation: jest.fn,
+      track: jest.fn,
+      identify: jest.fn,
     }));
   });
   mockLdClient();
@@ -78,23 +82,34 @@ describe("lib/utils", () => {
   });
 
   describe("identify", () => {
-    it("ldclient-js identify is called", () => {
-      utils.identify(1234, {}).then( () => {
-        expect(ldClient.identify).toHaveBeenCalled();
-      });
+    it("ldclient-js identify is called", async () => {
+      const spy = jest.spyOn(utils.ldClientWrapper(), "identify");
+      await utils.identify(1234, {});
+      expect(spy).toHaveBeenCalled();
     });
   });
 
   describe("track", () => {
-    it("ldclient-js track is called", () => {
-      utils.track(1234, {}).then( () => {
-        expect(ldClient.track).toHaveBeenCalled();
-      });
+    it("ldclient-js track is called", async () => {
+      const spy = jest.spyOn(utils.ldClientWrapper(), "track");
+      await utils.track(1234);
+      expect(spy).toHaveBeenCalled();
     });
   });
 
   describe("ldOverrideFlag", () => {
+  });
 
+  describe("feature", () => {
+    const key = "my key";
+    const user = { key: "my user" };
+    const featureFlag = "home-test";
+
+    it("ldclient-js feature is called", async () => {
+      const spy = jest.spyOn(utils.ldClientWrapper(), "variation");
+      await utils.feature(key, user, featureFlag);
+      expect(spy).toHaveBeenCalled();
+    });
   });
 
 });

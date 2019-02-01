@@ -114,3 +114,12 @@ export function track (key, user, goalKey) {
     });
   });
 }
+
+export function feature (key, user, variation) {
+  const ldClient = ldClientWrapper(key, user);
+  return new Promise((resolve) => {
+    ldClient.onReady(() => {
+      resolve(ldClient.variation(variation));
+    });
+  });
+}
