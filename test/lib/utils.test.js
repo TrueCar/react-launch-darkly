@@ -109,6 +109,13 @@ describe("lib/utils", () => {
       await utils.feature(key, user, featureFlag);
       expect(spy).toHaveBeenCalled();
     });
+
+    it("ldclient-js feature is called", async () => {
+      // console.log(ldClient);
+      const spy = jest.spyOn(utils.ldClientWrapper(), "variation");
+      await utils.feature(key, user, featureFlag);
+      expect(spy).toHaveBeenCalled();
+    });
   });
 
 });
