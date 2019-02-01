@@ -82,12 +82,6 @@ describe("lib/utils", () => {
   });
 
   describe("identify", () => {
-    it("is called", async () => {
-      const spy = jest.spyOn(utils, "identify");
-      await utils.identify(1234, {});
-      expect(spy).toHaveBeenCalled();
-    });
-
     it("ldclient-js identify is called", async () => {
       const spy = jest.spyOn(utils.ldClientWrapper(), "identify");
       await utils.identify(1234, {});
@@ -96,12 +90,6 @@ describe("lib/utils", () => {
   });
 
   describe("track", () => {
-    it("is called", async () => {
-      const spy = jest.spyOn(utils, "track");
-      await utils.track(1234);
-      expect(spy).toHaveBeenCalled();
-    });
-
     it("ldclient-js track is called", async () => {
       const spy = jest.spyOn(utils.ldClientWrapper(), "track");
       await utils.track(1234);
@@ -116,12 +104,6 @@ describe("lib/utils", () => {
     const key = "my key";
     const user = { key: "my user" };
     const featureFlag = "home-test";
-
-    it("is called", async () => {
-      const spy = jest.spyOn(utils, "feature");
-      await utils.feature(key, user, featureFlag);
-      expect(spy).toHaveBeenCalled();
-    });
 
     it("ldclient-js feature is called", async () => {
       const spy = jest.spyOn(utils.ldClientWrapper(), "variation");
