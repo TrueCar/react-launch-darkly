@@ -1,4 +1,4 @@
-import launchDarklyBrowser from "ldclient-js";
+import * as launchDarklyBrowser from "ldclient-js";
 const url = require("url");
 
 export function getLocation() {
