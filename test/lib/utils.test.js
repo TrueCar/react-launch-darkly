@@ -82,10 +82,17 @@ describe("lib/utils", () => {
   });
 
   describe("identify", () => {
-    it("ldclient-js identify is called", () => {
-      utils.identify(1234, {}).then( () => {
-        expect(ldClient.identify).toHaveBeenCalled();
-      });
+    it("is called", async () => {
+      const spy = jest.spyOn(utils, "identify");
+      await utils.identify(1234, {});
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it("ldclient-js identify is called", async () => {
+      // console.log(ldClient);
+      const spy = jest.spyOn(utils.ldClientWrapper(), "identify");
+      await utils.identify(1234, {});
+      expect(spy).toHaveBeenCalled();
     });
   });
 
