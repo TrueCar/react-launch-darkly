@@ -13,7 +13,9 @@ describe("lib/utils", () => {
           callback();
         }, 1000);
       },
-      variation: jest.fn
+      variation: jest.fn,
+      track: jest.fn,
+      identify: jest.fn,
     }));
   });
   mockLdClient();
@@ -88,15 +90,21 @@ describe("lib/utils", () => {
   });
 
   describe("track", () => {
-    it("ldclient-js track is called", () => {
-      utils.track(1234, {}).then( () => {
-        expect(ldClient.track).toHaveBeenCalled();
-      });
+    it("is called", async () => {
+      const spy = jest.spyOn(utils, "track");
+      await utils.track(1234);
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it("ldclient-js track is called", async () => {
+      // console.log(ldClient);
+      const spy = jest.spyOn(utils.ldClientWrapper(), "track");
+      await utils.track(1234);
+      expect(spy).toHaveBeenCalled();
     });
   });
 
   describe("ldOverrideFlag", () => {
-
   });
 
   describe("feature", () => {
