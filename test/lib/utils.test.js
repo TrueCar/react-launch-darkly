@@ -6,12 +6,14 @@ describe("lib/utils", () => {
 
   const mockLdClient = (() => {
     ldClient.identify = jest.fn();
+
     ldClient.initialize = jest.fn().mockImplementation(() => ({
       on: (event, callback) => {
         setTimeout(() => {
           callback();
         }, 1000);
-      }
+      },
+      variation: () => {}
     }));
   });
   mockLdClient();
@@ -98,10 +100,14 @@ describe("lib/utils", () => {
   });
 
   describe("feature", () => {
-    it("ldclient-js feature is called", () => {
-      utils.feature("home-test", {}).then( () => {
-        expect(ldClient.variation).toHaveBeenCalled();
-      });
+    const key = "my key";
+    const user = { key: "my user" };
+    const featureFlag = "home-test";
+
+    it("feature is called", async () => {
+      const spy = jest.spyOn(utils, "feature");
+      await utils.feature(key, user, featureFlag);
+      expect(spy).toHaveBeenCalled();
     });
   });
 
