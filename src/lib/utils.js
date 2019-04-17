@@ -1,4 +1,4 @@
-import launchDarklyBrowser from "ldclient-js";
+import { initialize } from "ldclient-js";
 const url = require("url");
 
 export function getLocation() {
@@ -14,7 +14,7 @@ export function ldClientWrapper (key, user, options = {}) {
   const queue = [];
 
   if (!ldClient) {
-    ldClient = launchDarklyBrowser.initialize(key, user, options);
+    ldClient = initialize(key, user, options);
   }
 
   if (!ldClientReady) {
@@ -123,3 +123,7 @@ export function feature (key, user, variation) {
     });
   });
 }
+
+export const testExports = {
+  reset: () => { ldClient = null; }
+};

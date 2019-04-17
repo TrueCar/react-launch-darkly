@@ -1,24 +1,21 @@
+jest.useFakeTimers();
+
+jest.mock("ldclient-js");
+
+import { initialize } from "ldclient-js";
+import * as utils from "../../src/lib/utils";
+
 describe("lib/utils", () => {
-  jest.useFakeTimers();
-
-  let utils = require("./../../src/lib/utils");
-  let ldClient = require("ldclient-js").default;
-
-  const mockLdClient = (() => {
-    ldClient.identify = jest.fn();
-
-    ldClient.initialize = jest.fn().mockImplementation(() => ({
-      on: (event, callback) => {
-        setTimeout(() => {
-          callback();
-        }, 1000);
-      },
-      variation: jest.fn,
-      track: jest.fn,
-      identify: jest.fn,
-    }));
-  });
-  mockLdClient();
+  initialize.mockImplementation(() => ({
+    on: (event, callback) => {
+      setTimeout(() => {
+        callback();
+      }, 1000);
+    },
+    variation: jest.fn,
+    track: jest.fn,
+    identify: jest.fn,
+  }));
 
   it("exports functions", () => {
     expect(utils["ldClientWrapper"]).toBeDefined();
@@ -33,22 +30,18 @@ describe("lib/utils", () => {
 
     describe("proxies to ldClient", () => {
       beforeEach(() => {
-        // `ldClientWrapper` is a singleton, we need to reset the module cache with each test
-        // to be able to properly assert each instance of `ldClientWrapper`
-        jest.resetModules();
-        utils = require("./../../src/lib/utils");
-        ldClient = require("ldclient-js").default;
-        mockLdClient();
+        jest.clearAllMocks();
+        utils.testExports.reset();
       });
 
       it("initializes with key, user and default options parameter", () => {
         utils.ldClientWrapper(key, user);
-        expect(ldClient.initialize).toBeCalledWith(key, user, {});
+        expect(initialize).toBeCalledWith(key, user, {});
       });
 
       it("initializes with key, user and options", () => {
         utils.ldClientWrapper(key, user, options);
-        expect(ldClient.initialize).toBeCalledWith(key, user, options);
+        expect(initialize).toBeCalledWith(key, user, options);
       });
     });
 
@@ -56,7 +49,7 @@ describe("lib/utils", () => {
       utils.ldClientWrapper(key, user);
       utils.ldClientWrapper(key, user);
       utils.ldClientWrapper(key, user);
-      expect(ldClient.initialize).toHaveBeenCalledTimes(1);
+      expect(initialize).toHaveBeenCalledTimes(1);
     });
 
     it("onReady calls wait for ready event to fire", () => {
