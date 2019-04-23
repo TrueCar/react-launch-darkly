@@ -65,13 +65,19 @@ describe("components/FeatureFlag", () => {
       expect(renderer).toHaveLength(0);
     });
   });
-  it("does render the FeatureFlagRenderer component if forceInitialize is set", () => {
+  it("renders the initial render callback if forceInitialize is set", () => {
+    const initialRenderCallback = jest
+      .fn()
+      .mockReturnValue(<div>"initial rendered"</div>);
     const subject = mount(
       <LaunchDarkly>
-        <FeatureFlag {...defaultProps} forceInitialize />
+        <FeatureFlag
+          {...defaultProps}
+          forceInitialize
+          initialRenderCallback={initialRenderCallback}
+        />
       </LaunchDarkly>
     );
-    const renderer = subject.find(FeatureFlagRenderer);
-    expect(renderer).toHaveLength(1);
+    expect(initialRenderCallback).toHaveBeenCalledTimes(1);
   });
 });
