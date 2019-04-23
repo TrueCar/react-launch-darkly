@@ -66,7 +66,6 @@ describe("components/FeatureFlag", () => {
         <LaunchDarkly>
           <FeatureFlag
             {...defaultProps}
-            forceInitialize
             initialRenderCallback={initialRenderCallback}
           />
         </LaunchDarkly>
