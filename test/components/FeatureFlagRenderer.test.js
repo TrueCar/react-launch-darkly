@@ -28,6 +28,8 @@ describe("components/FeatureFlagRenderer", () => {
       <FeatureFlagRenderer
         flagKey="my-test"
         renderFeatureCallback={renderFeatureCallback}
+        user={{}}
+        clientId="123"
         {...options}
       />,{ disableLifecycleMethods: true }
     )
@@ -35,6 +37,8 @@ describe("components/FeatureFlagRenderer", () => {
   const mountRender = (options) => (
     mount(
       <FeatureFlagRenderer
+        user={{}}
+        clientId="123"
         flagKey="my-test"
         renderFeatureCallback={renderFeatureCallback}
         {...options}

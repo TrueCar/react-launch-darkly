@@ -32,20 +32,31 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
 
     this._isMounted = true;
 
-    if (clientOptions && clientOptions.disableClient) {
+    if ((clientOptions && clientOptions.disableClient) || !(user && clientId)) {
       return;
     }
 
+    this.initializeClient();
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (!(prevProps.user && prevProps.clientId) && (this.props.user && this.props.clientId)) {
+      this.initializeClient();
+    }
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false;
+  }
+
+  initializeClient() {
+    const { clientId, user, clientOptions } = this.props;
     // Only initialize the launch darkly js-client when in browser,
     // can not be initialized on SSR due to dependency on XMLHttpRequest.
     const ldClient = ldClientWrapper(clientId, user, clientOptions);
 
     this.checkFeatureFlag(ldClient);
     this.listenFlagChangeEvent(ldClient);
-  }
-
-  componentWillUnmount () {
-    this._isMounted = false;
   }
 
   render () {
