@@ -10,8 +10,8 @@ export default function FeatureFlag (props:FeatureFlagType) {
     <LaunchDarklyConsumer>
       {
         (config) => {
-          if (config) {
-            return (<FeatureFlagRenderer {...config} {...props} />);
+          if (config || props.initialRenderCallback) {
+            return (<FeatureFlagRenderer {...(config || {})} {...props} />);
           }
 
           return null;
