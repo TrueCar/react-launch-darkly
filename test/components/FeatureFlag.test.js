@@ -58,5 +58,20 @@ describe("components/FeatureFlag", () => {
       const renderer = subject.find(FeatureFlagRenderer);
       expect(renderer).toHaveLength(0);
     });
+    it("renders the initial render callback, even if LD config is absent", () => {
+      const initialRenderCallback = jest
+        .fn()
+        .mockReturnValue(<div>"initial rendered"</div>);
+      mount(
+        <LaunchDarkly>
+          <FeatureFlag
+            {...defaultProps}
+            forceInitialize
+            initialRenderCallback={initialRenderCallback}
+          />
+        </LaunchDarkly>
+      );
+      expect(initialRenderCallback).toHaveBeenCalledTimes(1);
+    });
   });
 });
