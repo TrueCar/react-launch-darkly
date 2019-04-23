@@ -1,15 +1,16 @@
 // @flow
 export type LdClientWrapperType = {
-  on: (string, (FlagValueType) => (void)) => void,
+  on: (string, (FlagValueType) => void) => void,
   onReady: (() => void) => void,
   variation: (string, boolean) => FlagValueType
 };
 
 export type FeatureFlagType = {
   flagKey: string,
-  renderFeatureCallback: (FlagValueType) => ?React$Element<any>,
+  renderFeatureCallback: FlagValueType => ?React$Element<any>,
   renderDefaultCallback?: () => ?React$Element<any>,
-  initialRenderCallback?: () => ?React$Element<any>
+  initialRenderCallback?: () => ?React$Element<any>,
+  forceInitialize: boolean
 };
 
 export type ConfigType = {

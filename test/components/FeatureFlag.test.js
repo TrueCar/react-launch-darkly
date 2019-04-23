@@ -40,9 +40,15 @@ describe("components/FeatureFlag", () => {
     );
     const renderer = subject.find(FeatureFlagRenderer);
     expect(renderer.prop("flagKey")).toEqual(allProps.flagKey);
-    expect(renderer.prop("renderFeatureCallback")).toEqual(allProps.renderFeatureCallback);
-    expect(renderer.prop("renderDefaultCallback")).toEqual(allProps.renderDefaultCallback);
-    expect(renderer.prop("initialRenderCallback")).toEqual(allProps.initialRenderCallback);
+    expect(renderer.prop("renderFeatureCallback")).toEqual(
+      allProps.renderFeatureCallback
+    );
+    expect(renderer.prop("renderDefaultCallback")).toEqual(
+      allProps.renderDefaultCallback
+    );
+    expect(renderer.prop("initialRenderCallback")).toEqual(
+      allProps.initialRenderCallback
+    );
     expect(renderer.prop("clientId")).toEqual(config.clientId);
     expect(renderer.prop("user")).toEqual(config.user);
     expect(renderer.prop("clientOptions")).toEqual(config.clientOptions);
@@ -58,5 +64,14 @@ describe("components/FeatureFlag", () => {
       const renderer = subject.find(FeatureFlagRenderer);
       expect(renderer).toHaveLength(0);
     });
+  });
+  it("does render the FeatureFlagRenderer component if forceInitialize is set", () => {
+    const subject = mount(
+      <LaunchDarkly>
+        <FeatureFlag {...defaultProps} forceInitialize />
+      </LaunchDarkly>
+    );
+    const renderer = subject.find(FeatureFlagRenderer);
+    expect(renderer).toHaveLength(1);
   });
 });
