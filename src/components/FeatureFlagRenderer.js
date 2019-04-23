@@ -39,7 +39,7 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
     this.initializeClient();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     if (!(prevProps.user && prevProps.clientId) && (this.props.user && this.props.clientId)) {
       this.initializeClient();
     }
