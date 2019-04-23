@@ -69,7 +69,7 @@ describe("components/FeatureFlag", () => {
     const initialRenderCallback = jest
       .fn()
       .mockReturnValue(<div>"initial rendered"</div>);
-    const subject = mount(
+    mount(
       <LaunchDarkly>
         <FeatureFlag
           {...defaultProps}
