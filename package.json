@@ -4,7 +4,7 @@
   "description": "",
   "main": "./build/index",
   "scripts": {
-    "test": "jest && npm run lint && npm run flow",
+    "test": "jest",
     "test-coverage": "jest --coverage",
     "clean": "rimraf build",
     "build": "./node_modules/.bin/babel src --out-dir build",
@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/TrueCar/react-launch-darkly#readme",
   "devDependencies": {
+    "@testing-library/react": "^9.3.2",
     "babel-cli": "^6.18.0",
     "babel-eslint": "7.1.0",
     "babel-polyfill": "6.16.0",
@@ -40,12 +41,12 @@
     "eslint": "3.8.1",
     "eslint-plugin-flowtype": "^2.39.1",
     "eslint-plugin-react": "6.4.1",
-    "flow-bin": "^0.58.0",
-    "flow-typed": "^2.2.3",
+    "flow-bin": "^0.93.0",
+    "flow-typed": "^2.4.0",
     "jest": "23.6.0",
     "ldclient-js": "^2.7.1",
-    "react": "16.5.0",
-    "react-dom": "16.5.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "react-hot-loader": "^1.3.1",
     "rimraf": "^2.5.4"
   },
