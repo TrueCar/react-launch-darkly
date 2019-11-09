@@ -17,9 +17,8 @@ type UseFlagsReturn = {
 };
 
 const useFlags = (flagKey): UseFlagsReturn => {
-  const { clientId, user, clientOptions } = React.useContext(
-    LaunchDarklyContext
-  );
+  const config = React.useContext(LaunchDarklyContext);
+  const { clientId, user, clientOptions } = config || {};
   const bootstrap = clientOptions && clientOptions.bootstrap;
 
   const [
@@ -78,12 +77,13 @@ const useFlags = (flagKey): UseFlagsReturn => {
   }, []);
 
   const initializeClient = React.useCallback(() => {
-    // Only initialize the launch darkly js-client when in browser,
-    // can not be initialized on SSR due to dependency on XMLHttpRequest.
-    const ldClient = ldClientWrapper(clientId, user, clientOptions);
-
-    checkFeatureFlag(ldClient);
-    listenFlagChangeEvent(ldClient);
+    if (clientId && user && clientOptions) {
+      // Only initialize the launch darkly js-client when in browser,
+      // can not be initialized on SSR due to dependency on XMLHttpRequest.
+      const ldClient = ldClientWrapper(clientId, user, clientOptions);
+      checkFeatureFlag(ldClient);
+      listenFlagChangeEvent(ldClient);
+    }
   }, []);
 
   React.useEffect(() => {

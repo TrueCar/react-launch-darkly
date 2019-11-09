@@ -5,6 +5,7 @@ import LaunchDarkly from "../../src/components/LaunchDarkly";
 import useFlags from "../../src/hooks/useFlags";
 
 describe("hooks/useFlags", () => {
+  const flagKey = "abc";
   const config = {
     clientId: "80808080",
     user: {
@@ -16,9 +17,7 @@ describe("hooks/useFlags", () => {
   };
 
   const TestComponent = (props = {}) => {
-    const { matchControl, matchChallenger, match } = useFlags(
-      props.flag || "abc"
-    );
+    const { matchControl, matchChallenger, match } = useFlags(props.flag || "");
     return (
       <div>
         {matchControl() && <p>Matched control</p>}
@@ -29,30 +28,17 @@ describe("hooks/useFlags", () => {
     );
   };
 
-  it("passes the props to FeatureFlagRenderer", () => {
-    const { queryByText, findByText, debug } = render(
-      <LaunchDarkly
-        clientId={config.clientId}
-        user={config.user}
-        clientOptions={config.clientOptions}
-      >
+  it("does not render control, challenger, or matched challenger value", () => {
+    const { queryByText, getByText } = render(
+      <LaunchDarkly {...config}>
         <TestComponent />
       </LaunchDarkly>
     );
 
-    debug();
-    // expect(renderer.prop("renderFeatureCallback")).toEqual(
-    //   allProps.renderFeatureCallback
-    // );
-    // expect(renderer.prop("renderDefaultCallback")).toEqual(
-    //   allProps.renderDefaultCallback
-    // );
-    // expect(renderer.prop("initialRenderCallback")).toEqual(
-    //   allProps.initialRenderCallback
-    // );
-    // expect(renderer.prop("clientId")).toEqual(config.clientId);
-    // expect(renderer.prop("user")).toEqual(config.user);
-    // expect(renderer.prop("clientOptions")).toEqual(config.clientOptions);
+    expect(queryByText("Matched control")).toBeNull();
+    expect(queryByText("Matched challenger")).toBeNull();
+    expect(queryByText("Matched challenger 2")).toBeNull();
+    getByText("Matched nothing");
   });
   // describe("when Broadcast sends no value", () => {
   //   it("does not render the FeatureFlagRenderer component", () => {
