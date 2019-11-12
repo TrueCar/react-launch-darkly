@@ -21,7 +21,14 @@
     "react/prop-types": [0],
 
     "eol-last": 2,
-    "indent": [2, 2, {"SwitchCase": 1, "VariableDeclarator": { "var": 2, "let": 2, "const": 3}}],
+    "indent": [
+      2,
+      2,
+      {
+        "SwitchCase": 1,
+        "VariableDeclarator": { "var": 2, "let": 2, "const": 3 }
+      }
+    ],
     "jsx-quotes": [2, "prefer-double"],
     "linebreak-style": [2, "unix"],
     "no-trailing-spaces": 1,
@@ -34,25 +41,22 @@
     "react/display-name": 0,
     "react/jsx-wrap-multilines": 2,
 
-    "flowtype/define-flow-type": 1
+    "flowtype/define-flow-type": 1,
+
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   },
   "env": {
     "es6": true,
     "node": true,
     "browser": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "ecmaFeatures": {
     "jsx": true,
     "experimentalObjectRestSpread": true
   },
-  "plugins": [
-    "react",
-    "flowtype"
-  ],
+  "plugins": ["react", "flowtype"],
   "globals": {
     "before": true,
     "context": true,
