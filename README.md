@@ -1,32 +1,40 @@
 # React-Launch-Darkly
-*Simple component helpers to support LaunchDarkly in your react app.*
+
+_Simple component helpers to support LaunchDarkly in your react app._
 
 [![npm](https://img.shields.io/npm/v/react-launch-darkly.svg)](https://www.npmjs.com/package/react-launch-darkly)
 [![Build Status](https://travis-ci.org/TrueCar/react-launch-darkly.svg?branch=master)](https://travis-ci.org/TrueCar/react-launch-darkly)
 
 ## Installation
+
 `npm install --save react-launch-darkly`
 
 ## Dependencies
-- React `v16.3.0` or greater
+
+- React `v16.8.0` or greater
   - If you use an older version of React, you can continue to use [version 1.4.0](https://github.com/TrueCar/react-launch-darkly/releases/tag/v1.4.0) of this library. However, we will no longer be actively maintaining version 1.x.
-- [LaunchDarkly client](https://docs.launchdarkly.com/docs/js-sdk-reference) / `ldclient-js`
-  - `ldclient-js` needs to be a dependency within the app using `react-launch-darkly`
-  - supported versions of `ldclient-js`: `^1.1.12 || ^2.0.0`
+- [LaunchDarkly client](https://docs.launchdarkly.com/docs/js-sdk-reference) / `launchdarkly-js-client-sdk`
+  - `launchdarkly-js-client-sdk` needs to be a dependency within the app using `react-launch-darkly`
+  - supported versions of `launchdarkly-js-client-sdk`: `^2.15.1`
 
 ## Basic Usage
+
 To setup the `LaunchDarkly` component wrapper, you'll probably want to include it in a top-level
 layout component:
+
 ```javascript
 // MasterLayout.js
 import React, { Component } from "react";
 import { LaunchDarkly } from "react-launch-darkly";
 
 export default class MasterLayout extends Component {
-  render () {
+  render() {
     return (
       <div>
-        <LaunchDarkly clientId={YOUR_LAUNCH_DARKLY_CLIENT_ID} user={{ key: "YOUR_USER_KEY" }}>
+        <LaunchDarkly
+          clientId={YOUR_LAUNCH_DARKLY_CLIENT_ID}
+          user={{ key: "YOUR_USER_KEY" }}
+        >
           {this.props.children}
         </LaunchDarkly>
       </div>
@@ -36,13 +44,14 @@ export default class MasterLayout extends Component {
 ```
 
 Then in your lower-level components, to make use of the `FeatureFlag` component:
+
 ```javascript
 // Home.js
 import React, { Component } from "react";
 import { FeatureFlag } from "react-launch-darkly";
 
 export default class Home extends Component {
-  render () {
+  render() {
     return (
       <div>
         <FeatureFlag
@@ -53,15 +62,14 @@ export default class Home extends Component {
     );
   }
 
-  _renderFeature () {
-    return (
-      <div>Your new feature!</div>
-    );
+  _renderFeature() {
+    return <div>Your new feature!</div>;
   }
 }
 ```
 
 ## Docs
+
 - [LaunchDarkly component](https://github.com/TrueCar/react-launch-darkly#launchdarkly-component)
 - [FeatureFlag component](https://github.com/TrueCar/react-launch-darkly#featureflag-component)
 - [SSR Support](https://github.com/TrueCar/react-launch-darkly#ssr-support)
@@ -71,19 +79,23 @@ export default class Home extends Component {
 ---
 
 ### `LaunchDarkly` component
+
 Main component that initializes the [LaunchDarkly js-client](https://github.com/launchdarkly/js-client).
 
 #### props
 
 ##### `clientId` : `string` (required)
+
 This is the client id that is provided to you by LaunchDarkly.
 
 ##### `user` : `object` (required)
+
 See the [LaunchDarkly docs](http://docs.launchdarkly.com/docs/js-sdk-reference#section-users) for more info.
 
 ##### `clientOptions` : `object` (optional)
 
 Options that are passed to the LaunchDarkly JS client for additional configuration and features:
+
 - [Bootstrapping](https://docs.launchdarkly.com/docs/js-sdk-reference#section-bootstrapping)
 - [Secure Mode](https://docs.launchdarkly.com/docs/js-sdk-reference#section-secure-mode)
 - [Setting LaunchDarkly Enterprise URLs](https://github.com/launchdarkly/js-client/blob/master/src/index.js#L241-L243)
@@ -91,16 +103,20 @@ Options that are passed to the LaunchDarkly JS client for additional configurati
 ---
 
 ### `FeatureFlag` component
+
 Note that this component has to be rendered as a child of `LaunchDarkly`
 
 #### props
 
 ##### `flagKey` : `string` (required)
+
 The `flagKey` prop is the feature flag key you defined in LaunchDarkly.
 
 ##### `renderFeatureCallback` : `function` (required)
+
 The main callback function that renders your feature. In typical scenarios where your flag is a boolean,
 you can simply create your function to return the necessary JSX:
+
 ```javascript
 // Example FeatureFlag component
 <FeatureFlag flagKey="example" renderFeatureCallback={this._renderFeature} />
@@ -112,8 +128,10 @@ _renderFeature () {
 ```
 
 ##### Multivariate Flag Support
+
 When using a multivariate feature flag, the `renderFeatureCallback` prop will pass the value of
 the flag as an argument to your callback function:
+
 ```javascript
 // Example FeatureFlag component
 <FeatureFlag flagKey="multivariate-example" renderFeatureCallback={this._renderFeature} />
@@ -129,16 +147,20 @@ _renderFeature (featureFlagValue) {
 ```
 
 #### `initialRenderCallback` : `function` (optional)
+
 Since the feature flags are requested from LaunchDarkly after DOM load, there may be some latency in the rendering. This render callback allows you to provide some sort of feedback to indicate loading, e.g., the typical spinning loader.
 
 #### `renderDefaultCallback` : `function` (optional)
+
 This callback is provided for cases where you want to render something by default, think of it when your feature flag is "off" or falsy.
 
 ---
 
 ### SSR Support
+
 SSR is opt-in and you need to specify the initial set of feature flag keys and values through
 the `bootstrap` property on `clientOptions`:
+
 ```javascript
 // currentUser.featureFlags
 // >> { "your-feature-flag": true }
@@ -154,9 +176,11 @@ feature flags within js-client's internal state. Thus taking precedence over the
 present in `bootstrap`.
 
 #### Disable LaunchDarkly js-client Initialization (Preventing XHRs)
+
 In the event that you opt-in for SSR, you may not want to make any additional XHRs to LaunchDarkly
 since you already have the feature flags provided from your server through `bootstrap`, you can
 disable this by supplying `disableClient: true`:
+
 ```javascript
 const clientOptions = {
   bootstrap: currentUser.featureFlags,
@@ -213,6 +237,7 @@ http://localhost/users/101?features.show-user-email
 ```
 
 #### Examples
+
 ```
 // Overrides the `send-onboarding-email` boolean feature flag, setting it to `true`
 http://localhost/users?features=send-onboarding-email
@@ -232,6 +257,7 @@ http://localhost/users/101?features.show-user-email
 ### Identify a new user
 
 If you need to change the configured user for the launch darkly client you can do that by calling `identify`.
+
 ```
 import { identify } from "react-launch-darkly";
 

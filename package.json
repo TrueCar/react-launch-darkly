@@ -1,6 +1,6 @@
 {
   "name": "react-launch-darkly",
-  "version": "4.1.0",
+  "version": "5.0.0",
   "description": "",
   "main": "./build/index",
   "scripts": {
@@ -45,6 +45,7 @@
     "flow-bin": "^0.93.0",
     "flow-typed": "^2.4.0",
     "jest": "^24.9.0",
+    "launchdarkly-js-client-sdk": "^2.15.1",
     "ldclient-js": "^2.7.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
@@ -52,7 +53,7 @@
     "rimraf": "^2.5.4"
   },
   "peerDependencies": {
-    "ldclient-js": "^1.1.12 || ^2.0.0",
+    "launchdarkly-js-client-sdk": "^2.15.1",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },

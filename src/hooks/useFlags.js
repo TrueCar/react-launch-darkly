@@ -1,13 +1,7 @@
 // @flow
 import React from "react";
 import { LaunchDarklyContext } from "../components/Context";
-import type {
-  FeatureFlagType,
-  ConfigType,
-  LdClientWrapperType,
-  FlagValueType,
-  Flags
-} from "../types";
+import { type LdClientWrapperType, type FlagValueType } from "../types";
 import { ldClientWrapper, ldOverrideFlag } from "../lib/utils";
 
 type UseFlagsReturn = {
@@ -26,11 +20,7 @@ const useFlags = (flagKey: string): UseFlagsReturn => {
     setCheckFeatureFlagComplete
   ] = React.useState(false);
   const [flagValue, setFlagValue] = React.useState(
-    bootstrap &&
-      typeof bootstrap === "object" &&
-      bootstrap.hasOwnProperty(flagKey)
-      ? bootstrap[flagKey]
-      : false
+    bootstrap && bootstrap[flagKey] ? bootstrap[flagKey] : false
   );
 
   const setStateFlagValue = React.useCallback(
@@ -102,9 +92,6 @@ const useFlags = (flagKey: string): UseFlagsReturn => {
   const matchControl = () => checkFeatureFlagComplete;
   const matchChallenger = () => flagValue;
   const match = value => flagValue === value;
-
-  console.log("flagKey", flagKey);
-  console.log("flagValue", flagValue);
 
   return {
     matchControl,

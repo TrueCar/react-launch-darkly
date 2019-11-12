@@ -1,4 +1,4 @@
-import { initialize } from "ldclient-js";
+import { initialize } from "launchdarkly-js-client-sdk";
 const url = require("url");
 
 export function getLocation() {
@@ -29,7 +29,7 @@ export function ldClientWrapper(key, user, options = {}) {
     });
   }
 
-  // Create our own implementation of the ldclient-js' `on` function.
+  // Create our own implementation of the launchdarkly-js-client-sdk' `on` function.
   // Multiple calls with `on('ready')` seem to not fire after the original client has been initialized.
   // By implementing our own, we can track the initial "ready" fire and decide how to proceed.
   ldClient.onReady = callback => {

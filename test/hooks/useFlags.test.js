@@ -1,10 +1,8 @@
 import React from "react";
-import { render, wait } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import LaunchDarkly from "../../src/components/LaunchDarkly";
 import useFlags from "../../src/hooks/useFlags";
-import * as utils from "../../src/lib/utils";
-
-import * as LDClient from "ldclient-js";
+import * as LDClient from "launchdarkly-js-client-sdk";
 
 LDClient.initialize = jest.fn(() => ({
   identify: () => new Promise([]),
@@ -16,20 +14,21 @@ LDClient.initialize = jest.fn(() => ({
 
 describe("hooks/useFlags", () => {
   const flagKey = "abc";
-  const config = {
-    clientId: "80808080",
-    user: {
-      key: "abc123"
-    },
-    clientOptions: {
-      baseUrl: "https://test"
+  const generateConfig = bootstrap => {
+    const config = {
+      clientId: "80808080",
+      user: {
+        key: "abc123"
+      },
+      clientOptions: {
+        baseUrl: "https://test"
+      }
+    };
+    if (bootstrap) {
+      config.clientOptions.bootstrap = bootstrap;
     }
+    return config;
   };
-
-  utils.ldClientWrapper = jest.fn(() => ({
-    onReady: jest.fn(),
-    on: jest.fn()
-  }));
 
   const TestComponent = (props = {}) => {
     const { matchControl, matchChallenger, match } = useFlags(
@@ -45,9 +44,9 @@ describe("hooks/useFlags", () => {
     );
   };
 
-  it("does not render control, challenger, or matched challenger value", () => {
+  it("does not render control, challenger, or matched challenger value when config not provided", () => {
     const { queryByText, getByText } = render(
-      <LaunchDarkly {...config}>
+      <LaunchDarkly>
         <TestComponent />
       </LaunchDarkly>
     );
@@ -58,40 +57,67 @@ describe("hooks/useFlags", () => {
     getByText("Matched nothing");
   });
 
-  it.only("renders control", async () => {
-    LDClient.initialize = jest.fn(() => ({
-      identify: () => new Promise([]),
-      variation: () => "",
-      on: () => {},
-      track: () => {},
-      allFlags: () => ({
-        [flagKey]: "control"
-      })
-    }));
+  it("does not render control, challenger, or matched challenger value when flag not returned", () => {
+    const { queryByText, getByText } = render(
+      <LaunchDarkly {...generateConfig()}>
+        <TestComponent />
+      </LaunchDarkly>
+    );
 
-    console.log("allFlags", utils.testExports.allFlags());
+    expect(queryByText("Matched control")).toBeNull();
+    expect(queryByText("Matched challenger")).toBeNull();
+    expect(queryByText("Matched challenger 2")).toBeNull();
+    getByText("Matched nothing");
+  });
 
-    await wait(() => {
-      utils.getAllFeatureFlags(config.clientId, config.user);
-    });
-
-    console.log("allFlags after wait", utils.testExports.allFlags());
-
-    const { queryByText, getByText, rerender, debug } = render(
-      <LaunchDarkly {...config}>
+  it("renders control", () => {
+    const { queryByText, getByText } = render(
+      <LaunchDarkly
+        {...generateConfig({
+          [flagKey]: "control"
+        })}
+      >
         <TestComponent flagKey={flagKey} />
       </LaunchDarkly>
     );
 
-    // rerender(
-    //   <LaunchDarkly {...config}>
-    //     <TestComponent flagKey={flagKey} />
-    //   </LaunchDarkly>
-    // );
-
     getByText("Matched control");
     expect(queryByText("Matched challenger")).toBeNull();
     expect(queryByText("Matched challenger 2")).toBeNull();
+    getByText("Matched nothing");
+  });
+
+  it("renders challenger", () => {
+    const { queryByText, getByText } = render(
+      <LaunchDarkly
+        {...generateConfig({
+          [flagKey]: "challenger"
+        })}
+      >
+        <TestComponent flagKey={flagKey} />
+      </LaunchDarkly>
+    );
+
+    expect(queryByText("Matched control")).toBeNull();
+    getByText("Matched challenger");
+    expect(queryByText("Matched challenger 2")).toBeNull();
+    getByText("Matched nothing");
+  });
+
+  it("renders challenger 2", () => {
+    const { queryByText, getByText } = render(
+      <LaunchDarkly
+        {...generateConfig({
+          [flagKey]: "challenger2"
+        })}
+      >
+        <TestComponent flagKey={flagKey} />
+      </LaunchDarkly>
+    );
+
+    expect(queryByText("Matched control")).toBeNull();
+    getByText("Matched challenger");
+    getByText("Matched challenger 2");
     getByText("Matched nothing");
   });
 });
