@@ -69,13 +69,13 @@ describe("hooks/useFlags", () => {
       })
     }));
 
-    console.log("allFlags", utils.allFlags());
+    console.log("allFlags", utils.testExports.allFlags());
 
     await wait(() => {
       utils.getAllFeatureFlags(config.clientId, config.user);
     });
 
-    console.log("allFlags after wait", utils.allFlags());
+    console.log("allFlags after wait", utils.testExports.allFlags());
 
     const { queryByText, getByText, rerender, debug } = render(
       <LaunchDarkly {...config}>

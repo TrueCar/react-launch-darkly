@@ -10,7 +10,7 @@ export function getLocation() {
 
 let ldClient;
 let ldClientReady = false;
-export function ldClientWrapper (key, user, options = {}) {
+export function ldClientWrapper(key, user, options = {}) {
   const queue = [];
 
   if (!ldClient) {
@@ -32,7 +32,7 @@ export function ldClientWrapper (key, user, options = {}) {
   // Create our own implementation of the ldclient-js' `on` function.
   // Multiple calls with `on('ready')` seem to not fire after the original client has been initialized.
   // By implementing our own, we can track the initial "ready" fire and decide how to proceed.
-  ldClient.onReady = (callback) => {
+  ldClient.onReady = callback => {
     if (ldClientReady) {
       callback();
     } else {
@@ -57,10 +57,10 @@ export function ldOverrideFlag(flagKey, typeFlagValue) {
   const queryFlag = query["features." + flagKey];
   const queryFeatures = query["features"];
 
-  if (typeof queryFlag !== "undefined"){
-    if (queryFlag === ""){
+  if (typeof queryFlag !== "undefined") {
+    if (queryFlag === "") {
       override = true;
-    } else if (queryFlag === "false"){
+    } else if (queryFlag === "false") {
       override = false;
     } else {
       override = queryFlag;
@@ -70,8 +70,8 @@ export function ldOverrideFlag(flagKey, typeFlagValue) {
       override = parseFloat(override);
     }
   } else if (queryFeatures) {
-    queryFeatures.split(",").forEach((f) => {
-      if (f === flagKey){
+    queryFeatures.split(",").forEach(f => {
+      if (f === flagKey) {
         override = true;
       }
     });
@@ -79,9 +79,9 @@ export function ldOverrideFlag(flagKey, typeFlagValue) {
   return override;
 }
 
-export function getAllFeatureFlags (key, user) {
+export function getAllFeatureFlags(key, user) {
   const ldClient = ldClientWrapper(key, user);
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     ldClient.onReady(() => {
       resolve(ldClient.allFlags());
     });
@@ -97,27 +97,27 @@ export function getAllFeatureFlags (key, user) {
   you can pass in `null` for the hash."
 
 */
-export function identify (key, user, hash = null) {
+export function identify(key, user, hash = null) {
   const ldClient = ldClientWrapper(key, user);
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     ldClient.onReady(() => {
       resolve(ldClient.identify(user, hash));
     });
   });
 }
 
-export function track (key, user, goalKey) {
+export function track(key, user, goalKey) {
   const ldClient = ldClientWrapper(key, user);
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     ldClient.onReady(() => {
       resolve(ldClient.track(goalKey));
     });
   });
 }
 
-export function feature (key, user, variation) {
+export function feature(key, user, variation) {
   const ldClient = ldClientWrapper(key, user);
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     ldClient.onReady(() => {
       resolve(ldClient.variation(variation));
     });
@@ -125,5 +125,13 @@ export function feature (key, user, variation) {
 }
 
 export const testExports = {
-  reset: () => { ldClient = null; }
+  allFlags: () => {
+    if (ldClient) {
+      return ldClient.allFlags();
+    }
+    return {};
+  },
+  reset: () => {
+    ldClient = null;
+  }
 };

@@ -33,6 +33,34 @@ const useFlags = (flagKey: string): UseFlagsReturn => {
       : false
   );
 
+  const setStateFlagValue = React.useCallback(
+    (flagValue: FlagValueType) => {
+      const typeFlagValue = typeof flagValue;
+      const override = ldOverrideFlag(flagKey, typeFlagValue);
+
+      // Due to this function being called within a callback, we can run into issues
+      // where we try to set the state for an unmounted component. Since `isMounted()` is deprecated
+      // as part of a React class, we can create our own way to manage it within the protoype.
+      // See https://github.com/facebook/react/issues/5465#issuecomment-157888325 for more info
+      // if (!this._isMounted) {
+      //   return;
+      // }
+
+      if (typeof override !== "undefined") {
+        // Override is set for this flag key, use override instead
+        setFlagValue(override);
+        setCheckFeatureFlagComplete(true);
+      } else if (flagValue) {
+        setFlagValue(flagValue);
+        setCheckFeatureFlagComplete(true);
+      } else {
+        setFlagValue(false);
+        setCheckFeatureFlagComplete(true);
+      }
+    },
+    [flagKey]
+  );
+
   const checkFeatureFlag = React.useCallback(
     (ldClient: LdClientWrapperType) => {
       ldClient.onReady(() => {
@@ -43,7 +71,7 @@ const useFlags = (flagKey: string): UseFlagsReturn => {
         setStateFlagValue(flagValue);
       });
     },
-    []
+    [flagKey, setStateFlagValue]
   );
 
   const listenFlagChangeEvent = React.useCallback(
@@ -51,33 +79,9 @@ const useFlags = (flagKey: string): UseFlagsReturn => {
       ldClient.on(`change:${flagKey}`, value => {
         setStateFlagValue(value);
       });
-    }
+    },
+    [flagKey, setStateFlagValue]
   );
-
-  const setStateFlagValue = React.useCallback((flagValue: FlagValueType) => {
-    const typeFlagValue = typeof flagValue;
-    const override = ldOverrideFlag(flagKey, typeFlagValue);
-
-    // Due to this function being called within a callback, we can run into issues
-    // where we try to set the state for an unmounted component. Since `isMounted()` is deprecated
-    // as part of a React class, we can create our own way to manage it within the protoype.
-    // See https://github.com/facebook/react/issues/5465#issuecomment-157888325 for more info
-    // if (!this._isMounted) {
-    //   return;
-    // }
-
-    if (typeof override !== "undefined") {
-      // Override is set for this flag key, use override instead
-      setFlagValue(override);
-      setCheckFeatureFlagComplete(true);
-    } else if (flagValue) {
-      setFlagValue(flagValue);
-      setCheckFeatureFlagComplete(true);
-    } else {
-      setFlagValue(false);
-      setCheckFeatureFlagComplete(true);
-    }
-  }, []);
 
   const initializeClient = React.useCallback(() => {
     if (clientId && user && clientOptions) {
@@ -87,13 +91,13 @@ const useFlags = (flagKey: string): UseFlagsReturn => {
       checkFeatureFlag(ldClient);
       listenFlagChangeEvent(ldClient);
     }
-  }, []);
+  }, [checkFeatureFlag, clientId, clientOptions, listenFlagChangeEvent, user]);
 
   React.useEffect(() => {
     if (!(clientOptions && clientOptions.disableClient) || (user && clientId)) {
       initializeClient();
     }
-  }, []);
+  }, [clientId, clientOptions, initializeClient, user]);
 
   const matchControl = () => checkFeatureFlagComplete;
   const matchChallenger = () => flagValue;
