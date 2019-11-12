@@ -44,23 +44,26 @@
     "flowtype/define-flow-type": 1,
 
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+    "jest/no-identical-title": "error",
+    "jest/prefer-to-have-length": "warn",
+    "jest/valid-expect": "error"
   },
   "env": {
     "es6": true,
     "node": true,
-    "browser": true
+    "browser": true,
+    "jest/globals": true
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],
-  "ecmaFeatures": {
-    "jsx": true,
-    "experimentalObjectRestSpread": true
-  },
-  "plugins": ["react", "flowtype"],
-  "globals": {
-    "before": true,
-    "context": true,
-    "describe": true,
-    "it": true
+  "plugins": ["jest", "flowtype", "react", "react-hooks"],
+  "settings": {
+    "react": {
+      "version": "detect",
+      "flowVersion": "0.93.0"
+    }
   }
 }

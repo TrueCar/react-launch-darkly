@@ -1,8 +1,15 @@
 {
   "presets": [
-    "react",
-    "es2015",
-    "stage-0",
-    "flow"
-  ]
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ],
+    "@babel/preset-react",
+    "@babel/preset-flow"
+  ],
+  "plugins": ["@babel/plugin-syntax-export-default-from"]
 }
