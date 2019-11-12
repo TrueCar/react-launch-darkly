@@ -16,7 +16,7 @@ type UseFlagsReturn = {
   match: (value: string) => boolean
 };
 
-const useFlags = (flagKey): UseFlagsReturn => {
+const useFlags = (flagKey: string): UseFlagsReturn => {
   const config = React.useContext(LaunchDarklyContext);
   const { clientId, user, clientOptions } = config || {};
   const bootstrap = clientOptions && clientOptions.bootstrap;
@@ -37,6 +37,9 @@ const useFlags = (flagKey): UseFlagsReturn => {
     (ldClient: LdClientWrapperType) => {
       ldClient.onReady(() => {
         const flagValue = ldClient.variation(flagKey, false);
+
+        console.log("ldClient.variation(flagKey, false)", flagKey, flagValue);
+
         setStateFlagValue(flagValue);
       });
     },
@@ -95,6 +98,9 @@ const useFlags = (flagKey): UseFlagsReturn => {
   const matchControl = () => checkFeatureFlagComplete;
   const matchChallenger = () => flagValue;
   const match = value => flagValue === value;
+
+  console.log("flagKey", flagKey);
+  console.log("flagValue", flagValue);
 
   return {
     matchControl,

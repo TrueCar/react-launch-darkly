@@ -1,8 +1,18 @@
 import React from "react";
-import { render } from "@testing-library/react";
-
+import { render, wait } from "@testing-library/react";
 import LaunchDarkly from "../../src/components/LaunchDarkly";
 import useFlags from "../../src/hooks/useFlags";
+import * as utils from "../../src/lib/utils";
+
+import * as LDClient from "ldclient-js";
+
+LDClient.initialize = jest.fn(() => ({
+  identify: () => new Promise([]),
+  variation: () => "",
+  on: () => {},
+  track: () => {},
+  allFlags: () => ({})
+}));
 
 describe("hooks/useFlags", () => {
   const flagKey = "abc";
@@ -16,8 +26,15 @@ describe("hooks/useFlags", () => {
     }
   };
 
+  utils.ldClientWrapper = jest.fn(() => ({
+    onReady: jest.fn(),
+    on: jest.fn()
+  }));
+
   const TestComponent = (props = {}) => {
-    const { matchControl, matchChallenger, match } = useFlags(props.flag || "");
+    const { matchControl, matchChallenger, match } = useFlags(
+      props.flagKey || ""
+    );
     return (
       <div>
         {matchControl() && <p>Matched control</p>}
@@ -40,29 +57,41 @@ describe("hooks/useFlags", () => {
     expect(queryByText("Matched challenger 2")).toBeNull();
     getByText("Matched nothing");
   });
-  // describe("when Broadcast sends no value", () => {
-  //   it("does not render the FeatureFlagRenderer component", () => {
-  //     const subject = mount(
-  //       <LaunchDarkly>
-  //         <FeatureFlag {...defaultProps} />
-  //       </LaunchDarkly>
-  //     );
-  //     const renderer = subject.find(FeatureFlagRenderer);
-  //     expect(renderer).toHaveLength(0);
-  //   });
-  //   it("renders the initial render callback, even if LD config is absent", () => {
-  //     const initialRenderCallback = jest
-  //       .fn()
-  //       .mockReturnValue(<div>"initial rendered"</div>);
-  //     mount(
-  //       <LaunchDarkly>
-  //         <FeatureFlag
-  //           {...defaultProps}
-  //           initialRenderCallback={initialRenderCallback}
-  //         />
-  //       </LaunchDarkly>
-  //     );
-  //     expect(initialRenderCallback).toHaveBeenCalledTimes(1);
-  //   });
-  // });
+
+  it.only("renders control", async () => {
+    LDClient.initialize = jest.fn(() => ({
+      identify: () => new Promise([]),
+      variation: () => "",
+      on: () => {},
+      track: () => {},
+      allFlags: () => ({
+        [flagKey]: "control"
+      })
+    }));
+
+    console.log("allFlags", utils.allFlags());
+
+    await wait(() => {
+      utils.getAllFeatureFlags(config.clientId, config.user);
+    });
+
+    console.log("allFlags after wait", utils.allFlags());
+
+    const { queryByText, getByText, rerender, debug } = render(
+      <LaunchDarkly {...config}>
+        <TestComponent flagKey={flagKey} />
+      </LaunchDarkly>
+    );
+
+    // rerender(
+    //   <LaunchDarkly {...config}>
+    //     <TestComponent flagKey={flagKey} />
+    //   </LaunchDarkly>
+    // );
+
+    getByText("Matched control");
+    expect(queryByText("Matched challenger")).toBeNull();
+    expect(queryByText("Matched challenger 2")).toBeNull();
+    getByText("Matched nothing");
+  });
 });
