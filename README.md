@@ -79,7 +79,7 @@ export default class Home extends Component {
 
 ### `LaunchDarkly` component
 
-Main component that initializes the [LaunchDarkly js-client](https://github.com/launchdarkly/js-client).
+Main component that provides configuration data to `FeatureFlag` and `useFlags()`.
 
 #### props
 
@@ -111,6 +111,7 @@ Challenger test function which is used by `useFlags` to determine whether challe
 
 ### `FeatureFlag` component
 
+Component that initializes the [LaunchDarkly js-client](https://github.com/launchdarkly/js-client).
 Note that this component has to be rendered as a child of `LaunchDarkly`
 
 #### props
@@ -165,6 +166,7 @@ This callback is provided for cases where you want to render something by defaul
 
 ### `useFlags` hook
 
+Hook that initializes the [LaunchDarkly js-client](https://github.com/launchdarkly/js-client).
 Note that any component using `useFlags` has to be rendered as a child of `LaunchDarkly`
 
 #### arguments
