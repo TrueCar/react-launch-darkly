@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { LaunchDarklyContext } from "../components/Context";
-import { type LdClientWrapperType, type FlagValueType } from "../types";
+import type { LdClientWrapperType, FlagValueType } from "../types";
 import { ldClientWrapper, ldOverrideFlag } from "../lib/utils";
 
 type UseFlagsReturn = {
@@ -16,10 +16,6 @@ const useFlags = (flagKey: string): UseFlagsReturn => {
     config || {};
   const bootstrap = clientOptions && clientOptions.bootstrap;
 
-  const [
-    checkFeatureFlagComplete,
-    setCheckFeatureFlagComplete
-  ] = React.useState(false);
   const [flagValue, setFlagValue] = React.useState(
     bootstrap && bootstrap[flagKey] ? bootstrap[flagKey] : false
   );
@@ -29,24 +25,13 @@ const useFlags = (flagKey: string): UseFlagsReturn => {
       const typeFlagValue = typeof flagValue;
       const override = ldOverrideFlag(flagKey, typeFlagValue);
 
-      // Due to this function being called within a callback, we can run into issues
-      // where we try to set the state for an unmounted component. Since `isMounted()` is deprecated
-      // as part of a React class, we can create our own way to manage it within the protoype.
-      // See https://github.com/facebook/react/issues/5465#issuecomment-157888325 for more info
-      // if (!this._isMounted) {
-      //   return;
-      // }
-
       if (typeof override !== "undefined") {
         // Override is set for this flag key, use override instead
         setFlagValue(override);
-        setCheckFeatureFlagComplete(true);
       } else if (flagValue) {
         setFlagValue(flagValue);
-        setCheckFeatureFlagComplete(true);
       } else {
         setFlagValue(false);
-        setCheckFeatureFlagComplete(true);
       }
     },
     [flagKey]
