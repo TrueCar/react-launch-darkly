@@ -12,7 +12,6 @@ _Simple component helpers to support LaunchDarkly in your react app._
 ## Dependencies
 
 - React `v16.8.0` or greater
-  - If you use an older version of React, you can continue to use [version 1.4.0](https://github.com/TrueCar/react-launch-darkly/releases/tag/v1.4.0) of this library. However, we will no longer be actively maintaining version 1.x.
 - [LaunchDarkly client](https://docs.launchdarkly.com/docs/js-sdk-reference) / `launchdarkly-js-client-sdk`
   - `launchdarkly-js-client-sdk` needs to be a dependency within the app using `react-launch-darkly`
   - supported versions of `launchdarkly-js-client-sdk`: `^2.15.1`
