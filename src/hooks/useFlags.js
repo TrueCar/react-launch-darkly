@@ -19,7 +19,7 @@ const useFlags = (flagKey: string): UseFlagsReturn => {
   const [flagValue, setFlagValue] = React.useState(
     bootstrap && typeof bootstrap === "object" && bootstrap[flagKey]
       ? bootstrap[flagKey]
-      : false
+      : null
   );
 
   const setStateFlagValue = React.useCallback(

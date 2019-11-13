@@ -40,9 +40,15 @@ describe("components/FeatureFlag", () => {
     );
     const renderer = subject.find(FeatureFlagRenderer);
     expect(renderer.prop("flagKey")).toEqual(allProps.flagKey);
-    expect(renderer.prop("renderFeatureCallback")).toEqual(allProps.renderFeatureCallback);
-    expect(renderer.prop("renderDefaultCallback")).toEqual(allProps.renderDefaultCallback);
-    expect(renderer.prop("initialRenderCallback")).toEqual(allProps.initialRenderCallback);
+    expect(renderer.prop("renderFeatureCallback")).toEqual(
+      allProps.renderFeatureCallback
+    );
+    expect(renderer.prop("renderDefaultCallback")).toEqual(
+      allProps.renderDefaultCallback
+    );
+    expect(renderer.prop("initialRenderCallback")).toEqual(
+      allProps.initialRenderCallback
+    );
     expect(renderer.prop("clientId")).toEqual(config.clientId);
     expect(renderer.prop("user")).toEqual(config.user);
     expect(renderer.prop("clientOptions")).toEqual(config.clientOptions);
@@ -61,7 +67,7 @@ describe("components/FeatureFlag", () => {
     it("renders the initial render callback, even if LD config is absent", () => {
       const initialRenderCallback = jest
         .fn()
-        .mockReturnValue(<div>"initial rendered"</div>);
+        .mockReturnValue(<div>initial rendered</div>);
       mount(
         <LaunchDarkly>
           <FeatureFlag
