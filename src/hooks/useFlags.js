@@ -17,7 +17,9 @@ const useFlags = (flagKey: string): UseFlagsReturn => {
   const bootstrap = clientOptions && clientOptions.bootstrap;
 
   const [flagValue, setFlagValue] = React.useState(
-    bootstrap && bootstrap[flagKey] ? bootstrap[flagKey] : false
+    bootstrap && typeof bootstrap === "object" && bootstrap[flagKey]
+      ? bootstrap[flagKey]
+      : false
   );
 
   const setStateFlagValue = React.useCallback(

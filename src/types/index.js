@@ -15,7 +15,9 @@ export type FeatureFlagType = {
 export type ConfigType = {
   clientId: string,
   user: UserType,
-  clientOptions: ClientOptionsType
+  clientOptions: ClientOptionsType,
+  controlTest?: FlagTest,
+  challengerTest?: FlagTest
 };
 
 export type UserType = {
@@ -48,3 +50,5 @@ export type ClientOptionsType = {
 export type Flags = {
   [flagKey: string]: string
 };
+
+export type FlagTest = (flagValue: FlagValueType) => boolean;

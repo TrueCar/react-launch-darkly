@@ -1,5 +1,5 @@
 // @flow
-import React from "react";
+import * as React from "react";
 import { LaunchDarklyProvider } from "./Context";
 import { defaultControlTest, defaultChallengerTest } from "../lib/utils";
 import type { UserType, ClientOptionsType, FlagValueType } from "../types";
@@ -8,7 +8,7 @@ type Props = {
   clientId: string,
   user: UserType,
   clientOptions: ClientOptionsType,
-  children: any,
+  children: React.Node,
   controlTest?: (flagValue: FlagValueType) => boolean,
   challengerTest?: (flagValue: FlagValueType) => boolean
 };

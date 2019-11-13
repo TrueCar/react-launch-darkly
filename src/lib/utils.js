@@ -1,5 +1,3 @@
-// @flow
-
 import { initialize } from "launchdarkly-js-client-sdk";
 import type { FlagValueType } from "../types";
 const url = require("url");
@@ -128,14 +126,20 @@ export function feature(key, user, variation) {
 }
 
 export const defaultControlTest = (flagValue: FlagValueType) => {
-  if (typeof flagValue === "string" && flagValue.startsWith("control")) {
+  if (
+    typeof flagValue === "string" &&
+    flagValue.toLowerCase().startsWith("control")
+  ) {
     return true;
   }
   return false;
 };
 
 export const defaultChallengerTest = (flagValue: FlagValueType) => {
-  if (typeof flagValue === "string" && flagValue.startsWith("challenger")) {
+  if (
+    typeof flagValue === "string" &&
+    !flagValue.toLowerCase().startsWith("control")
+  ) {
     return true;
   }
   return false;

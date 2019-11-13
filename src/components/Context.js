@@ -1,9 +1,8 @@
 // @flow
 import React from "react";
+import type { ConfigType } from "../types";
 
-const DEFAULT_CONTEXT = {};
-
-export const LaunchDarklyContext = React.createContext(DEFAULT_CONTEXT);
+export const LaunchDarklyContext = React.createContext<ConfigType | null>(null);
 
 export const {
   Provider: LaunchDarklyProvider,

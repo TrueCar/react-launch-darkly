@@ -26,7 +26,12 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
 
     this.state = {
       checkFeatureFlagComplete: false,
-      flagValue: bootstrap && bootstrap[flagKey] ? bootstrap[flagKey] : false
+      // This doesn't appear to make sense (bootstrap can be a string),
+      // but it's not clear to me what's correct here
+      flagValue:
+        bootstrap && typeof bootstrap === "object" && bootstrap[flagKey]
+          ? bootstrap[flagKey]
+          : false
     };
   }
 
@@ -45,7 +50,8 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
   componentDidUpdate(prevProps: Props) {
     if (
       !(prevProps.user && prevProps.clientId) &&
-      this.props.user && this.props.clientId
+      this.props.user &&
+      this.props.clientId
     ) {
       this.initializeClient();
     }
@@ -66,7 +72,7 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
   }
 
   render() {
-    return this.renderLogic();
+    return this.renderLogic() || null;
   }
 
   renderLogic() {
