@@ -100,6 +100,14 @@ Options that are passed to the LaunchDarkly JS client for additional configurati
 - [Secure Mode](https://docs.launchdarkly.com/docs/js-sdk-reference#section-secure-mode)
 - [Setting LaunchDarkly Enterprise URLs](https://github.com/launchdarkly/js-client/blob/master/src/index.js#L241-L243)
 
+##### `controlTest` : `(flagValue: FlagValueType) => boolean` (optional)
+
+Control test function which is used by `useFlags` to determine whether control should be rendered. If none is provided, a default is used which checks if value starts with "control"
+
+##### `challengerTest` : `(flagValue: FlagValueType) => boolean` (optional)
+
+Challenger test function which is used by `useFlags` to determine whether challenger should be rendered. If none is provided, a default is used which checks if value does not start with "control"
+
 ---
 
 ### `FeatureFlag` component
@@ -125,6 +133,76 @@ you can simply create your function to return the necessary JSX:
 _renderFeature () {
   return (<div>New Feature Here!</div>);
 }
+```
+
+##### Multivariate Flag Support
+
+When using a multivariate feature flag, the `renderFeatureCallback` prop will pass the value of
+the flag as an argument to your callback function:
+
+```javascript
+// Example FeatureFlag component
+<FeatureFlag flagKey="multivariate-example" renderFeatureCallback={this._renderFeature} />
+
+// Callback function with feature flag value passed in
+_renderFeature (featureFlagValue) {
+  if (featureFlagValue === "A") {
+    return (<div>Bucket "A" Feature!</div>);
+  }
+
+  return (<div>Default Bucket Feature Here!</div>);
+}
+```
+
+#### `initialRenderCallback` : `function` (optional)
+
+Since the feature flags are requested from LaunchDarkly after DOM load, there may be some latency in the rendering. This render callback allows you to provide some sort of feedback to indicate loading, e.g., the typical spinning loader.
+
+#### `renderDefaultCallback` : `function` (optional)
+
+This callback is provided for cases where you want to render something by default, think of it when your feature flag is "off" or falsy.
+
+---
+
+### `useFlags` hook
+
+Note that any component using `useFlags` has to be rendered as a child of `LaunchDarkly`
+
+#### arguments
+
+##### `flagKey` : `string` (required)
+
+The `flagKey` prop is the feature flag key you defined in LaunchDarkly.
+
+#### return
+
+##### `matchControl` : `() => boolean`
+
+Helper which can be used to determine whether flag has a control value. `matchControl` internally uses `controlTest` to determine if flag has a control value.
+
+##### `matchChallenger` : `() => boolean`
+
+Helper which can be used to determine whether flag has a challenger value. `matchChallenger` internally uses `challengerTest` to determine if flag has a challenger value.
+
+##### `match` : `(value: string) => boolean`
+
+Helper which can be used to determine whether flag has a specific value.
+
+```javascript
+// Example usage
+const TestComponent = (props = {}) => {
+  const { matchControl, matchChallenger, match } = useFlags("my-flag");
+  return (
+    <div>
+      {matchControl() && <p>Matched any control</p>}
+      {matchChallenger() && <p>Matched any challenger</p>}
+      {match("challenger2") && (
+        <p>Matched a specific challenger – challenger 2</p>
+      )}
+      <p>Matched nothing</p>
+    </div>
+  );
+};
 ```
 
 ##### Multivariate Flag Support

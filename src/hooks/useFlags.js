@@ -13,7 +13,7 @@ type UseFlagsReturn = {
 const useFlags = (flagKey: string): UseFlagsReturn => {
   const config = React.useContext(LaunchDarklyContext);
   const { clientId, user, clientOptions, controlTest, challengerTest } =
-    config || {};
+    config || {}; // config can be null
   const bootstrap = clientOptions && clientOptions.bootstrap;
 
   const [flagValue, setFlagValue] = React.useState(
