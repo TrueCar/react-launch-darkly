@@ -24,14 +24,14 @@ export type UserType = {
   firstName?: string,
   lastName?: string,
   email?: string,
-  custom?: Object
+  custom?: any
 };
 
-export type FlagValueType = string | Object | boolean;
+export type FlagValueType = string | any | boolean;
 
 export type ClientOptionsType = {
   // https://docs.launchdarkly.com/docs/js-sdk-reference#section-bootstrapping
-  // Additionally used for SSR when an Object
+  // Additionally used for SSR when an any
   bootstrap?: string | { [flagKey: string]: FlagValueType },
 
   // https://docs.launchdarkly.com/docs/js-sdk-reference#section-secure-mode

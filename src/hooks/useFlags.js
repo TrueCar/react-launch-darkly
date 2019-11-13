@@ -12,7 +12,8 @@ type UseFlagsReturn = {
 
 const useFlags = (flagKey: string): UseFlagsReturn => {
   const config = React.useContext(LaunchDarklyContext);
-  const { clientId, user, clientOptions } = config || {};
+  const { clientId, user, clientOptions, controlTest, challengerTest } =
+    config || {};
   const bootstrap = clientOptions && clientOptions.bootstrap;
 
   const [
@@ -89,8 +90,9 @@ const useFlags = (flagKey: string): UseFlagsReturn => {
     }
   }, [clientId, clientOptions, initializeClient, user]);
 
-  const matchControl = () => checkFeatureFlagComplete;
-  const matchChallenger = () => flagValue;
+  const matchControl = () => (controlTest ? controlTest(flagValue) : false);
+  const matchChallenger = () =>
+    challengerTest ? challengerTest(flagValue) : false;
   const match = value => flagValue === value;
 
   return {

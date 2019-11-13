@@ -1,4 +1,7 @@
+// @flow
+
 import { initialize } from "launchdarkly-js-client-sdk";
+import type { FlagValueType } from "../types";
 const url = require("url");
 
 export function getLocation() {
@@ -124,13 +127,21 @@ export function feature(key, user, variation) {
   });
 }
 
+export const defaultControlTest = (flagValue: FlagValueType) => {
+  if (typeof flagValue === "string" && flagValue.startsWith("control")) {
+    return true;
+  }
+  return false;
+};
+
+export const defaultChallengerTest = (flagValue: FlagValueType) => {
+  if (typeof flagValue === "string" && flagValue.startsWith("challenger")) {
+    return true;
+  }
+  return false;
+};
+
 export const testExports = {
-  allFlags: () => {
-    if (ldClient) {
-      return ldClient.allFlags();
-    }
-    return {};
-  },
   reset: () => {
     ldClient = null;
   }

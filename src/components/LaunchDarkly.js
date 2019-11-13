@@ -1,20 +1,26 @@
 // @flow
 import React from "react";
 import { LaunchDarklyProvider } from "./Context";
-
-import type { UserType, ClientOptionsType } from "../types";
+import { defaultControlTest, defaultChallengerTest } from "../lib/utils";
+import type { UserType, ClientOptionsType, FlagValueType } from "../types";
 
 type Props = {
   clientId: string,
   user: UserType,
   clientOptions: ClientOptionsType,
-  children: any
+  children: any,
+  controlTest?: (flagValue: FlagValueType) => boolean,
+  challengerTest?: (flagValue: FlagValueType) => boolean
 };
 
-
-export default function LaunchDarkly (props:Props) {
-  const { clientId, user, children, clientOptions } = props;
-
+const LaunchDarkly = ({
+  clientId,
+  user,
+  children,
+  clientOptions,
+  controlTest = defaultControlTest,
+  challengerTest = defaultChallengerTest
+}: Props) => {
   let config = null;
 
   // if clientId or user do not exist we still want to
@@ -24,13 +30,13 @@ export default function LaunchDarkly (props:Props) {
     config = {
       clientId,
       user,
-      clientOptions
+      clientOptions,
+      controlTest,
+      challengerTest
     };
   }
 
-  return (
-    <LaunchDarklyProvider value={config}>
-      {children}
-    </LaunchDarklyProvider>
-  );
-}
+  return <LaunchDarklyProvider value={config}>{children}</LaunchDarklyProvider>;
+};
+
+export default LaunchDarkly;
