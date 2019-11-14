@@ -1,5 +1,10 @@
+// @flow
 import React from "react";
+import type { ConfigType } from "../types";
 
-const { Provider: LaunchDarklyProvider, Consumer: LaunchDarklyConsumer } = React.createContext();
+export const LaunchDarklyContext = React.createContext<ConfigType | null>(null);
 
-export { LaunchDarklyProvider, LaunchDarklyConsumer };
+export const {
+  Provider: LaunchDarklyProvider,
+  Consumer: LaunchDarklyConsumer
+} = LaunchDarklyContext;

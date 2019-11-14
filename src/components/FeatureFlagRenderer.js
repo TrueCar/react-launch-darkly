@@ -1,7 +1,12 @@
 // @flow
 import { Component } from "react";
 
-import type { FeatureFlagType, ConfigType, LdClientWrapperType, FlagValueType } from "../types";
+import type {
+  FeatureFlagType,
+  ConfigType,
+  LdClientWrapperType,
+  FlagValueType
+} from "../types";
 import { ldClientWrapper, ldOverrideFlag } from "../lib/utils";
 
 type Props = FeatureFlagType & ConfigType;
@@ -13,7 +18,7 @@ type State = {
 export default class FeatureFlagRenderer extends Component<Props, State> {
   _isMounted: boolean;
 
-  constructor (props:Props) {
+  constructor(props: Props) {
     super(props);
 
     const { flagKey, clientOptions } = this.props;
@@ -21,13 +26,16 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
 
     this.state = {
       checkFeatureFlagComplete: false,
-      flagValue: bootstrap &&
-        typeof bootstrap === "object" &&
-        bootstrap.hasOwnProperty(flagKey) ? bootstrap[flagKey] : false
+      // This doesn't appear to make sense (bootstrap can be a string),
+      // but it's not clear to me what's correct here
+      flagValue:
+        bootstrap && typeof bootstrap === "object" && bootstrap[flagKey]
+          ? bootstrap[flagKey]
+          : false
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { clientId, user, clientOptions } = this.props;
 
     this._isMounted = true;
@@ -40,12 +48,16 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (!(prevProps.user && prevProps.clientId) && (this.props.user && this.props.clientId)) {
+    if (
+      !(prevProps.user && prevProps.clientId) &&
+      this.props.user &&
+      this.props.clientId
+    ) {
       this.initializeClient();
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this._isMounted = false;
   }
 
@@ -59,13 +71,17 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
     this.listenFlagChangeEvent(ldClient);
   }
 
-  render () {
-    return this.renderLogic();
+  render() {
+    return this.renderLogic() || null;
   }
 
-  renderLogic () {
+  renderLogic() {
     const { flagValue, checkFeatureFlagComplete } = this.state;
-    const { renderFeatureCallback, renderDefaultCallback, initialRenderCallback } = this.props;
+    const {
+      renderFeatureCallback,
+      renderDefaultCallback,
+      initialRenderCallback
+    } = this.props;
 
     if (flagValue) {
       return renderFeatureCallback(flagValue);
@@ -80,7 +96,7 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
     return null;
   }
 
-  checkFeatureFlag (ldClient:LdClientWrapperType) {
+  checkFeatureFlag(ldClient: LdClientWrapperType) {
     const { flagKey } = this.props;
 
     ldClient.onReady(() => {
@@ -89,15 +105,15 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
     });
   }
 
-  listenFlagChangeEvent (ldClient:LdClientWrapperType) {
+  listenFlagChangeEvent(ldClient: LdClientWrapperType) {
     const { flagKey } = this.props;
 
-    ldClient.on(`change:${flagKey}`, (value) => {
+    ldClient.on(`change:${flagKey}`, value => {
       this.setStateFlagValue(value);
     });
   }
 
-  setStateFlagValue (flagValue:FlagValueType) {
+  setStateFlagValue(flagValue: FlagValueType) {
     const { flagKey } = this.props;
     const typeFlagValue = typeof flagValue;
     const defaultState = { checkFeatureFlagComplete: true };
