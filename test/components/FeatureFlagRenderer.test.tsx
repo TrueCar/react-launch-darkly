@@ -1,13 +1,11 @@
 import React from "react";
 import { shallow, mount, configure } from "enzyme";
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
-// jest.mock("../../src/lib/utils");
 import * as utils from "../../src/lib/utils";
 import { ClientOptionsType } from "../../src/types";
 
 import Adapter from "enzyme-adapter-react-16";
 
-const Adapter = require("enzyme-adapter-react-16");
 configure({ adapter: new Adapter() });
 
 describe("components/FeatureFlagRenderer", () => {
@@ -28,9 +26,9 @@ describe("components/FeatureFlagRenderer", () => {
   });
 
   interface RenderOptions {
-    clientOptions?: ClientOptionsType,
-    renderDefaultCallback?: jest.Mock,
-    initialRenderCallback?: jest.Mock
+    clientOptions?: ClientOptionsType;
+    renderDefaultCallback?: jest.Mock;
+    initialRenderCallback?: jest.Mock;
   }
 
   const shallowRender = (options?: RenderOptions) => (
@@ -57,12 +55,6 @@ describe("components/FeatureFlagRenderer", () => {
   );
 
   beforeEach(() => {
-    // mocked(utils.ldClientWrapper).mockImplementation(() => ({
-    //   onReady: ldClientWrapperOnReady,
-    //   on: ldClientWrapperOn,
-    //   variation
-    // }));
-
     (utils.ldClientWrapper as jest.Mock) = jest.fn();
     (utils.ldClientWrapper as jest.Mock).mockImplementation(() => ({
       onReady: ldClientWrapperOnReady,
@@ -72,7 +64,7 @@ describe("components/FeatureFlagRenderer", () => {
   });
 
   afterEach(() => {
-    mocked(utils.ldClientWrapper).mockReset();
+    (utils.ldClientWrapper as jest.Mock).mockReset();
   });
 
   describe("when instantiated", () => {
@@ -266,10 +258,10 @@ describe("components/FeatureFlagRenderer", () => {
     describe("query param flag overrides if not undefined", () => {
       beforeEach( () => {
         (utils.getLocation as jest.Mock) = jest.fn();
-      })
+      });
       it("param 'features.flag=false' overrides LD data 'on'", () => {
-        variation.mockImplementation(() => false); 
-        mocked(utils.getLocation).mockImplementation(() => "http://ab.cdef.com?features.my-test=false");
+        variation.mockImplementation(() => false);
+        (utils.getLocation as jest.Mock).mockImplementation(() => "http://ab.cdef.com?features.my-test=false");
 
         const wrapper = mountRender();
 
@@ -278,7 +270,7 @@ describe("components/FeatureFlagRenderer", () => {
 
       it("param 'features.flag' overrides LD data 'off'", () => {
         variation.mockImplementation(() => false);
-        mocked(utils.getLocation).mockImplementation(() => "http://ab.cdef.com?features.my-test");
+        (utils.getLocation as jest.Mock).mockImplementation(() => "http://ab.cdef.com?features.my-test");
 
         const wrapper = mountRender();
 
@@ -287,7 +279,7 @@ describe("components/FeatureFlagRenderer", () => {
 
       it("param 'features=flag' overrides LD data 'off'", () => {
         variation.mockImplementation(() => false);
-        mocked(utils.getLocation).mockImplementation(() => "http://ab.cdef.com?features=my-test");
+        (utils.getLocation as jest.Mock).mockImplementation(() => "http://ab.cdef.com?features=my-test");
 
         const wrapper = mountRender();
 
@@ -301,7 +293,7 @@ describe("components/FeatureFlagRenderer", () => {
           }
           return true;
         });
-        mocked(utils.getLocation).mockImplementation(() => "http://ab.cdef.com?features=one,my-test");
+        (utils.getLocation as jest.Mock).mockImplementation(() => "http://ab.cdef.com?features=one,my-test");
         const wrapper = mountRender();
         expect(wrapper.state()).toEqual({ checkFeatureFlagComplete: true, flagValue: true });
       });
