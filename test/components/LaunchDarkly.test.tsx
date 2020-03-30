@@ -2,7 +2,7 @@ import React from "react";
 import { configure, shallow } from "enzyme";
 import LaunchDarkly from "../../src/components/LaunchDarkly";
 
-const Adapter = require("enzyme-adapter-react-16");
+import Adapter from "enzyme-adapter-react-16";
 configure({ adapter: new Adapter() });
 
 describe("components/LaunchDarkly", () => {

@@ -5,7 +5,7 @@ import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import * as utils from "../../src/lib/utils";
 import { ClientOptionsType } from "../../src/types";
 
-import { mocked } from 'ts-jest/utils';
+import Adapter from "enzyme-adapter-react-16";
 
 const Adapter = require("enzyme-adapter-react-16");
 configure({ adapter: new Adapter() });

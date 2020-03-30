@@ -9,7 +9,7 @@
     "clean": "rimraf build",
     "build": "tsc",
     "prepare": "npm run clean && npm run build",
-    "lint": "./node_modules/.bin/eslint src test"
+    "lint": "./node_modules/.bin/eslint \"**/*.{js,jsx,ts,tsx}\""
   },
   "files": [
     "build"
@@ -31,13 +31,16 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
     "@babel/preset-typescript": "^7.9.0",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/jest": "^25.1.4",
     "@types/react": "^16.9.25",
     "@types/react-dom": "^16.9.5",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
     "babel-jest": "^25.2.1",
     "enzyme": "3.5.1",
     "enzyme-adapter-react-16": "^1.5.0",
-    "eslint": "3.8.1",
+    "eslint": "^6.8.0",
     "eslint-plugin-react": "6.4.1",
     "jest": "^25.2.2",
     "ldclient-js": "^2.7.1",
@@ -60,5 +63,6 @@
       "node_modules/react/",
       "node_modules/enzyme/"
     ]
-  }
+  },
+  "dependencies": {}
 }

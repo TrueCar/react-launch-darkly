@@ -1,5 +1,5 @@
 import { initialize} from "ldclient-js";
-const url = require("url");
+import url from "url";
 
 export function getLocation(): string {
   if (window.location) {

@@ -70,10 +70,6 @@ describe("lib/utils", () => {
     });
   });
 
-  describe("getAllFeatureFlags", () => {
-
-  });
-
   describe("identify", () => {
     it("ldclient-js identify is called", async () => {
       const spy = jest.spyOn(utils.ldClientWrapper(key, user), "identify");
@@ -88,9 +84,6 @@ describe("lib/utils", () => {
       await utils.track(key, user, 1234);
       expect(spy).toHaveBeenCalled();
     });
-  });
-
-  describe("ldOverrideFlag", () => {
   });
 
   describe("feature", () => {
