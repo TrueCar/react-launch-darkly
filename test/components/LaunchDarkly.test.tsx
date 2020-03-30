@@ -46,7 +46,7 @@ describe("components/LaunchDarkly", () => {
 
   it("renders the children", () => {
     const subject = shallow(
-      <LaunchDarkly clientId="080808" user="zeke">
+      <LaunchDarkly clientId="080808" user={{key: "zeke"}}>
         <div>Hi</div>
       </LaunchDarkly>
     );
@@ -59,15 +59,15 @@ describe("components/LaunchDarkly", () => {
     it("broadcasts null", () => {
       // with neither
       let provider = shallow(<LaunchDarkly><div>Hi</div></LaunchDarkly>);
-      expect(provider.props().value).toEqual(null);
+      expect(provider.props().value).toEqual({});
 
       // with clientId
       provider = shallow(<LaunchDarkly clientId="asdf"><div>Hi</div></LaunchDarkly>);
-      expect(provider.props().value).toEqual(null);
+      expect(provider.props().value).toEqual({});
 
       // with user
-      provider = shallow(<LaunchDarkly user={{name: "Kelly Slater"}}><div>Hi</div></LaunchDarkly>);
-      expect(provider.props().value).toEqual(null);
+      provider = shallow(<LaunchDarkly user={{key: "key", firstName: "Kelly"}}><div>Hi</div></LaunchDarkly>);
+      expect(provider.props().value).toEqual({});
     });
   });
 });
