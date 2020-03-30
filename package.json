@@ -2,12 +2,13 @@
   "name": "react-launch-darkly",
   "version": "4.0.1",
   "description": "",
-  "main": "./build/index",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
   "scripts": {
     "test": "jest && npm run lint",
     "test-coverage": "jest --coverage",
     "clean": "rimraf build",
-    "build": "tsc",
+    "build": "tsc --declaration",
     "prepare": "npm run clean && npm run build",
     "lint": "./node_modules/.bin/eslint \"**/*.{js,jsx,ts,tsx}\""
   },
