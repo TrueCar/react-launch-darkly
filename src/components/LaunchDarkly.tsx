@@ -13,7 +13,7 @@ interface Props {
 export default function LaunchDarkly (props: Props) {
   const { clientId, user, children, clientOptions } = props;
 
-  let config: ConfigType | {} = {};
+  let config: ConfigType = {};
 
   // if clientId or user do not exist we still want to
   // render the Consumer component but we want value
