@@ -3,7 +3,7 @@ import url from "url";
 
 export function getLocation(): string {
   if (window.location) {
-    return "window.location.toString()";
+    return window.location.toString();
   }
   return "";
 }
