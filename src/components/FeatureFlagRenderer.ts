@@ -1,11 +1,10 @@
-// @flow
 import { Component } from "react";
 
-import type { FeatureFlagType, ConfigType, LdClientWrapperType, FlagValueType } from "../types";
+import { FeatureFlagType, ConfigType, LdClientWrapperType, FlagValueType } from "../types";
 import { ldClientWrapper, ldOverrideFlag } from "../lib/utils";
 
-type Props = FeatureFlagType & ConfigType;
-type State = {
+interface Props extends FeatureFlagType, ConfigType {}
+interface State {
   checkFeatureFlagComplete: boolean,
   flagValue: any
 };

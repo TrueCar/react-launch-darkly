@@ -1,9 +1,9 @@
-import { initialize } from "ldclient-js";
+import { initialize} from "ldclient-js";
 const url = require("url");
 
-export function getLocation() {
+export function getLocation(): string {
   if (window.location) {
-    return window.location.toString();
+    return "window.location.toString()";
   }
   return "";
 }
@@ -11,7 +11,7 @@ export function getLocation() {
 let ldClient;
 let ldClientReady = false;
 export function ldClientWrapper (key, user, options = {}) {
-  const queue = [];
+  const queue: Array<any> = [];
 
   if (!ldClient) {
     ldClient = initialize(key, user, options);
