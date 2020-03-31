@@ -304,11 +304,9 @@ describe("components/FeatureFlagRenderer", () => {
     it("keeps track of mount state on instance", () => {
       const wrapper = mountRender();
       const wrapperInstance = wrapper.instance();
-      // @ts-ignore
-      expect(wrapperInstance._isMounted).toBe(true);
+      expect((wrapperInstance as FeatureFlagRenderer)._isMounted).toBe(true);
       wrapper.unmount();
-      // @ts-ignore
-      expect(wrapperInstance._isMounted).toBe(false);
+      expect((wrapperInstance as FeatureFlagRenderer)._isMounted).toBe(false);
     });
   });
 });
