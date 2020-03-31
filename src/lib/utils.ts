@@ -55,7 +55,7 @@ export function ldOverrideFlag(flagKey, typeFlagValue) {
    */
   const query = url.parse(exports.getLocation(), true).query;
   const queryFlag = query["features." + flagKey];
-  const queryFeatures  = query.features?.toString();
+  const queryFeatures  = query.features && query.features.toString();
 
   if (typeof queryFlag !== "undefined"){
     if (queryFlag === ""){

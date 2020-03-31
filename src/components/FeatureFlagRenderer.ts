@@ -3,16 +3,16 @@ import { Component } from "react";
 import { FeatureFlagType, ConfigType, LdClientWrapperType, FlagValueType } from "../types";
 import { ldClientWrapper, ldOverrideFlag } from "../lib/utils";
 
-interface Props extends FeatureFlagType, ConfigType {}
-interface State {
+interface FeatureFlagRendererProps extends FeatureFlagType, ConfigType {}
+interface FeatureFlagRendererState {
   checkFeatureFlagComplete: boolean;
   flagValue: any;
 }
 
-export default class FeatureFlagRenderer extends Component<Props, State> {
+export default class FeatureFlagRenderer extends Component<FeatureFlagRendererProps, FeatureFlagRendererState> {
   _isMounted: boolean;
 
-  constructor (props: Props) {
+  constructor (props: FeatureFlagRendererProps) {
     super(props);
 
     const { flagKey, clientOptions } = this.props;
@@ -38,7 +38,7 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
     this.initializeClient();
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: FeatureFlagRendererProps) {
     if (!(prevProps.user && prevProps.clientId) && (this.props.user && this.props.clientId)) {
       this.initializeClient();
     }

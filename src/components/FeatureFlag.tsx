@@ -1,16 +1,16 @@
 import React from "react";
 import { LaunchDarklyConsumer } from "./Context";
 
-import { FeatureFlagType } from "../types";
+import { FeatureFlagType, ConfigType } from "../types";
 import FeatureFlagRenderer from "./FeatureFlagRenderer";
 
-export default function FeatureFlag (props: FeatureFlagType) {
-  const isConfigEmpty = (config): boolean => (Object.keys(config).length === 0);
+const FeatureFlag: React.FC<FeatureFlagType> = (props) => {
+  const isConfigEmpty = (config: ConfigType): boolean => !Object.keys(config).length;
 
   return (
     <LaunchDarklyConsumer>
       {
-        (config) => {
+        (config: ConfigType) => {
           if (!isConfigEmpty(config) || props.initialRenderCallback) {
             return (<FeatureFlagRenderer {...config} {...props} />);
           }
@@ -20,4 +20,6 @@ export default function FeatureFlag (props: FeatureFlagType) {
       }
     </LaunchDarklyConsumer>
   );
-}
+};
+
+export default FeatureFlag;
