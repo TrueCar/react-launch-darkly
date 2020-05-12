@@ -1,19 +1,18 @@
-// @flow
 import { Component } from "react";
 
-import type { FeatureFlagType, ConfigType, LdClientWrapperType, FlagValueType } from "../types";
+import { FeatureFlagType, ConfigType, LdClientWrapperType, FlagValueType } from "../types";
 import { ldClientWrapper, ldOverrideFlag } from "../lib/utils";
 
-type Props = FeatureFlagType & ConfigType;
-type State = {
-  checkFeatureFlagComplete: boolean,
-  flagValue: any
-};
+interface FeatureFlagRendererProps extends FeatureFlagType, ConfigType {}
+interface FeatureFlagRendererState {
+  checkFeatureFlagComplete: boolean;
+  flagValue: any;
+}
 
-export default class FeatureFlagRenderer extends Component<Props, State> {
+export default class FeatureFlagRenderer extends Component<FeatureFlagRendererProps, FeatureFlagRendererState> {
   _isMounted: boolean;
 
-  constructor (props:Props) {
+  constructor (props: FeatureFlagRendererProps) {
     super(props);
 
     const { flagKey, clientOptions } = this.props;
@@ -23,7 +22,7 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
       checkFeatureFlagComplete: false,
       flagValue: bootstrap &&
         typeof bootstrap === "object" &&
-        bootstrap.hasOwnProperty(flagKey) ? bootstrap[flagKey] : false
+        Object.prototype.hasOwnProperty.call(bootstrap, flagKey) ? bootstrap[flagKey] : false
     };
   }
 
@@ -39,7 +38,7 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
     this.initializeClient();
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: FeatureFlagRendererProps) {
     if (!(prevProps.user && prevProps.clientId) && (this.props.user && this.props.clientId)) {
       this.initializeClient();
     }
@@ -80,7 +79,7 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
     return null;
   }
 
-  checkFeatureFlag (ldClient:LdClientWrapperType) {
+  checkFeatureFlag (ldClient: LdClientWrapperType) {
     const { flagKey } = this.props;
 
     ldClient.onReady(() => {
@@ -89,7 +88,7 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
     });
   }
 
-  listenFlagChangeEvent (ldClient:LdClientWrapperType) {
+  listenFlagChangeEvent (ldClient: LdClientWrapperType) {
     const { flagKey } = this.props;
 
     ldClient.on(`change:${flagKey}`, (value) => {
@@ -97,7 +96,7 @@ export default class FeatureFlagRenderer extends Component<Props, State> {
     });
   }
 
-  setStateFlagValue (flagValue:FlagValueType) {
+  setStateFlagValue (flagValue: FlagValueType) {
     const { flagKey } = this.props;
     const typeFlagValue = typeof flagValue;
     const defaultState = { checkFeatureFlagComplete: true };

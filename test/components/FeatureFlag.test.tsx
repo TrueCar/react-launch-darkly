@@ -5,7 +5,7 @@ import FeatureFlag from "../../src/components/FeatureFlag";
 import FeatureFlagRenderer from "../../src/components/FeatureFlagRenderer";
 import LaunchDarkly from "../../src/components/LaunchDarkly";
 
-const Adapter = require("enzyme-adapter-react-16");
+import Adapter from "enzyme-adapter-react-16";
 configure({ adapter: new Adapter() });
 
 describe("components/FeatureFlag", () => {

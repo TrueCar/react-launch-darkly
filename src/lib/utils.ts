@@ -1,7 +1,7 @@
-import { initialize } from "ldclient-js";
-const url = require("url");
+import { initialize} from "ldclient-js";
+import url from "url";
 
-export function getLocation() {
+export function getLocation(): string {
   if (window.location) {
     return window.location.toString();
   }
@@ -11,7 +11,7 @@ export function getLocation() {
 let ldClient;
 let ldClientReady = false;
 export function ldClientWrapper (key, user, options = {}) {
-  const queue = [];
+  const queue: Array<any> = [];
 
   if (!ldClient) {
     ldClient = initialize(key, user, options);
@@ -55,7 +55,7 @@ export function ldOverrideFlag(flagKey, typeFlagValue) {
    */
   const query = url.parse(exports.getLocation(), true).query;
   const queryFlag = query["features." + flagKey];
-  const queryFeatures = query["features"];
+  const queryFeatures  = query.features && query.features.toString();
 
   if (typeof queryFlag !== "undefined"){
     if (queryFlag === ""){

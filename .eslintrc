@@ -1,5 +1,5 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "rules": {
     "comma-dangle": 0,
     "no-cond-assign": [2, "always"],
@@ -21,7 +21,6 @@
     "react/prop-types": [0],
 
     "eol-last": 2,
-    "indent": [2, 2, {"SwitchCase": 1, "VariableDeclarator": { "var": 2, "let": 2, "const": 3}}],
     "jsx-quotes": [2, "prefer-double"],
     "linebreak-style": [2, "unix"],
     "no-trailing-spaces": 1,
@@ -33,8 +32,6 @@
 
     "react/display-name": 0,
     "react/jsx-wrap-multilines": 2,
-
-    "flowtype/define-flow-type": 1
   },
   "env": {
     "es6": true,
@@ -44,14 +41,10 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
-  "ecmaFeatures": {
-    "jsx": true,
-    "experimentalObjectRestSpread": true
-  },
   "plugins": [
-    "react",
-    "flowtype"
+    "react"
   ],
   "globals": {
     "before": true,

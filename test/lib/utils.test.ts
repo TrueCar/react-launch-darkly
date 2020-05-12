@@ -6,7 +6,7 @@ import { initialize } from "ldclient-js";
 import * as utils from "../../src/lib/utils";
 
 describe("lib/utils", () => {
-  initialize.mockImplementation(() => ({
+  (initialize as jest.Mock).mockImplementation(() => ({
     on: (event, callback) => {
       setTimeout(() => {
         callback();
@@ -17,6 +17,10 @@ describe("lib/utils", () => {
     identify: jest.fn,
   }));
 
+  const key = "my key";
+  const user = { key: "my user" };
+  const options = { baseUrl: "http://test" };
+
   it("exports functions", () => {
     expect(utils["ldClientWrapper"]).toBeDefined();
     expect(utils["ldOverrideFlag"]).toBeDefined();
@@ -24,10 +28,6 @@ describe("lib/utils", () => {
   });
 
   describe("ldClientWrapper", () => {
-    const key = "my key";
-    const user = { key: "my user" };
-    const options = { baseUrl: "http://test" };
-
     describe("proxies to ldClient", () => {
       beforeEach(() => {
         jest.clearAllMocks();
@@ -70,13 +70,9 @@ describe("lib/utils", () => {
     });
   });
 
-  describe("getAllFeatureFlags", () => {
-
-  });
-
   describe("identify", () => {
     it("ldclient-js identify is called", async () => {
-      const spy = jest.spyOn(utils.ldClientWrapper(), "identify");
+      const spy = jest.spyOn(utils.ldClientWrapper(key, user), "identify");
       await utils.identify(1234, {});
       expect(spy).toHaveBeenCalled();
     });
@@ -84,13 +80,10 @@ describe("lib/utils", () => {
 
   describe("track", () => {
     it("ldclient-js track is called", async () => {
-      const spy = jest.spyOn(utils.ldClientWrapper(), "track");
-      await utils.track(1234);
+      const spy = jest.spyOn(utils.ldClientWrapper(key, user), "track");
+      await utils.track(key, user, 1234);
       expect(spy).toHaveBeenCalled();
     });
-  });
-
-  describe("ldOverrideFlag", () => {
   });
 
   describe("feature", () => {
@@ -99,7 +92,7 @@ describe("lib/utils", () => {
     const featureFlag = "home-test";
 
     it("ldclient-js feature is called", async () => {
-      const spy = jest.spyOn(utils.ldClientWrapper(), "variation");
+      const spy = jest.spyOn(utils.ldClientWrapper(key, user), "variation");
       await utils.feature(key, user, featureFlag);
       expect(spy).toHaveBeenCalled();
     });
