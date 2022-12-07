@@ -1,3 +1,7 @@
+# Deprecation Notice
+
+This project is no longer maintained, as Launch Darkly has an official [React SDK for web, React Native, and Gatsby](https://docs.launchdarkly.com/sdk/client-side/react/react-web).
+
 # React-Launch-Darkly
 *Simple component helpers to support LaunchDarkly in your react app.*
 
